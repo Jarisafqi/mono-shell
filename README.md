@@ -1,27 +1,7 @@
 # mono-shell
 
-mono-shell is a native Wayland bar and notification panel for people who want a polished, configurable Linux desktop
-without stitching together a separate bar, notification daemon, and settings UI.
-
-It provides the shell layer around your compositor: a configurable bar with widgets and a notification panel with a
-quick toggle. The project is built directly on Wayland and OpenGL ES with no Qt or GTK dependency, so the UI, rendering,
-configuration, and IPC model are designed as one cohesive shell instead of a collection of unrelated panels and scripts.
-
-> [!IMPORTANT]
-> mono-shell v5 is currently in Beta. While the core features and architecture are stabilizing, you may still encounter occasional configuration or behavior adjustments as we prepare for the final release.
-
-<p><br/></p>
-
-<p align="center">
-  <a href="https://github.com/Jarisafqi/mono-shell/commits">
-    <img src="https://img.shields.io/github/last-commit/Jarisafqi/mono-shell?style=for-the-badge&labelColor=FFF59B&color=FFF59B&logo=git&logoColor=070722&label=commit" alt="Last commit" />
-  </a>
-  <a href="https://github.com/Jarisafqi/mono-shell/stargazers">
-    <img src="https://img.shields.io/github/stars/Jarisafqi/mono-shell?style=for-the-badge&labelColor=FFF59B&color=FFF59B&logo=github&logoColor=070722" alt="GitHub stars" />
-  </a>
-</p>
-
-<p><br/></p>
+mono-shell is a fork of the [Noctalia](https://github.com/noctalia-dev/noctalia) desktop shell. All credit for the
+original source code and assets goes to the [noctalia-dev](https://github.com/noctalia-dev) team.
 
 ## Why mono-shell?
 
