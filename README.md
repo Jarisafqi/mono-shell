@@ -34,17 +34,6 @@ mono-shell solves that by providing one configurable shell layer that owns the c
 still fitting into compositor-driven Wayland workflows. It is meant for users who want the control of a custom desktop
 environment with fewer moving parts and a consistent UI.
 
-## What It Includes
-
-- Multi-monitor bars with configurable widgets, taskbar, workspaces, system tray, media, network, battery, brightness,
-  weather, clipboard, and custom script-backed widgets.
-- Dock, launcher, control center, notification toasts/history, wallpaper picker, OSD overlays, lock screen, session
-  panel, and desktop widgets.
-- TOML configuration with hot reload, GUI-managed overrides, theme/palette support, template application, and IPC for
-  runtime control.
-- Direct Wayland integration for layer-shell, session lock, idle behavior, clipboard, foreign toplevels, workspaces,
-  fractional scaling, and compositor-specific workspace backends where needed.
-
 ## Wayland Compositor Support
 
 mono-shell supports Wayland compositors that provide the layer-shell protocols it needs for shell surfaces. Workspace
