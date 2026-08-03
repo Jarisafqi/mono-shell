@@ -11,6 +11,7 @@
 class Box;
 class Glyph;
 class Label;
+class BluetoothService;
 
 enum class BatteryDisplayMode : std::uint8_t { None, Graphic, Glyph };
 enum class BatteryLabelContent : std::uint8_t { Percent, Time, Rate };
@@ -26,9 +27,10 @@ public:
     bool showLabel = true;
     bool hideWhenPlugged = false;
     bool hideWhenFull = false;
+    bool showBluetoothDevices = true;
   };
 
-  BatteryWidget(UPowerService* upower, Options options);
+  BatteryWidget(UPowerService* upower, BluetoothService* bluetooth, Options options);
 
   void create() override;
 
@@ -47,8 +49,11 @@ private:
   void layoutGraphicMode(Renderer& renderer);
   void layoutGlyphMode(Renderer& renderer, float containerWidth, float containerHeight);
   void layoutLabelOnlyMode(Renderer& renderer, float containerWidth, float containerHeight);
+  void layoutBluetoothIndicator(Renderer& renderer, float& rootWidth, float& rootHeight);
+  void syncBluetoothState(Renderer& renderer);
 
   UPowerService* m_upower = nullptr;
+  BluetoothService* m_bluetooth = nullptr;
   std::string m_deviceSelector = "auto";
   int m_warningThreshold = 0;
   ColorSpec m_warningColor;
@@ -57,6 +62,7 @@ private:
   bool m_showLabel = true;
   bool m_hideWhenPlugged = false;
   bool m_hideWhenFull = false;
+  bool m_showBluetoothDevices = true;
 
   // Glyph mode nodes
   Glyph* m_glyph = nullptr;
@@ -68,6 +74,12 @@ private:
   Box* m_terminalNub = nullptr;
   Label* m_overlayLabel = nullptr;
   Glyph* m_overlayGlyph = nullptr;
+
+  // Bluetooth indicator nodes
+  Glyph* m_bluetoothGlyph = nullptr;
+  Label* m_bluetoothLabel = nullptr;
+  bool m_lastBluetoothVisible = false;
+  std::string m_lastBluetoothText;
 
   // Animated fill
   float m_animatedPct = 0.0f;

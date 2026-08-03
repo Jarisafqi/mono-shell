@@ -1,5 +1,6 @@
 #include "shell/bar/widgets/battery_widget.h"
 
+#include "dbus/bluetooth/bluetooth_service.h"
 #include "dbus/upower/upower_service.h"
 #include "i18n/i18n.h"
 #include "render/scene/input_area.h"
@@ -58,11 +59,12 @@ namespace {
 
 } // namespace
 
-BatteryWidget::BatteryWidget(UPowerService* upower, Options options)
-    : m_upower(upower), m_deviceSelector(std::move(options.deviceSelector)),
+BatteryWidget::BatteryWidget(UPowerService* upower, BluetoothService* bluetooth, Options options)
+    : m_upower(upower), m_bluetooth(bluetooth), m_deviceSelector(std::move(options.deviceSelector)),
       m_warningThreshold(options.warningThreshold), m_warningColor(options.warningColor),
       m_displayMode(options.displayMode), m_labelContent(options.labelContent), m_showLabel(options.showLabel),
-      m_hideWhenPlugged(options.hideWhenPlugged), m_hideWhenFull(options.hideWhenFull) {}
+      m_hideWhenPlugged(options.hideWhenPlugged), m_hideWhenFull(options.hideWhenFull),
+      m_showBluetoothDevices(options.showBluetoothDevices) {}
 
 // Vertical bars are too narrow for time or rate text, so they always show the bare percentage; the
 // tooltip carries the full detail. Time and rate are only known while the battery is actively charging
@@ -102,6 +104,27 @@ void BatteryWidget::create() {
     createGlyphMode();
   } else {
     createLabelOnlyMode();
+  }
+
+  if (m_showBluetoothDevices && m_bluetooth != nullptr) {
+    container->addChild(
+        ui::glyph({
+            .out = &m_bluetoothGlyph,
+            .glyph = "bluetooth-connected",
+            .glyphSize = Style::baseGlyphSize * m_contentScale,
+            .color = widgetIconColorOr(colorSpecFromRole(ColorRole::OnSurface)),
+            .visible = false,
+        })
+    );
+    container->addChild(
+        ui::label({
+            .out = &m_bluetoothLabel,
+            .fontSize = Style::fontSizeBody * m_contentScale,
+            .fontWeight = labelFontWeight(),
+            .fontFamily = labelFontFamily(),
+            .visible = false,
+        })
+    );
   }
 }
 
@@ -294,6 +317,11 @@ void BatteryWidget::layoutGraphicMode(Renderer& renderer) {
 
     rootNode->setSize(graphicW + (hasOverlay ? overlayGroupW : 0.0f), rootH);
   }
+
+  float rootW = rootNode->width();
+  float rootH = rootNode->height();
+  layoutBluetoothIndicator(renderer, rootW, rootH);
+  rootNode->setSize(rootW, rootH);
 }
 
 void BatteryWidget::layoutGlyphMode(Renderer& renderer, float /*containerWidth*/, float /*containerHeight*/) {
@@ -324,6 +352,11 @@ void BatteryWidget::layoutGlyphMode(Renderer& renderer, float /*containerWidth*/
     m_glyph->setPosition(hPad, 0.0f);
     rootNode->setSize(m_glyph->width() + 2.0f * hPad, m_glyph->height());
   }
+
+  float rootW = rootNode->width();
+  float rootH = rootNode->height();
+  layoutBluetoothIndicator(renderer, rootW, rootH);
+  rootNode->setSize(rootW, rootH);
 }
 
 void BatteryWidget::layoutLabelOnlyMode(Renderer& renderer, float /*containerWidth*/, float /*containerHeight*/) {
@@ -337,6 +370,110 @@ void BatteryWidget::layoutLabelOnlyMode(Renderer& renderer, float /*containerWid
   const float hPad = Style::spaceXs * m_contentScale;
   m_label->setPosition(hPad, 0.0f);
   rootNode->setSize(m_label->width() + 2.0f * hPad, m_label->height());
+
+  float rootW = rootNode->width();
+  float rootH = rootNode->height();
+  layoutBluetoothIndicator(renderer, rootW, rootH);
+  rootNode->setSize(rootW, rootH);
+}
+
+void BatteryWidget::layoutBluetoothIndicator(Renderer& renderer, float& rootWidth, float& rootHeight) {
+  if (m_bluetoothGlyph == nullptr || !m_bluetoothGlyph->visible()) {
+    return;
+  }
+
+  m_bluetoothGlyph->measure(renderer);
+
+  const bool showLabel = m_bluetoothLabel != nullptr && m_bluetoothLabel->visible();
+  if (showLabel) {
+    m_bluetoothLabel->measure(renderer);
+  }
+
+  const float gap = Style::spaceXs * m_contentScale;
+  const float glyphW = m_bluetoothGlyph->width();
+  const float glyphH = m_bluetoothGlyph->height();
+  const float labelW = showLabel ? m_bluetoothLabel->width() : 0.0f;
+  const float labelH = showLabel ? m_bluetoothLabel->height() : 0.0f;
+
+  if (m_isVertical) {
+    const float groupW = std::max(glyphW, labelW);
+    const float groupH = glyphH + (showLabel ? gap + labelH : 0.0f);
+    const float startY = rootHeight + gap;
+    const float startX = std::round((rootWidth - groupW) * 0.5f);
+    m_bluetoothGlyph->setPosition(startX + std::round((groupW - glyphW) * 0.5f), startY);
+    if (showLabel) {
+      m_bluetoothLabel->setPosition(startX + std::round((groupW - labelW) * 0.5f), startY + glyphH + gap);
+    }
+    rootWidth = std::max(rootWidth, groupW);
+    rootHeight = startY + groupH;
+  } else {
+    const float groupW = glyphW + (showLabel ? gap + labelW : 0.0f);
+    const float groupH = std::max(glyphH, labelH);
+    const float startX = rootWidth + gap;
+    const float groupY = std::round((rootHeight - groupH) * 0.5f);
+    m_bluetoothGlyph->setPosition(startX, groupY + std::round((groupH - glyphH) * 0.5f));
+    if (showLabel) {
+      m_bluetoothLabel->setPosition(startX + glyphW + gap, groupY + std::round((groupH - labelH) * 0.5f));
+    }
+    rootWidth = startX + groupW;
+    rootHeight = std::max(rootHeight, groupH);
+  }
+}
+
+void BatteryWidget::syncBluetoothState(Renderer& renderer) {
+  if (m_bluetoothGlyph == nullptr || m_bluetooth == nullptr) {
+    return;
+  }
+
+  std::vector<int> percentages;
+  bool anyConnected = false;
+  for (const auto& d : m_bluetooth->devices()) {
+    if (!d.connected) {
+      continue;
+    }
+    anyConnected = true;
+    if (d.hasBattery) {
+      percentages.push_back(d.batteryPercent);
+    }
+  }
+
+  std::string text;
+  for (std::size_t i = 0; i < percentages.size(); ++i) {
+    if (i > 0) {
+      text += " ";
+    }
+    text += std::to_string(percentages[i]) + "%";
+  }
+
+  const bool show = m_showBluetoothDevices && anyConnected;
+  if (show == m_lastBluetoothVisible && text == m_lastBluetoothText) {
+    return;
+  }
+  m_lastBluetoothVisible = show;
+  m_lastBluetoothText = text;
+
+  m_bluetoothGlyph->setVisible(show);
+  if (m_bluetoothLabel != nullptr) {
+    m_bluetoothLabel->setVisible(show && !text.empty());
+  }
+  if (!show) {
+    requestRedraw();
+    return;
+  }
+
+  m_bluetoothGlyph->setGlyph("bluetooth-connected");
+  m_bluetoothGlyph->setGlyphSize(Style::baseGlyphSize * m_contentScale);
+  m_bluetoothGlyph->setColor(widgetIconColorOr(colorSpecFromRole(ColorRole::OnSurface)));
+  m_bluetoothGlyph->measure(renderer);
+
+  if (m_bluetoothLabel != nullptr && !text.empty()) {
+    m_bluetoothLabel->setText(text);
+    m_bluetoothLabel->setFontSize((m_isVertical ? Style::fontSizeCaption : Style::fontSizeBody) * m_contentScale);
+    m_bluetoothLabel->setColor(widgetForegroundOr(colorSpecFromRole(ColorRole::OnSurface)));
+    m_bluetoothLabel->measure(renderer);
+  }
+
+  requestRedraw();
 }
 
 void BatteryWidget::updateFillGeometry() {
@@ -371,6 +508,8 @@ void BatteryWidget::syncState(Renderer& renderer) {
   if (m_upower == nullptr) {
     return;
   }
+
+  syncBluetoothState(renderer);
 
   const auto s = m_upower->stateForDevice(m_deviceSelector);
 

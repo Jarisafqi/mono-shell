@@ -3652,6 +3652,10 @@
           "description": "Include windows from every display on this widget",
           "label": "Show All Monitors"
         },
+        "show-bluetooth": {
+          "description": "Show connected Bluetooth devices with their battery level",
+          "label": "Show Bluetooth Battery"
+        },
         "show-caps-lock": {
           "description": "Show Caps Lock state",
           "label": "Show Caps Lock"

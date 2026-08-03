@@ -146,7 +146,7 @@ std::unique_ptr<Widget> WidgetFactory::create(
 
   if (type == "battery") {
     return createWidget<BatteryWidget>(
-        contentScale, m_upower,
+        contentScale, m_upower, m_bluetooth,
         batteryWidgetDefinition().resolve(
             wc, settingContext, BatteryWidgetDefinitionContext{.batteryConfig = &m_config.battery, .upower = m_upower}
         )

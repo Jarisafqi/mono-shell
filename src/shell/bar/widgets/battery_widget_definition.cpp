@@ -67,6 +67,13 @@ batteryWidgetDefinition() {
               field<&Options::hideWhenFull>({
                   .key = "hide_when_full",
               }),
+              field<&Options::showBluetoothDevices>({
+                  .key = "show_bluetooth",
+                  .presentation =
+                      settings::WidgetSettingPresentation{
+                          .labelKey = "settings.widgets.battery.show_bluetooth",
+                      },
+              }),
               field<&Options::deviceSelector>({
                   .key = "device",
                   .presentation =
