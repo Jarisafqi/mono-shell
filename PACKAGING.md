@@ -1,7 +1,7 @@
-# Packaging Noctalia
+# Packaging mono-shell
 
 Notes for distribution packagers. End-user install docs live in the
-[README](README.md) and at [docs.noctalia.dev](https://docs.noctalia.dev/v5/getting-started/installation).
+[README](README.md).
 
 ## Package description
 
@@ -11,7 +11,7 @@ AppStream, etc.):
 > A sleek, customizable desktop shell crafted for Wayland.
 
 Do not substitute shorter or alternate blurbs (“lightweight Wayland bar”,
-“status bar”, ...). Noctalia is a full desktop shell (bars, dock, launcher,
+“status bar”, ...). mono-shell is a full desktop shell (bars, dock, launcher,
 notifications, lock screen, wallpaper, settings, ...), not a bar-only tool.
 
 ## Packaged distributions
@@ -28,22 +28,20 @@ v5 is already packaged for:
 - GNU Guix
 - Debian (including Ubuntu)
 
-[Repology](https://repology.org/project/noctalia/versions) is a useful at-a-glance
-check, but it only covers repositories it indexes (and may still list v4 as
-`noctalia-shell`). It is not a complete inventory of community packaging.
+[Repology](https://repology.org/project/noctalia/versions) lists the upstream Noctalia community packaging; mono-shell is a separate fork and is not listed there.
 
 ## Identity
 
 | | |
 |---|---|
-| Name | `noctalia` |
-| Homepage | https://github.com/noctalia-dev/noctalia |
-| Docs | https://docs.noctalia.dev |
+| Name | `mono-shell` |
+| Homepage | https://github.com/Jarisafqi/mono-shell |
+| Docs | https://github.com/Jarisafqi/mono-shell |
 | License | MIT ([LICENSE](LICENSE)); also see vendored licenses under `third_party/` for SPDX completeness |
 | Version | Meson `project(... version: ...)` in [`meson.build`](meson.build) |
-| Binary | `noctalia` |
-| Desktop entry | `dev.noctalia.Noctalia.desktop` |
-| Icon | `noctalia` (`share/icons/hicolor/scalable/apps/noctalia.svg`) |
+| Binary | `mono-shell` |
+| Desktop entry | `dev.monoshell.MonoShell.desktop` |
+| Icon | `mono-shell` (`share/icons/hicolor/scalable/apps/mono-shell.svg`) |
 
 ## Maintenance Policy
 
@@ -97,22 +95,22 @@ support.
 - `jemalloc`: recommended on glibc; Meson feature option `-Djemalloc=auto|enabled|disabled`.
   Only used on glibc builds.
 
-Prefix/datadir are baked into the binary via `NOCTALIA_INSTALL_PREFIX` /
-`NOCTALIA_INSTALL_DATADIR`. Install with the same prefix you configured.
+Prefix/datadir are baked into the binary via `MONO_SHELL_INSTALL_PREFIX` /
+`MONO_SHELL_INSTALL_DATADIR`. Install with the same prefix you configured.
 
 ### Installed layout
 
 ```text
-<prefix>/bin/noctalia
-<prefix>/share/noctalia/assets/...
-<prefix>/share/applications/dev.noctalia.Noctalia.desktop
-<prefix>/share/icons/hicolor/scalable/apps/noctalia.svg
+<prefix>/bin/mono-shell
+<prefix>/share/mono-shell/assets/...
+<prefix>/share/applications/dev.monoshell.MonoShell.desktop
+<prefix>/share/icons/hicolor/scalable/apps/mono-shell.svg
 ```
 
 The shipped `assets/` tree is **required at runtime**. Shipping only the binary
 breaks fonts, translations, templates, glyphs, and sounds. See
 [CONTRIBUTING.md](CONTRIBUTING.md#runtime-assets) for lookup order (including
-`NOCTALIA_ASSETS_DIR` overrides for unusual layouts).
+`MONO_SHELL_ASSETS_DIR` overrides for unusual layouts).
 
 Not shipped (don’t look for them in the install): AppStream / metainfo XML, man
 pages, systemd units.
@@ -156,8 +154,8 @@ Each carries its own license file beside the code.
 ## Startup and IPC
 
 No systemd user unit is shipped. Typical startup is compositor autostart or the
-desktop entry (`noctalia --daemon`). Control a running instance with
-`noctalia msg ...` (Unix socket under `XDG_RUNTIME_DIR`).
+desktop entry (`mono-shell --daemon`). Control a running instance with
+`mono-shell msg ...` (Unix socket under `XDG_RUNTIME_DIR`).
 
 Keep the `.desktop` daemon Exec unless you intentionally package a different
 session integration. Prefer the canonical description above for `Comment=` /
@@ -165,35 +163,35 @@ AppStream summary as well.
 
 ## Session conflicts
 
-On non-Plasma sessions Noctalia provides and registers:
+On non-Plasma sessions mono-shell provides and registers:
 
 - `org.freedesktop.Notifications`
 - `org.kde.StatusNotifierWatcher` (system tray host)
 
 Do not run it alongside another notification daemon or StatusNotifier host
 (mako, dunst, swaync, waybar-as-host, ...) unless those are disabled. On Plasma,
-Noctalia integrates with Plasma's notification / tray paths instead of claiming
+also on Plasma, mono-shell integrates with Plasma's notification / tray paths instead of claiming
 the freedesktop Notifications name.
 
 ## User data paths
 
 | Kind | Default |
 |---|---|
-| Config | `$XDG_CONFIG_HOME/noctalia` (`~/.config/noctalia`), e.g. `config.toml` |
-| State | `$XDG_STATE_HOME/noctalia` (`~/.local/state/noctalia`), e.g. `settings.toml`, caches |
-| Data | `$XDG_DATA_HOME/noctalia` (`~/.local/share/noctalia`) |
-| Logs | `$XDG_CACHE_HOME/noctalia` (`~/.cache/noctalia`) |
+| Config | `$XDG_CONFIG_HOME/mono-shell` (`~/.config/mono-shell`), e.g. `config.toml` |
+| State | `$XDG_STATE_HOME/mono-shell` (`~/.local/state/mono-shell`), e.g. `settings.toml`, caches |
+| Data | `$XDG_DATA_HOME/mono-shell` (`~/.local/share/mono-shell`) |
+| Logs | `$XDG_CACHE_HOME/mono-shell` (`~/.cache/mono-shell`) |
 
-Override bases with `NOCTALIA_CONFIG_HOME`, `NOCTALIA_STATE_HOME`,
-`NOCTALIA_DATA_HOME` (each still appends `/noctalia`).
+Override bases with `MONO_SHELL_CONFIG_HOME`, `MONO_SHELL_STATE_HOME`,
+`MONO_SHELL_DATA_HOME` (each still appends `/mono-shell`).
 
-## What Noctalia is not
+## What mono-shell is not
 
-- Not a compositor, display manager, or greeter. Greeter support is
-  [noctalia-greeter](https://github.com/noctalia-dev/noctalia-greeter).
+- Not a compositor, display manager, or greeter. Greeter support lives in the
+  upstream [noctalia-greeter](https://github.com/noctalia-dev/noctalia-greeter) project.
 - Not a replacement for file managers, screen casting, or drive mounting.
-- Compositor support varies (protocols / IPC). See
-  [compositor docs](https://docs.noctalia.dev/v5/compositor-settings/).
+- Compositor support varies (protocols / IPC). See the
+  [compositor notes](README.md#wayland-compositor-support) in the README.
 
 ## Versioning and beta
 
@@ -202,5 +200,5 @@ v5 is currently beta. Prefer packaging **tagged releases** rather than random
 
 ## Contact
 
-- Issues: https://github.com/noctalia-dev/noctalia/issues
-- Discord: https://discord.noctalia.dev
+- Issues: https://github.com/Jarisafqi/mono-shell/issues
+- Upstream (the original Noctalia project): https://github.com/noctalia-dev/noctalia

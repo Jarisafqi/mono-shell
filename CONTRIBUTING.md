@@ -1,12 +1,12 @@
 Contributing
 ===
 
-This file collects contributor-facing details for Noctalia: design goals, stack notes, code style, source layout,
+This file collects contributor-facing details for mono-shell: design goals, stack notes, code style, source layout,
 runtime asset behavior, and debugging helpers.
 
 For dependencies and normal build commands, start with [README.md](README.md).
 
-Before contributing, read our [ethos](https://noctalia.dev/ethos) to understand the values and philosophy guiding the
+Before contributing, read the values and philosophy guiding the
 project.
 
 ## Design Principles
@@ -57,35 +57,35 @@ Direct project dependencies are listed below; transitive dependencies are owned 
 `meson install` installs the binary and shipped assets separately using the normal prefix layout:
 
 ```text
-/usr/local/bin/noctalia
-/usr/local/share/noctalia/assets/...
+/usr/local/bin/mono-shell
+/usr/local/share/mono-shell/assets/...
 ```
 
 With a different Meson `prefix`/`datadir`, the same structure is preserved under that prefix.
 
-Noctalia needs the `assets/` tree at runtime. Copying only the bare `noctalia` binary is not enough.
+mono-shell needs the `assets/` tree at runtime. Copying only the bare `mono-shell` binary is not enough.
 
 Portable bundle layouts are also supported:
 
 ```text
 bundle/
-  noctalia
+  mono-shell
   assets/
 ```
 
 ```text
 bundle/
-  bin/noctalia
-  share/noctalia/assets/
+  bin/mono-shell
+  share/mono-shell/assets/
 ```
 
 Runtime asset lookup order:
 
-1. `NOCTALIA_ASSETS_DIR`
+1. `MONO_SHELL_ASSETS_DIR`
 2. `assets/` next to the executable
 3. `assets/` one level above the executable
-4. install-style `../share/noctalia/assets` relative to the executable
-5. the compiled install path from Meson (`<prefix>/<datadir>/noctalia/assets`)
+4. install-style `../share/mono-shell/assets` relative to the executable
+5. the compiled install path from Meson (`<prefix>/<datadir>/mono-shell/assets`)
 6. the source-tree `assets/` directory as a development fallback
 
 An asset root is only accepted if it contains the expected shipped files such as `emoji.json`, `fonts/material-icons.otf`,
@@ -120,7 +120,7 @@ C++ identifiers.
 
 ## Translations
 
-Noctalia translations are managed through [Noctalia Translate](https://i18n.noctalia.dev/projects/noctalia). The JSON
+mono-shell translations are managed in-repo. The JSON
 files in `assets/translations/` are exported from that workflow, with `assets/translations/en.json` acting as the
 source catalog for new strings.
 
@@ -235,18 +235,18 @@ third_party/
 
 ## Debugging
 
-All debug commands use the `dev.noctalia.Debug` D-Bus service, available at runtime.
+All debug commands use the `dev.monoshell.Debug` D-Bus service, available at runtime.
 
 ```sh
 # Enable verbose debug logs
-gdbus call --session --dest dev.noctalia.Debug --object-path /dev/noctalia/Debug --method dev.noctalia.Debug.SetVerboseLogs true
+gdbus call --session --dest dev.monoshell.Debug --object-path /dev/monoshell/Debug --method dev.monoshell.Debug.SetVerboseLogs true
 
 # Disable verbose debug logs
-gdbus call --session --dest dev.noctalia.Debug --object-path /dev/noctalia/Debug --method dev.noctalia.Debug.SetVerboseLogs false
+gdbus call --session --dest dev.monoshell.Debug --object-path /dev/monoshell/Debug --method dev.monoshell.Debug.SetVerboseLogs false
 
 # Check current verbose log state
-gdbus call --session --dest dev.noctalia.Debug --object-path /dev/noctalia/Debug --method dev.noctalia.Debug.GetVerboseLogs
+gdbus call --session --dest dev.monoshell.Debug --object-path /dev/monoshell/Debug --method dev.monoshell.Debug.GetVerboseLogs
 
 # Emit an internal notification (app_name, summary, body, timeout_ms, urgency 0-2)
-gdbus call --session --dest dev.noctalia.Debug --object-path /dev/noctalia/Debug --method dev.noctalia.Debug.EmitInternalNotification "Noctalia" "Test" "Hello from debug" 5000 1
+gdbus call --session --dest dev.monoshell.Debug --object-path /dev/monoshell/Debug --method dev.monoshell.Debug.EmitInternalNotification "Mono Shell" "Test" "Hello from debug" 5000 1
 ```

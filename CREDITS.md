@@ -1,6 +1,9 @@
 # Credits
 
-Noctalia is made possible by the incredible work of many open-source projects and contributors.
+mono-shell is a fork of the Noctalia desktop shell. The following credits reflect the original work that made this
+project possible, along with the additional assets and libraries mono-shell builds upon.
+
+mono-shell is made possible by the incredible work of many open-source projects and contributors.
 
 ## Design & Branding
 
@@ -58,7 +61,7 @@ Bundled in `third_party/` and built from source:
 
 ## System Integration
 
-External tools Noctalia integrates with at runtime when present:
+External tools mono-shell integrates with at runtime when present:
 
 - **[ddcutil](https://www.ddcutil.com/)** — External display brightness control
 
@@ -66,10 +69,10 @@ External tools Noctalia integrates with at runtime when present:
 
 - The **Wayland** community for building the future of Linux desktop graphics
 - The **Niri**, **Hyprland**, **Sway**, **Labwc**, and **MangoWC** teams for their excellent Wayland compositors
-- All the contributors and users who have helped make Noctalia better
+- All the contributors and users who have helped make mono-shell better
 
 ## License
 
-Noctalia is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+mono-shell is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 Each dependency listed above is governed by its own respective license. Please refer to their individual projects for licensing information.

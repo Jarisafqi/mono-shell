@@ -1,6 +1,6 @@
-# Noctalia
+# mono-shell
 
-Noctalia is a native Wayland desktop shell for people who want a polished, configurable Linux desktop without stitching
+mono-shell is a native Wayland desktop shell for people who want a polished, configurable Linux desktop without stitching
 together a separate bar, launcher, notification daemon, lock screen, wallpaper tool, and settings UI.
 
 It provides the shell layer around your compositor: bars, widgets, dock, launcher, control center, notifications,
@@ -9,52 +9,30 @@ built directly on Wayland and OpenGL ES with no Qt or GTK dependency, so the UI,
 are designed as one cohesive shell instead of a collection of unrelated panels and scripts.
 
 > [!IMPORTANT]
-> Noctalia v5 is currently in Beta. While the core features and architecture are stabilizing, you may still encounter occasional configuration or behavior adjustments as we prepare for the final release.
+> mono-shell v5 is currently in Beta. While the core features and architecture are stabilizing, you may still encounter occasional configuration or behavior adjustments as we prepare for the final release.
 
 <p><br/></p>
 
 <p align="center">
-  <img src="https://assets.noctalia.dev/noctalia-logo.svg?v=2" alt="Noctalia Logo" style="width: 192px" />
-</p>
-
-<p align="center">
-  <a href="https://docs.noctalia.dev/v5/getting-started/installation">
-    <img
-      src="https://img.shields.io/badge/Install_Noctalia-FFF59B?style=for-the-badge&labelColor=FFF59B"
-      alt="Install Noctalia"
-      style="height: 50px"
-    />
+  <a href="https://github.com/Jarisafqi/mono-shell/commits">
+    <img src="https://img.shields.io/github/last-commit/Jarisafqi/mono-shell?style=for-the-badge&labelColor=FFF59B&color=FFF59B&logo=git&logoColor=070722&label=commit" alt="Last commit" />
+  </a>
+  <a href="https://github.com/Jarisafqi/mono-shell/stargazers">
+    <img src="https://img.shields.io/github/stars/Jarisafqi/mono-shell?style=for-the-badge&labelColor=FFF59B&color=FFF59B&logo=github&logoColor=070722" alt="GitHub stars" />
   </a>
 </p>
 
 <p><br/></p>
 
-<p align="center">
-  <a href="https://github.com/noctalia-dev/noctalia/commits">
-    <img src="https://img.shields.io/github/last-commit/noctalia-dev/noctalia?style=for-the-badge&labelColor=FFF59B&color=FFF59B&logo=git&logoColor=070722&label=commit" alt="Last commit" />
-  </a>
-  <a href="https://github.com/noctalia-dev/noctalia/stargazers">
-    <img src="https://img.shields.io/github/stars/noctalia-dev/noctalia?style=for-the-badge&labelColor=FFF59B&color=FFF59B&logo=github&logoColor=070722" alt="GitHub stars" />
-  </a>
-  <a href="https://docs.noctalia.dev">
-    <img src="https://img.shields.io/badge/docs-FFF59B?style=for-the-badge&logo=gitbook&logoColor=070722&labelColor=FFF59B" alt="Documentation" />
-  </a>
-  <a href="https://discord.noctalia.dev">
-    <img src="https://img.shields.io/badge/discord-FFF59B?style=for-the-badge&labelColor=FFF59B&logo=discord&logoColor=070722" alt="Discord" />
-  </a>
-</p>
-
-## Why Noctalia?
+## Why mono-shell?
 
 Most Wayland setups leave the desktop shell to a stack of small tools: one bar, another launcher, another notification
 daemon, a lock screen, a wallpaper daemon, scripts for session actions, and separate config formats for each piece. That
 can be flexible, but it also makes a complete desktop feel fragile and hard to keep visually consistent.
 
-Noctalia solves that by providing one configurable shell layer that owns the common desktop surfaces and services while
+mono-shell solves that by providing one configurable shell layer that owns the common desktop surfaces and services while
 still fitting into compositor-driven Wayland workflows. It is meant for users who want the control of a custom desktop
 environment with fewer moving parts and a consistent UI.
-
-To understand the values and philosophy guiding the project, read our [ethos](https://noctalia.dev/ethos).
 
 ## What It Includes
 
@@ -69,25 +47,25 @@ To understand the values and philosophy guiding the project, read our [ethos](ht
 
 ## Wayland Compositor Support
 
-Noctalia supports Wayland compositors that provide the layer-shell protocols it needs for shell surfaces. Workspace
+mono-shell supports Wayland compositors that provide the layer-shell protocols it needs for shell surfaces. Workspace
 integration works through compositor-native backends where needed, or through `ext-workspace-v1` on compositors that
 implement it.
 
 Current compositor integrations include Niri, Hyprland, Sway, Scroll, Mango, Labwc, Triad, dwl, and other compatible
-Wayland compositors. Other compositors may run Noctalia but can have reduced workspace, window, output, or
+Wayland compositors. Other compositors may run mono-shell but can have reduced workspace, window, output, or
 session-action integration depending on the protocols and IPC they expose.
 
 ## Scope
 
-Noctalia is a desktop shell, not a full desktop environment. It provides the visual and service layer around your
+mono-shell is a desktop shell, not a full desktop environment. It provides the visual and service layer around your
 Wayland compositor: bars, panels, launcher, notifications, dock, lock screen, idle behavior, OSDs, theming, wallpapers,
 desktop widgets, and multi-monitor shell surfaces.
 
 Window management, tiling, file management, removable-drive mounting, printers management and screen mirroring/casting
 belong to the compositor, dedicated desktop applications, or system services.
 
-Display/login greeter support lives in the separate [Noctalia Greeter](https://github.com/noctalia-dev/noctalia-greeter)
-project. Noctalia may integrate with those pieces when useful, but it does not replace them.
+mono-shell is a fork of the [Noctalia](https://github.com/noctalia-dev/noctalia) desktop shell, inheriting its
+architecture, features, and configuration format.
 
 The plugin system is available for user-installed extensions. Features that are useful to some users but not essential
 to the core shell can live there: extra bar widgets, launcher providers, desktop widgets, panels, shortcuts, background
@@ -195,8 +173,8 @@ Polkit agent support requires development files that provide the `polkit-agent-1
 modules. Some distros ship these in the runtime `polkit` package, while split-package distros use names such as
 `polkit-devel`, `polkit-dev`, or `libpolkit-agent-1-dev` / `libpolkit-gobject-1-dev`.
 
-Pipewire libraries/headers are sufficient to build Noctalia, but there is also a runtime requirement for the pipewire
-daemon. Noctalia will abort startup if it can't connect to the daemon. If your distro splits the pipewire libraries
+Pipewire libraries/headers are sufficient to build mono-shell, but there is also a runtime requirement for the pipewire
+daemon. mono-shell will abort startup if it can't connect to the daemon. If your distro splits the pipewire libraries
 and daemon into separate packages, make sure you have both installed.
 
 `upower` is an optional dependency used for battery and power device integration.
@@ -204,7 +182,7 @@ and daemon into separate packages, make sure you have both installed.
 `ddcutil` is an optional dependency used for controlling monitor brightness.
 
 Credential and encrypted-state persistence requires a Secret Service provider at runtime, such as GNOME Keyring,
-KWallet, or KeePassXC. `libsecret` is the client library and does not provide the session service by itself. Noctalia
+KWallet, or KeePassXC. `libsecret` is the client library and does not provide the session service by itself. mono-shell
 continues to run when no provider is available, but features requiring durable secrets cannot persist them.
 CalDAV accounts may instead read their password from one explicitly configured regular file, which supports secret
 provisioners such as agenix and sops-nix without installing a Secret Service provider. Google refresh tokens and
@@ -265,7 +243,7 @@ just build
 just run
 ```
 
-Unit tests are not compiled by `just build`, which targets only the Noctalia executable. Build and run them explicitly
+Unit tests are not compiled by `just build`, which targets only the mono-shell executable. Build and run them explicitly
 with `just test` (use `just test release` to force them on for a release build). Direct Meson users can control test
 target generation with the `-Dtests=enabled|disabled|auto` option.
 Production sources compile once into an internal static library shared by the shell and test executables.
@@ -273,62 +251,50 @@ Production sources compile once into an internal static library shared by the sh
 Meson installs the binary and shipped assets using the normal prefix layout:
 
 ```text
-/usr/local/bin/noctalia
-/usr/local/share/noctalia/assets/...
+/usr/local/bin/mono-shell
+/usr/local/share/mono-shell/assets/...
 ```
 
-Noctalia needs the shipped `assets/` tree at runtime. Copying only the `noctalia` binary is not enough.
+mono-shell needs the shipped `assets/` tree at runtime. Copying only the `mono-shell` binary is not enough.
 
 Firefox theming uses the built-in template `post_action = "firefox-theme"` (same pattern as
 `kde-color-scheme`) plus the [Pywalfox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
-browser extension. Manual host helpers: `noctalia firefox-theme --help`.
+browser extension. Manual host helpers: `mono-shell firefox-theme --help`.
 
 Portable bundle layouts are also supported:
 
 ```text
 bundle/
-  noctalia
+  mono-shell
   assets/
 ```
 
 ```text
 bundle/
-  bin/noctalia
-  share/noctalia/assets/
+  bin/mono-shell
+  share/mono-shell/assets/
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md#runtime-assets) for the full runtime asset lookup order.
 
 ## Configuration
 
-A ready-to-use starting config with all defaults is at [example.toml](example.toml). The full configuration reference
-lives in the [documentation site](https://docs.noctalia.dev/v5/).
+A ready-to-use starting config with all defaults is at [example.toml](example.toml).
 
 ## Contributing
 
 Developer notes, architecture overview, code style, project layout, and debugging commands live in
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Bug reports, fixes, documentation updates, themes, and configuration examples are welcome. For general help and design
-discussion, join the community on [Discord](https://discord.noctalia.dev).
+Bug reports, fixes, documentation updates, themes, and configuration examples are welcome. Report issues and start
+discussions on [GitHub Issues](https://github.com/Jarisafqi/mono-shell/issues).
 
 ## Credits
 
-Thank you to the [contributors](https://github.com/noctalia-dev/noctalia/graphs/contributors) and community
-members who test Noctalia, report issues, share configurations, and help shape the project.
-
-## Donations
-
-Donations are appreciated but completely optional.
-
-<p>
-  <a href="https://www.buymeacoffee.com/noctalia">
-    <img src="https://img.shields.io/badge/Buy_Me_a_Coffee-FFF59B?style=for-the-badge&logo=buymeacoffee&logoColor=070722&labelColor=FFF59B" alt="Buy Me a Coffee">
-  </a>
-  <a href="https://ko-fi.com/noctaliadev">
-    <img src="https://img.shields.io/badge/Ko--fi-FFF59B?style=for-the-badge&logo=kofi&logoColor=070722&labelColor=FFF59B" alt="Ko-fi">
-  </a>
-</p>
+mono-shell is a fork of the [Noctalia](https://github.com/noctalia-dev/noctalia) desktop shell. Credit for the original
+design, architecture, and implementation goes to the
+[Noctalia contributors](https://github.com/noctalia-dev/noctalia/graphs/contributors). Detailed credits for assets,
+sounds, and dependencies are in [CREDITS.md](CREDITS.md).
 
 ## License
 
@@ -338,11 +304,3 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 Distro packaging notes (description, deps, install layout, Meson options) live in
 [PACKAGING.md](PACKAGING.md).
-
-## Star History
-
-<p align="center">
-  <a href="https://github.com/noctalia-dev/noctalia/stargazers">
-    <img src="https://api.noctalia.dev/stars" alt="Star History" />
-  </a>
-</p>
