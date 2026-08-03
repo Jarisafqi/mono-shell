@@ -686,7 +686,7 @@
       "calendar-google-connect-start-failed": "Kunne ikkje byrja Google-sanninga. Sjå etter nettverktilkoplinga og prøv å nyo.",
       "calendar-google-connect-start-http": "Kunne ikkje byrja Google-sanninga. OAuth-handsamaren svara med HTTP {status}.",
       "calendar-google-connect-timeout": "Google-sanning gjekk ut. Byrja koplinga å nyo når du vil skriva deg inn.",
-      "config-migration-body": "Utdatert tilmåting vert flytta i minnet, medrekna {path}. Oppdater brunntilmåtinga; Innstillingar og noctalia config validate vis det som må bytast ut.",
+      "config-migration-body": "Utdatert tilmåting vert flytta i minnet, medrekna {path}. Oppdater brunntilmåtinga; Innstillingar og mono-shell config validate vis det som må bytast ut.",
       "config-migration-title": "Tilmåtinga krev oppdatering",
       "dbus-disabled": "DBus-varsel avslegne",
       "desktop-widgets-editor": "Nøytelbrigdar",
@@ -694,10 +694,10 @@
       "greeter-sync": "Noctaliahelsar",
       "greeter-sync-pending": "Ventar på stjornargodkjenning for å skriva til helsaren.",
       "greeter-sync-pending-console": "Ventar på stjornargodkjenning. Godkjenn polkit-meldinga i Noctalia, i ein TTY eller konsoll, eller køyr pkexec sjølv.",
-      "greeter-sync-pending-manual": "Filene ventar. Køyr i terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\". Eller set shell.greeter_sync.privilege_command (til dømes ghostty -e pkexec) og synkroniser å nyo.",
+      "greeter-sync-pending-manual": "Filene ventar. Køyr i terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\". Eller set shell.greeter_sync.privilege_command (til dømes ghostty -e pkexec) og synkroniser å nyo.",
       "greeter-sync-success": "Utsjånad synkronisert. Brigde viser neste gong du skriv deg inn.",
       "greeter-sync-timeout": "Helsarsynkroniseringa ventar enno på stjornargodkjenning. Sjå i ein TTY eller konsoll for polkit-leietekst, slå på polkitagenten i Tryggleiksinnstillingane, eller køyr pkexec sjølv.",
-      "greeter-sync-timeout-manual": "Helsarsynkroniseringa tarv enno stjornargodkjenning. Køyr i terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "greeter-sync-timeout-manual": "Helsarsynkroniseringa tarv enno stjornargodkjenning. Køyr i terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "keybind-app": "Noctalia",
       "keybind-invalid-modifier": "Snarvegen godtek éin knapp utan hjelpeknappar.",
       "keybind-invalid-printable": "Skrivande knappar (bokstavar, tal, teikn) krev ein hjelpeknapp som Ctrl eller Alt.",
@@ -1032,7 +1032,7 @@
       "support-report": "Kunne ikkje lagra støtterapport.",
       "sync-greeter": "Kunne ikkje synkronisera utsjånad med Noctaliahelsaren.",
       "sync-greeter-timeout": "Helsarsynkroniseringa ventar enno på stjornargodkjenning. Sjå i ein TTY eller konsoll for polkit-leietekst, slå på polkitagenten i Tryggleiksinnstillingane, eller køyr pkexec sjølv.",
-      "sync-greeter-timeout-manual": "Helsarsynkroniseringa tarv enno stjornargodkjenning. Køyr i terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "sync-greeter-timeout-manual": "Helsarsynkroniseringa tarv enno stjornargodkjenning. Køyr i terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "widget": {
         "rename": "Kunne ikkje gjeva eit nytt namn til nøytelen."
       },
@@ -1414,8 +1414,8 @@
         },
         "kind-label": "Slag",
         "location-label": "Stad",
-        "location-placeholder-git": "https://github.com/me/noctalia-utvidingar",
-        "location-placeholder-path": "~/dev/noctalia-utvidingar",
+        "location-placeholder-git": "https://github.com/me/mono-shell-utvidingar",
+        "location-placeholder-path": "~/dev/mono-shell-utvidingar",
         "name-label": "Brunn-ID",
         "name-placeholder": "utvidingane-mine",
         "precedence-hint": "Brunnar lægre ned på lista overstyrer høgre brunnar når dei båe byd på same utvidinga.",
@@ -1482,7 +1482,7 @@
           "label": "Rundingsgrad på hyrno"
         },
         "custom-palette": {
-          "description": "Vel ein palett frå ~/.config/noctalia/palettes/",
+          "description": "Vel ein palett frå ~/.config/mono-shell/palettes/",
           "label": "Sjølvvald palett",
           "search-placeholder": "Leita i sjølvvalde palettar ..."
         },
@@ -3370,7 +3370,7 @@
     "window": {
       "export-config": "Før ut tilmåting ...",
       "export-config-saved": "Tilmåtingsutførsle lagra.",
-      "legacy-config-warning": "Utdatert tilmåting flyttar i minnet: {issue}. Køyr noctalia config validate for å sjå kva du må brigda.",
+      "legacy-config-warning": "Utdatert tilmåting flyttar i minnet: {issue}. Køyr mono-shell config validate for å sjå kva du må brigda.",
       "native-title": "Noctalia-innstillingar",
       "no-results": "Ingen innstillingar funne",
       "no-results-hint": "Prøv med eit anna innstillingsnamn eller config-lykel.",

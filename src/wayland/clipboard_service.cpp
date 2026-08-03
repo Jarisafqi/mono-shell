@@ -1951,7 +1951,7 @@ std::string ClipboardService::stateDirectory() {
   if (!dir.empty()) {
     return dir + "/clipboard";
   }
-  return "/tmp/noctalia-clipboard";
+  return "/tmp/mono-shell-clipboard";
 }
 
 std::string ClipboardService::manifestPath() { return stateDirectory() + "/index.enc"; }

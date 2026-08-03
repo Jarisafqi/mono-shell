@@ -10,7 +10,7 @@ namespace noctalia::ipc {
 
   int runCli(int argc, char* argv[]) {
     if (argc < 3) {
-      std::fputs("error: msg requires a command (try: noctalia msg --help)\n", stderr);
+      std::fputs("error: msg requires a command (try: mono-shell msg --help)\n", stderr);
       return 1;
     }
 

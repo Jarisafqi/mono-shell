@@ -1393,6 +1393,34 @@ namespace settings {
           "size dimension wide narrow"
       ));
     }
+    {
+      SliderSetting height = sliderFor(cfg.controlCenter.height, noctalia::config::schema::kControlCenterHeightRange, true);
+      height.valueSuffix = "px";
+      entries.push_back(makeEntry(
+          SettingsSection::ControlCenter, "general", tr("settings.schema.panels.control-center-height.label"),
+          tr("settings.schema.panels.control-center-height.description"), {"control_center", "height"},
+          std::move(height), "size dimension tall short"
+      ));
+    }
+    {
+      SliderSetting scale = sliderFor(cfg.controlCenter.scale, noctalia::config::schema::kScaleRange, false);
+      entries.push_back(makeEntry(
+          SettingsSection::ControlCenter, "general", tr("settings.schema.panels.control-center-scale.label"),
+          tr("settings.schema.panels.control-center-scale.description"), {"control_center", "scale"}, std::move(scale),
+          "size dimension zoom scale smaller larger"
+      ));
+    }
+    {
+      SliderSetting notifScale =
+          sliderFor(cfg.controlCenter.notificationsScale, noctalia::config::schema::kScaleRange, false);
+      entries.push_back(makeEntry(
+          SettingsSection::ControlCenter, "general",
+          tr("settings.schema.panels.control-center-notifications-scale.label"),
+          tr("settings.schema.panels.control-center-notifications-scale.description"),
+          {"control_center", "notifications_scale"}, std::move(notifScale),
+          "size dimension zoom scale notifications list smaller larger"
+      ));
+    }
     entries.push_back(makeEntry(
         SettingsSection::ControlCenter, "general", tr("settings.schema.panels.control-center-sidebar.label"),
         tr("settings.schema.panels.control-center-sidebar.description"), {"control_center", "sidebar"},

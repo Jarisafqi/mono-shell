@@ -688,10 +688,10 @@
       "greeter-sync": "Noctalia Greeter",
       "greeter-sync-pending": "Чаканне ухвалення адміністратара на запіс у Greeter.",
       "greeter-sync-pending-console": "Чаканне ухвалення адміністратара. Ухваліце запыт polkit у Noctalia, на TTY ці кансолі, або ўласнаручна выканайце pkexec.",
-      "greeter-sync-pending-manual": "Файлы ў чаканні. Выканайце ў тэрмінале каманду: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\". Або задайце shell.greeter_sync.privilege_command (напрыклад, ghostty -e pkexec) і сінхранізуйцеся паўторна.",
+      "greeter-sync-pending-manual": "Файлы ў чаканні. Выканайце ў тэрмінале каманду: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\". Або задайце shell.greeter_sync.privilege_command (напрыклад, ghostty -e pkexec) і сінхранізуйцеся паўторна.",
       "greeter-sync-success": "Выгляд сінхранізаваны. Змены прыменяцца на наступным экране блакіроўкі.",
       "greeter-sync-timeout": "Сінхранізацыя Greeter усё яшчэ чакае ухвалення адміністратара. Праверце TTY або кансоль на прадмет запыту polkit, уключыце агент polkit у наладах бяспекі, або ўласнаручна выканайце pkexec.",
-      "greeter-sync-timeout-manual": "Сінхранізацыя Greeter усё яшчэ патрабуе ухвалення адміністратарам. Выканайце ў тэрмінале каманду: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "greeter-sync-timeout-manual": "Сінхранізацыя Greeter усё яшчэ патрабуе ухвалення адміністратарам. Выканайце ў тэрмінале каманду: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "keybind-app": "Noctalia",
       "keybind-invalid-modifier": "Гэта спалучэнне можа быць адной клавішай без мадыфікатараў.",
       "keybind-invalid-printable": "Клавішам-сімвалам (літарам, лічбам, пунктуацыі і інш.) патрабуецца мадыфікатары, такія як Ctrl або Alt.",
@@ -1004,7 +1004,7 @@
       "support-report": "Не ўдалося захаваць справаздачу.",
       "sync-greeter": "Не ўдалося сінхранізаваць выгляд з Noctalia Greeter.",
       "sync-greeter-timeout": "Сінхранізацыя Greeter усё яшчэ чакае ухвалення адміністратара. Праверце TTY або кансоль на прадмет запыту polkit, уключыце агент polkit у наладах бяспекі, або ўласнаручна выканайце pkexec.",
-      "sync-greeter-timeout-manual": "Сінхранізацыя Greeter усё яшчэ патрабуе ухвалення адміністратарам. Выканайце ў тэрмінале каманду: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "sync-greeter-timeout-manual": "Сінхранізацыя Greeter усё яшчэ патрабуе ухвалення адміністратарам. Выканайце ў тэрмінале каманду: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "widget": {
         "rename": "Не ўдалося перайменаваць названы віджэт."
       },
@@ -1359,8 +1359,8 @@
         },
         "kind-label": "Тып",
         "location-label": "Месцазнаходжанне",
-        "location-placeholder-git": "https://github.com/ja/ubudovy-noctalia",
-        "location-placeholder-path": "~/dev/ubudovy-noctalia",
+        "location-placeholder-git": "https://github.com/ja/ubudovy-mono-shell",
+        "location-placeholder-path": "~/dev/ubudovy-mono-shell",
         "name-label": "ID крыніцы",
         "name-placeholder": "maje-ubudovy",
         "precedence-hint": "Крыніцы ніжэй перавызначаюць крыніцы вышэй, калі ёсць аднолькавыя ўбудовы.",
@@ -1418,7 +1418,7 @@
           "label": "Скругленасць кутоў"
         },
         "custom-palette": {
-          "description": "Выберыце палітру з ~/.config/noctalia/palettes/",
+          "description": "Выберыце палітру з ~/.config/mono-shell/palettes/",
           "label": "Уласная палітра",
           "search-placeholder": "Шукаць карыстальніцкія палітры..."
         },

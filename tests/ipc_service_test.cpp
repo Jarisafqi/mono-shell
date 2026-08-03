@@ -16,7 +16,7 @@
 namespace {
 
   std::filesystem::path makeTempDir() {
-    std::string pattern = (std::filesystem::temp_directory_path() / "noctalia-ipc-service-XXXXXX").string();
+    std::string pattern = (std::filesystem::temp_directory_path() / "mono-shell-ipc-service-XXXXXX").string();
     std::vector<char> buffer(pattern.begin(), pattern.end());
     buffer.push_back('\0');
     char* result = ::mkdtemp(buffer.data());
@@ -70,7 +70,7 @@ namespace {
 int main() {
   const auto runtimeDir = makeTempDir();
   assert(!runtimeDir.empty());
-  constexpr const char* kWaylandDisplay = "noctalia-ipc-service-test";
+  constexpr const char* kWaylandDisplay = "mono-shell-ipc-service-test";
   assert(::setenv("XDG_RUNTIME_DIR", runtimeDir.c_str(), 1) == 0);
   assert(::setenv("WAYLAND_DISPLAY", kWaylandDisplay, 1) == 0);
 
@@ -188,7 +188,7 @@ int main() {
   assert(!updatedHelp.contains("Now hidden"));
 
   assert(ipc.start());
-  const auto socketPath = runtimeDir / ("noctalia-" + std::string(kWaylandDisplay) + ".sock");
+  const auto socketPath = runtimeDir / ("mono-shell-" + std::string(kWaylandDisplay) + ".sock");
   assert(sendRaw(ipc, socketPath, "hidden-command line1\nline2\nline3") == "hidden:line1\nline2\nline3\n");
 
   return 0;

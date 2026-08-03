@@ -44,9 +44,9 @@ namespace {
   // sequence; seeding from a non-trivial constant decorrelates the low bits.
   constexpr std::size_t kGlyphHashSalt = 0x7E4B2A9C5D3F8161ULL;
 
-  // Hinting is disabled for icons: tabler glyphs are monoline strokes with
-  // fractional widths by design. Autohinter snaps each stroke to the nearest
-  // integer pixel, which visibly thins the icons. Grayscale AA without
+  // Hinting is disabled for icons: material icon glyphs are monoline strokes
+  // with fractional widths by design. Autohinter snaps each stroke to the
+  // nearest integer pixel, which visibly thins the icons. Grayscale AA without
   // hinting preserves the intended stroke thickness.
   cairo_scaled_font_t*
   create_scaled_font(cairo_font_face_t* face, cairo_font_options_t* fontOptions, float rasterSize) {

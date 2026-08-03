@@ -82,17 +82,17 @@ category = "terminal"
 
 [templates.alacritty]
 input_path = "./alacritty/alacritty.toml"
-output_path = "$XDG_CONFIG_HOME/alacritty/themes/noctalia.toml"
+output_path = "$XDG_CONFIG_HOME/alacritty/themes/mono-shell.toml"
 post_hook = "bash '{{ config_dir }}/alacritty/apply.sh'"
 
 [templates.btop]
 input_path = "./btop/btop.theme"
-output_path = "$XDG_CONFIG_HOME/btop/themes/noctalia.theme"
+output_path = "$XDG_CONFIG_HOME/btop/themes/mono-shell.theme"
 post_hook = "bash '{{ config_dir }}/btop/apply.sh'"
 
 [templates.cava]
 input_path = "./cava/cava.ini"
-output_path = "$XDG_CONFIG_HOME/cava/themes/noctalia"
+output_path = "$XDG_CONFIG_HOME/cava/themes/mono-shell"
 post_hook = "bash '{{ config_dir }}/cava/apply.sh'"
 
 [templates.emacs]
@@ -102,41 +102,41 @@ post_hook = "bash '{{ config_dir }}/emacs/apply.sh'"
 
 [templates.foot]
 input_path = "./foot/foot"
-output_path = "$XDG_CONFIG_HOME/foot/themes/noctalia"
+output_path = "$XDG_CONFIG_HOME/foot/themes/mono-shell"
 post_hook = "bash '{{ config_dir }}/foot/apply.sh'"
 
 [templates.ghostty]
 input_path = "./ghostty/ghostty"
-output_path = "$XDG_CONFIG_HOME/ghostty/themes/noctalia"
+output_path = "$XDG_CONFIG_HOME/ghostty/themes/mono-shell"
 post_hook = "bash '{{ config_dir }}/ghostty/apply.sh'"
 
 [templates.gtk3]
 input_path = "./gtk/gtk3.css"
-output_path = "$XDG_CONFIG_HOME/gtk-3.0/noctalia.css"
+output_path = "$XDG_CONFIG_HOME/gtk-3.0/mono-shell.css"
 post_hook = "bash '{{ config_dir }}/gtk/apply.sh' {{ mode }}"
 
 [templates.gtk4]
 input_path = "./gtk/gtk4.css"
-output_path = "$XDG_CONFIG_HOME/gtk-4.0/noctalia.css"
+output_path = "$XDG_CONFIG_HOME/gtk-4.0/mono-shell.css"
 post_hook = "bash '{{ config_dir }}/gtk/apply.sh' {{ mode }}"
 
 [templates.helix]
 input_path = "./helix/helix.toml"
-output_path = "$XDG_CONFIG_HOME/helix/themes/noctalia.toml"
+output_path = "$XDG_CONFIG_HOME/helix/themes/mono-shell.toml"
 
 [templates.kcolorscheme]
 input_path = "./kde/kcolorscheme.colors"
-output_path = "$XDG_DATA_HOME/color-schemes/noctalia.colors"
+output_path = "$XDG_DATA_HOME/color-schemes/mono-shell.colors"
 post_action = "kde-color-scheme"
 
 [templates.kitty]
 input_path = "./kitty/kitty.conf"
-output_path = "$XDG_CONFIG_HOME/kitty/themes/noctalia.conf"
+output_path = "$XDG_CONFIG_HOME/kitty/themes/mono-shell.conf"
 post_hook = "bash '{{ config_dir }}/kitty/apply.sh'"
 
 [templates.labwc]
 input_path = "./labwc/labwc.conf"
-output_path = "$XDG_CONFIG_HOME/labwc/noctalia.conf"
+output_path = "$XDG_CONFIG_HOME/labwc/mono-shell.conf"
 post_hook = "bash '{{ config_dir }}/labwc/apply.sh'"
 
 [templates.niri]
@@ -151,26 +151,26 @@ post_hook = "bash '{{ config_dir }}/hyprland/apply.sh' apply"
 
 [templates.mango]
 input_path = "./mango/mango.conf"
-output_path = "$XDG_CONFIG_HOME/mango/noctalia.conf"
+output_path = "$XDG_CONFIG_HOME/mango/mono-shell.conf"
 post_hook = "bash '{{ config_dir }}/mango/apply.sh'"
 
 [templates.qt]
 input_path = "./qt/qtct.conf"
-output_path = ["$XDG_CONFIG_HOME/qt5ct/colors/noctalia.conf", "$XDG_CONFIG_HOME/qt6ct/colors/noctalia.conf"]
+output_path = ["$XDG_CONFIG_HOME/qt5ct/colors/mono-shell.conf", "$XDG_CONFIG_HOME/qt6ct/colors/mono-shell.conf"]
 
 [templates.scroll]
 input_path = "./scroll/scroll"
-output_path = "$XDG_CONFIG_HOME/scroll/noctalia"
+output_path = "$XDG_CONFIG_HOME/scroll/mono-shell"
 post_hook = "bash '{{ config_dir }}/scroll/apply.sh'"
 
 [templates.sway]
 input_path = "./sway/sway"
-output_path = "$XDG_CONFIG_HOME/sway/noctalia"
+output_path = "$XDG_CONFIG_HOME/sway/mono-shell"
 post_hook = "bash '{{ config_dir }}/sway/apply.sh'"
 
 [templates.starship]
 input_path = "./starship/starship.toml"
-output_path = "$XDG_CACHE_HOME/noctalia/starship-palette.toml"
+output_path = "$XDG_CACHE_HOME/mono-shell/starship-palette.toml"
 post_hook = "bash '{{ config_dir }}/starship/apply.sh'"
 
 [templates.wezterm]

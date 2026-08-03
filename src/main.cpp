@@ -23,7 +23,7 @@
 #include <unistd.h>
 
 #ifdef __GLIBC__
-#ifdef NOCTALIA_USE_JEMALLOC
+#ifdef MONO_SHELL_USE_JEMALLOC
 #include <jemalloc/jemalloc.h>
 #else
 #include <malloc.h>
@@ -34,7 +34,7 @@ namespace {
 
   enum class SpawnResult { Parent, Error };
 
-  constexpr const char* kDaemonPipeEnv = "NOCTALIA_DAEMON_PIPE_FD";
+  constexpr const char* kDaemonPipeEnv = "MONO_SHELL_DAEMON_PIPE_FD";
   int g_daemonPipe = -1;
 
   void closeFd(int& fd) {
@@ -128,12 +128,12 @@ namespace {
   int runTopLevelFlag(const char* flag) {
     if (std::strcmp(flag, "--version") == 0 || std::strcmp(flag, "-v") == 0) {
       const std::string version = noctalia::build_info::displayVersion();
-      std::println("noctalia {}", version);
+      std::println("mono-shell {}", version);
       return 0;
     }
     if (std::strcmp(flag, "--help") == 0 || std::strcmp(flag, "-h") == 0) {
       std::println(
-          "Usage: noctalia [OPTIONS]\n"
+          "Usage: mono-shell [OPTIONS]\n"
           "\n"
           "Options:\n"
           "  -h, --help       Show this help message\n"
@@ -142,13 +142,13 @@ namespace {
           "\n"
           "Subcommands:\n"
           "  msg <command>    Send a command to the running instance\n"
-          "                   Run 'noctalia msg --help' for available commands\n"
+          "                   Run 'mono-shell msg --help' for available commands\n"
           "  theme <image>    Generate a color palette from an image\n"
-          "                   Run 'noctalia theme --help' for options\n"
+          "                   Run 'mono-shell theme --help' for options\n"
           "  config <command> Validate config and support/replay helpers\n"
-          "                   Run 'noctalia config --help' for options\n"
+          "                   Run 'mono-shell config --help' for options\n"
           "  plugins <cmd>    Offline plugin author tools (lint)\n"
-          "                   Run 'noctalia plugins --help' for options\n"
+          "                   Run 'mono-shell plugins --help' for options\n"
           "\n"
           "For more information and documentation, visit:\n"
           "  https://noctalia.dev"
@@ -241,7 +241,7 @@ namespace {
     // is settled before bars or surfaces are created. Held for the process lifetime.
     SingleInstanceLock instanceLock;
     if (!instanceLock.tryAcquire()) {
-      std::println(stderr, "error: noctalia is already running");
+      std::println(stderr, "error: mono-shell is already running");
       completeDaemonStartup(1);
       _exit(1);
     }
@@ -258,13 +258,13 @@ namespace {
 
 } // namespace
 
-#ifdef NOCTALIA_USE_JEMALLOC
+#ifdef MONO_SHELL_USE_JEMALLOC
 const char* malloc_conf = "narenas:2,dirty_decay_ms:1000,muzzy_decay_ms:5000,lg_tcache_max:12";
 #endif
 
 int main(int argc, char* argv[]) {
 
-#if defined(__GLIBC__) && !defined(NOCTALIA_USE_JEMALLOC)
+#if defined(__GLIBC__) && !defined(MONO_SHELL_USE_JEMALLOC)
   mallopt(M_ARENA_MAX, 2);
 #endif
 
@@ -340,7 +340,7 @@ int main(int argc, char* argv[]) {
         return 1;
       }
       if (daemonResult == 0) {
-        std::println("noctalia started [pid: {}]", pid);
+        std::println("mono-shell started [pid: {}]", pid);
       }
       return daemonResult;
     }

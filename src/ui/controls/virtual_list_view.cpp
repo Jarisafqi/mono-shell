@@ -154,6 +154,17 @@ void VirtualListView::setOverscanItems(std::size_t items) {
   markLayoutDirty();
 }
 
+void VirtualListView::setScrollbarVisible(bool visible) {
+  if (m_showScrollbar == visible) {
+    return;
+  }
+  m_showScrollbar = visible;
+  if (m_scroll != nullptr) {
+    m_scroll->setScrollbarVisible(visible);
+  }
+  markLayoutDirty();
+}
+
 void VirtualListView::scrollToIndex(std::size_t index) {
   m_pendingScrollToIndex = true;
   m_pendingScrollIndex = index;
@@ -174,10 +185,12 @@ void VirtualListView::doLayout(Renderer& renderer) {
   const float viewportH = std::max(0.0f, ourH - 2.0f * padV);
   const float scrollbarGutter = Style::scrollbarWidth + Style::scrollbarGap;
 
-  // Match ScrollView: only reserve the scrollbar gutter when content overflows vertically.
+  // Only reserve the scrollbar gutter when we actually draw a scroll indicator.
+  // Reserving it otherwise changes the viewport width, which rewraps variable
+  // height rows and can feed back into a height/width oscillation.
   recomputeMetrics(renderer, innerW);
   float viewportW = innerW;
-  if (m_virtualHeight > viewportH + 0.5f) {
+  if (m_showScrollbar && m_virtualHeight > viewportH + 0.5f) {
     viewportW = std::max(0.0f, innerW - scrollbarGutter);
     recomputeMetrics(renderer, viewportW);
   }

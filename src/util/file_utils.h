@@ -252,49 +252,49 @@ namespace FileUtils {
   }
 
   [[nodiscard]] inline std::string configDir() {
-    const char* noctalia = std::getenv("NOCTALIA_CONFIG_HOME");
-    if (noctalia != nullptr && noctalia[0] != '\0') {
-      return std::string(noctalia) + "/noctalia";
+    const char* monoshell = std::getenv("MONO_SHELL_CONFIG_HOME");
+    if (monoshell != nullptr && monoshell[0] != '\0') {
+      return std::string(monoshell) + "/mono-shell";
     }
     const char* xdg = std::getenv("XDG_CONFIG_HOME");
     if (xdg != nullptr && xdg[0] != '\0') {
-      return std::string(xdg) + "/noctalia";
+      return std::string(xdg) + "/mono-shell";
     }
     const char* home = std::getenv("HOME");
     if (home != nullptr && home[0] != '\0') {
-      return std::string(home) + "/.config/noctalia";
+      return std::string(home) + "/.config/mono-shell";
     }
     return {};
   }
 
   [[nodiscard]] inline std::string stateDir() {
-    const char* noctalia = std::getenv("NOCTALIA_STATE_HOME");
-    if (noctalia != nullptr && noctalia[0] != '\0') {
-      return std::string(noctalia) + "/noctalia";
+    const char* monoshell = std::getenv("MONO_SHELL_STATE_HOME");
+    if (monoshell != nullptr && monoshell[0] != '\0') {
+      return std::string(monoshell) + "/mono-shell";
     }
     const char* xdg = std::getenv("XDG_STATE_HOME");
     if (xdg != nullptr && xdg[0] != '\0') {
-      return std::string(xdg) + "/noctalia";
+      return std::string(xdg) + "/mono-shell";
     }
     const char* home = std::getenv("HOME");
     if (home != nullptr && home[0] != '\0') {
-      return std::string(home) + "/.local/state/noctalia";
+      return std::string(home) + "/.local/state/mono-shell";
     }
     return {};
   }
 
   [[nodiscard]] inline std::string dataDir() {
-    const char* noctalia = std::getenv("NOCTALIA_DATA_HOME");
-    if (noctalia != nullptr && noctalia[0] != '\0') {
-      return std::string(noctalia) + "/noctalia";
+    const char* monoshell = std::getenv("MONO_SHELL_DATA_HOME");
+    if (monoshell != nullptr && monoshell[0] != '\0') {
+      return std::string(monoshell) + "/mono-shell";
     }
     const char* xdg = std::getenv("XDG_DATA_HOME");
     if (xdg != nullptr && xdg[0] != '\0') {
-      return std::string(xdg) + "/noctalia";
+      return std::string(xdg) + "/mono-shell";
     }
     const char* home = std::getenv("HOME");
     if (home != nullptr && home[0] != '\0') {
-      return std::string(home) + "/.local/share/noctalia";
+      return std::string(home) + "/.local/share/mono-shell";
     }
     return {};
   }
@@ -320,7 +320,7 @@ namespace FileUtils {
   }
 
   // Persistent per-plugin data directory. Survives plugin updates (unlike the
-  // materialized runtime dir) and honors the NOCTALIA_STATE_HOME override.
+  // materialized runtime dir) and honors the MONO_SHELL_STATE_HOME override.
   // Caller is responsible for creating it. Empty if no state home resolves.
   [[nodiscard]] inline std::string pluginDataDir(const std::string& pluginId) {
     const std::string base = stateDir();

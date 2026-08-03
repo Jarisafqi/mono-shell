@@ -676,16 +676,16 @@ bool WeatherService::coordinatesValid() const noexcept {
       && m_resolvedLongitude <= 180.0;
 }
 
-std::filesystem::path WeatherService::transportCacheDir() { return std::filesystem::path("/tmp") / "noctalia-weather"; }
+std::filesystem::path WeatherService::transportCacheDir() { return std::filesystem::path("/tmp") / "mono-shell-weather"; }
 
 std::filesystem::path WeatherService::stateCacheFilePath() {
   if (const char* xdg = std::getenv("XDG_CACHE_HOME"); xdg != nullptr && xdg[0] != '\0') {
-    return std::filesystem::path(xdg) / "noctalia" / "weather.json";
+    return std::filesystem::path(xdg) / "mono-shell" / "weather.json";
   }
   if (const char* home = std::getenv("HOME"); home != nullptr && home[0] != '\0') {
-    return std::filesystem::path(home) / ".cache" / "noctalia" / "weather.json";
+    return std::filesystem::path(home) / ".cache" / "mono-shell" / "weather.json";
   }
-  return std::filesystem::path("/tmp") / "noctalia-weather-cache.json";
+  return std::filesystem::path("/tmp") / "mono-shell-weather-cache.json";
 }
 
 std::string WeatherService::formatCoordinate(double value) { return std::format("{:.4f}", value); }

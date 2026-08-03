@@ -1,3 +1,5 @@
+#include "dbus/bluetooth/bluetooth_service.h"
+#include "dbus/network/inetwork_service.h"
 #include "shell/control_center/tabs/notifications_tab.h"
 
 #include "core/log.h"
@@ -13,6 +15,7 @@
 #include "shell/panel/panel_manager.h"
 #include "time/time_format.h"
 #include "ui/builders.h"
+#include "ui/controls/virtual_list_view.h"
 #include "ui/palette.h"
 #include "ui/style.h"
 #include "util/string_utils.h"
@@ -48,6 +51,10 @@ namespace {
   }
   constexpr float kNotificationActionButtonSize = Style::controlHeightSm;
 
+  bool hasDefaultAction(const Notification& notification) {
+    return !notification.actions.empty() && notification.actions.size() >= 2 && notification.actions[0] == "default";
+  }
+
   std::string historyActionLabel(std::string_view actionKey, std::string_view actionLabel) {
     if (!StringUtils::isBlank(actionLabel)) {
       return std::string(actionLabel);
@@ -76,7 +83,7 @@ namespace {
     const std::size_t limit = std::min(actions.size(), kMaxNotificationActions * 2);
     for (std::size_t i = 0; i + 1 < limit; i += 2) {
       const std::string& actionKey = actions[i];
-      if (actionKey.empty()) {
+      if (actionKey.empty() || actionKey == "default") {
         continue;
       }
       buttons.push_back(
@@ -105,7 +112,7 @@ namespace {
 
   std::filesystem::path remoteNotificationIconCachePath(std::string_view url) {
     return std::filesystem::path("/tmp")
-        / "noctalia-notification-icons"
+        / "mono-shell-notification-icons"
         / (std::to_string(std::hash<std::string_view>{}(url)) + ".img");
   }
 
@@ -363,7 +370,7 @@ namespace {
       ));
 
       m_expand = static_cast<Button*>(m_headerActions->addChild(makeActionButton("chevron-down", scale)));
-      m_dismiss = static_cast<Button*>(m_headerActions->addChild(makeActionButton("trash", scale)));
+      m_dismiss = static_cast<Button*>(m_headerActions->addChild(makeDismissButton(scale)));
 
       m_summary = static_cast<Label*>(addChild(
           ui::label({
@@ -446,7 +453,7 @@ namespace {
         const std::size_t limit = std::min(entry.notification.actions.size(), kMaxNotificationActions * 2);
         for (std::size_t i = 0; i + 1 < limit; i += 2) {
           const std::string& actionKey = entry.notification.actions[i];
-          if (actionKey.empty()) {
+          if (actionKey.empty() || actionKey == "default") {
             continue;
           }
           auto button = ui::button({
@@ -483,6 +490,22 @@ namespace {
           .minHeight = kNotificationActionButtonSize * scale,
           .padding = Style::spaceXs * scale,
           .radius = Style::scaledRadiusMd(scale),
+      });
+    }
+
+    // Circular dismiss (X) button with an outline.
+    static std::unique_ptr<Button> makeDismissButton(float scale) {
+      const float diameter = kNotificationActionButtonSize * scale * 0.7f;
+      return ui::button({
+          .glyph = "close",
+          .glyphSize = Style::fontSizeCaption * scale,
+          .variant = ButtonVariant::Outline,
+          .minWidth = diameter,
+          .minHeight = diameter,
+          .padding = 0.0f,
+          .radius = diameter * 0.5f,
+          .width = diameter,
+          .height = diameter,
       });
     }
 
@@ -593,10 +616,29 @@ public:
       return 0;
     }
     const auto& entry = *m_owner.m_filtered[index];
-    const bool expanded = m_owner.m_expandedIds.contains(entry.notification.id);
+    const bool expanded = m_owner.expandedForEntry(entry.notification.id);
     std::uint64_t revision = revisionForEntry(entry, expanded, m_owner.m_lastRelativeTimeSlot);
     revision ^= static_cast<std::uint64_t>(Style::cornerRadiusScale() * 10000.0f) * 0xC2B2AE3D27D4EB4FULL;
     return revision;
+  }
+
+  [[nodiscard]] bool itemInteractive(std::size_t index) const override {
+    if (index >= m_owner.m_filtered.size() || m_owner.m_filtered[index] == nullptr) {
+      return false;
+    }
+    const auto& entry = *m_owner.m_filtered[index];
+    return hasDefaultAction(entry.notification)
+        && m_owner.m_notifications != nullptr && m_owner.m_notifications->hasPendingDBusClose(entry.notification.id);
+  }
+
+  void onActivate(std::size_t index) override {
+    if (index >= m_owner.m_filtered.size() || m_owner.m_filtered[index] == nullptr) {
+      return;
+    }
+    const auto& entry = *m_owner.m_filtered[index];
+    if (hasDefaultAction(entry.notification)) {
+      m_owner.invokeNotificationAction(entry.notification.id, "default");
+    }
   }
 
   [[nodiscard]] float measureItem(Renderer& renderer, std::size_t index, float width) override {
@@ -604,7 +646,7 @@ public:
       return 1.0f;
     }
     const auto& entry = *m_owner.m_filtered[index];
-    const bool expanded = m_owner.m_expandedIds.contains(entry.notification.id);
+    const bool expanded = m_owner.expandedForEntry(entry.notification.id);
     const bool showHistoryActions =
         m_owner.m_notifications != nullptr && m_owner.m_notifications->hasPendingDBusClose(entry.notification.id);
     return measureNotificationCard(renderer, entry, m_scale, width, expanded, showHistoryActions).height;
@@ -626,7 +668,7 @@ public:
     const bool showHistoryActions =
         m_owner.m_notifications != nullptr && m_owner.m_notifications->hasPendingDBusClose(entry.notification.id);
     row->bind(
-        renderer, entry, width, m_owner.m_expandedIds.contains(entry.notification.id), showHistoryActions,
+        renderer, entry, width, m_owner.expandedForEntry(entry.notification.id), showHistoryActions,
         m_owner.m_iconResolver, [this](uint32_t id) { m_owner.toggleNotificationExpanded(id); },
         [this](uint32_t id, bool active) { m_owner.removeNotificationEntry(id, active); },
         [this](uint32_t id, const std::string& key) { m_owner.invokeNotificationAction(id, key); }
@@ -639,7 +681,10 @@ private:
   float m_fillOpacity = 1.0f;
 };
 
-NotificationsTab::NotificationsTab(NotificationManager* notifications) : m_notifications(notifications) {}
+NotificationsTab::NotificationsTab(
+    NotificationManager* notifications, INetworkService* network, BluetoothService* bluetooth
+)
+    : m_notifications(notifications), m_network(network), m_bluetooth(bluetooth) {}
 
 NotificationsTab::~NotificationsTab() = default;
 
@@ -648,49 +693,20 @@ std::unique_ptr<Flex> NotificationsTab::create() {
   auto tab = ui::column({
       .out = &m_root,
       .align = FlexAlign::Stretch,
-      .gap = Style::spaceMd * scale,
+      .gap = Style::spaceXs * scale,
   });
-
-  tab->addChild(
-      ui::segmented({
-          .out = &m_filter,
-          .options =
-              std::vector<ui::SegmentedOption>{
-                  {.label = i18n::tr("control-center.notifications.filter.all")},
-                  {.label = i18n::tr("control-center.notifications.filter.today")},
-                  {.label = i18n::tr("control-center.notifications.filter.yesterday")},
-                  {.label = i18n::tr("control-center.notifications.filter.older")},
-              },
-          .selectedIndex = m_filterIndex,
-          .fontSize = Style::fontSizeCaption * scale,
-          .scale = scale,
-          .surfaceOpacity = panelCardOpacity(),
-          .equalSegmentWidths = true,
-          .onChange = [this](std::size_t idx) {
-            if (idx == m_filterIndex) {
-              return;
-            }
-
-            cancelFilterSlide();
-            AnimationManager* animations = m_list != nullptr ? m_list->animationManager() : nullptr;
-            if (animations == nullptr || m_list == nullptr) {
-              m_filterIndex = idx;
-              m_lastRebuildFilterIndex = static_cast<std::size_t>(-1);
-              if (m_list != nullptr) {
-                m_list->scrollView().setScrollOffset(0.0f);
-              }
-              PanelManager::instance().requestLayout();
-              return;
-            }
-
-            beginFilterSlideOut(idx);
-          },
-      })
-  );
 
   m_adapter = std::make_unique<NotificationHistoryAdapter>(*this, scale, panelCardOpacity());
 
-  tab->addChild(
+  auto* contentArea = tab->addChild(
+      ui::column({
+          .align = FlexAlign::Stretch,
+          .gap = Style::spaceMd * scale,
+          .flexGrow = 1.0f,
+      })
+  );
+
+  contentArea->addChild(
       ui::virtualListView({
           .out = &m_list,
           .itemGap = Style::spaceMd * scale,
@@ -700,16 +716,19 @@ std::unique_ptr<Flex> NotificationsTab::create() {
           .configure = [](VirtualListView& list) {
             list.setFillWidth(true);
             list.setFillHeight(true);
+            list.setScrollbarVisible(false);
           },
       })
   );
 
-  tab->addChild(
+  contentArea->addChild(
       ui::column(
           {
               .out = &m_emptyCard,
               .align = FlexAlign::Center,
+              .justify = FlexJustify::Center,
               .gap = Style::spaceSm * scale,
+              .flexGrow = 1.0f,
               .visible = false,
               .configure =
                   [scale, opacity = panelCardOpacity()](Flex& empty) {
@@ -719,14 +738,73 @@ std::unique_ptr<Flex> NotificationsTab::create() {
           },
           ui::label({
               .out = &m_emptyTitle,
-              .fontSize = Style::fontSizeBody * scale,
+              .fontSize = Style::fontSizeTitle * scale,
               .fontWeight = FontWeight::Bold,
               .color = colorSpecFromRole(ColorRole::OnSurface),
+              .textAlign = TextAlign::Center,
           }),
           ui::label({
               .out = &m_emptyBody,
               .fontSize = Style::fontSizeBody * scale,
               .color = colorSpecFromRole(ColorRole::OnSurfaceVariant),
+          })
+      )
+  );
+
+  const auto quickToggle = [scale](Button& button) {
+    button.setVariant(ButtonVariant::Default);
+    button.setGlyphSize(Style::fontSizeHeader * scale * 1.15f);
+    button.setMinHeight((Style::controlHeightLg + 8.0f) * scale);
+    button.setMinWidth((Style::controlHeightLg + 8.0f) * scale);
+    button.setFlexGrow(1.0f);
+    button.setRadius(Style::scaledRadiusMd(scale));
+  };
+
+  tab->addChild(
+      ui::row(
+          {
+              .align = FlexAlign::Stretch,
+              .gap = Style::spaceSm * scale,
+              .padding = Style::spaceSm * scale,
+              .radius = Style::scaledRadiusMd(scale),
+              .border = colorSpecFromRole(ColorRole::Outline),
+              .borderWidth = Style::borderWidth,
+          },
+          ui::button({
+              .out = &m_wifiButton,
+              .glyph = "wifi",
+              .tooltip = i18n::tr("control-center.network.wifi"),
+              .onClick = [this]() {
+                if (m_network != nullptr) {
+                  m_network->setWirelessEnabled(!m_network->state().wirelessEnabled);
+                }
+              },
+              .configure = quickToggle,
+          }),
+          ui::button({
+              .out = &m_bluetoothButton,
+              .glyph = "bluetooth",
+              .tooltip = i18n::tr("control-center.tabs.bluetooth"),
+              .onClick = [this]() {
+                if (m_bluetooth != nullptr) {
+                  m_bluetooth->setPowered(!m_bluetooth->state().powered);
+                }
+              },
+              .configure = quickToggle,
+          }),
+          ui::button({
+              .out = &m_dndButton,
+              .glyph = "bell",
+              .tooltip = i18n::tr("control-center.notifications.dnd-on"),
+              .onClick = [this]() { toggleDoNotDisturb(); },
+              .configure = quickToggle,
+          }),
+          ui::button({
+              .out = &m_clearAllButton,
+              .glyph = "trash",
+              .tooltip = i18n::tr("control-center.notifications.clear-all"),
+              .onClick = [this]() { clearAllNotifications(); },
+              .configure = quickToggle,
           })
       )
   );
@@ -766,7 +844,7 @@ std::unique_ptr<Flex> NotificationsTab::createHeaderActions() {
 }
 
 void NotificationsTab::doLayout(Renderer& renderer, float contentWidth, float bodyHeight) {
-  if (m_root == nullptr || m_filter == nullptr) {
+  if (m_root == nullptr) {
     return;
   }
 
@@ -775,6 +853,18 @@ void NotificationsTab::doLayout(Renderer& renderer, float contentWidth, float bo
   }
   m_root->setSize(contentWidth, bodyHeight);
   m_root->layout(renderer);
+
+  // The list only measures its true item heights during this layout pass, which
+  // is later than the panel chose its size from our (then-stale) content height.
+  // Once the list settles, re-ask the panel to relayout so the panel height keeps
+  // tracking the notification list (grow with several cards, shrink on clear).
+  if (m_list != nullptr) {
+    const float contentHeight = estimatedContentHeight();
+    if (std::abs(contentHeight - m_lastSizedContentHeight) > 0.5f) {
+      m_lastSizedContentHeight = contentHeight;
+      PanelManager::instance().relayoutActivePanelPreferredSize();
+    }
+  }
 
   if (m_list != nullptr && m_filterSlideAnimId == 0 && !m_startFilterSlideIn) {
     m_filterSlideBaseX = m_list->x();
@@ -791,6 +881,7 @@ void NotificationsTab::doUpdate(Renderer& renderer) {
   if (filterSlideOutActive()) {
     return;
   }
+  syncQuickToggles();
   if (refreshDataSnapshot() && m_root != nullptr) {
     m_root->layout(renderer);
   }
@@ -809,6 +900,8 @@ void NotificationsTab::onClose() {
   m_filter = nullptr;
   m_clearAllButton = nullptr;
   m_dndButton = nullptr;
+  m_wifiButton = nullptr;
+  m_bluetoothButton = nullptr;
   m_adapter.reset();
   m_filtered.clear();
   m_expandedIds.clear();
@@ -820,6 +913,53 @@ void NotificationsTab::onClose() {
   m_filterSlideDirection = 0;
   m_filterSlideBaseX = 0.0f;
   m_filterSlideBaseY = 0.0f;
+  m_lastSizedContentHeight = -1.0f;
+}
+
+float NotificationsTab::estimatedContentHeight() const {
+  if (m_filtered.empty()) {
+    return 0.0f;
+  }
+  if (m_list != nullptr) {
+    const float measured = m_list->contentHeight();
+    if (measured > 0.0f) {
+      return measured;
+    }
+  }
+  const float scale = contentScale();
+  const float cardHeight = kHistoryIconSize * scale + (Style::spaceSm + Style::spaceXs) * scale * 2.0f + Style::spaceLg * scale;
+  const float itemGap = Style::spaceMd * scale;
+  const std::size_t count = m_filtered.size();
+  if (count == 0) {
+    return 0.0f;
+  }
+  return cardHeight * static_cast<float>(count) + itemGap * static_cast<float>(count - 1);
+}
+
+float NotificationsTab::collapsedCardHeight() const {
+  const float scale = contentScale();
+
+  // Mirror measureNotificationCard() for a representative collapsed card
+  // (summary + body, each on a single line, no actions row).
+  const float paddingY = (Style::spaceSm + Style::spaceXs) * scale * 2.0f;
+  const float iconPx = kHistoryIconSize * scale;
+  const float actionButtonSize = kNotificationActionButtonSize * scale;
+  // Approximate single-line rendered height via the font size (renderer returns
+  // ~1.2-1.3x font size per line).
+  const float lineHeight = Style::fontSizeBody * scale * 1.25f;
+  const float headerHeight = std::max({iconPx, actionButtonSize, lineHeight});
+  const float summaryHeight = lineHeight;
+  const float bodyHeight = lineHeight;
+  // meta + summary + body => 3 segments, 2 gaps.
+  const float gaps = Style::spaceSm * scale * 2.0f;
+  return paddingY + headerHeight + summaryHeight + bodyHeight + gaps;
+}
+
+float NotificationsTab::chromeHeight() const {
+  const float scale = contentScale();
+  // Quick-toggle row: button min-height (controlHeightLg + 8) plus its vertical
+  // padding, plus the small gap that separates it from the list, plus border.
+  return (Style::controlHeightLg + 8.0f + 2.0f * Style::spaceSm + Style::spaceXs + Style::borderWidth * 2.0f) * scale;
 }
 
 void NotificationsTab::cancelFilterSlide() {
@@ -978,6 +1118,10 @@ void NotificationsTab::removeNotificationEntry(uint32_t id, bool wasActive) {
   PanelManager::instance().refresh();
 }
 
+bool NotificationsTab::expandedForEntry(uint32_t id) const {
+  return m_expandedIds.contains(id);
+}
+
 void NotificationsTab::toggleNotificationExpanded(uint32_t id) {
   if (m_expandedIds.contains(id)) {
     m_expandedIds.erase(id);
@@ -1017,9 +1161,6 @@ void NotificationsTab::invokeNotificationAction(uint32_t id, const std::string& 
 
 bool NotificationsTab::refreshDataSnapshot() {
   const bool hasHistory = m_notifications != nullptr && !m_notifications->history().empty();
-  if (m_clearAllButton != nullptr) {
-    m_clearAllButton->setVisible(hasHistory);
-  }
   syncDndButton();
 
   const std::uint64_t serial = m_notifications != nullptr ? m_notifications->changeSerial() : 0;
@@ -1049,6 +1190,9 @@ bool NotificationsTab::refreshDataSnapshot() {
   if (m_list != nullptr) {
     m_list->notifyDataChanged();
   }
+  // Notifications tab height adapts to its content; ask the panel manager to
+  // re-read preferredHeight() so the panel grows/shrinks with the list.
+  PanelManager::instance().relayoutActivePanelPreferredSize();
   return true;
 }
 
@@ -1066,6 +1210,22 @@ void NotificationsTab::syncDndButton() {
   );
 }
 
+void NotificationsTab::syncQuickToggles() {
+  if (m_wifiButton != nullptr) {
+    const bool wifiEnabled = m_network != nullptr && m_network->state().wirelessEnabled;
+    m_wifiButton->setEnabled(m_network != nullptr);
+    m_wifiButton->setSelected(wifiEnabled);
+    m_wifiButton->setGlyph(wifiEnabled ? "wifi" : "wifi-off");
+  }
+  if (m_bluetoothButton != nullptr) {
+    const bool btEnabled = m_bluetooth != nullptr && m_bluetooth->state().powered;
+    m_bluetoothButton->setEnabled(m_bluetooth != nullptr);
+    m_bluetoothButton->setSelected(btEnabled);
+    m_bluetoothButton->setGlyph(btEnabled ? "bluetooth" : "bluetooth-off");
+  }
+  syncDndButton();
+}
+
 void NotificationsTab::updateEmptyState(bool hasHistory, bool hasFiltered) {
   if (m_list != nullptr) {
     m_list->setVisible(hasFiltered);
@@ -1081,9 +1241,11 @@ void NotificationsTab::updateEmptyState(bool hasHistory, bool hasFiltered) {
   if (hasHistory) {
     m_emptyTitle->setText(i18n::tr("control-center.notifications.filter-empty-title"));
     m_emptyBody->setText(i18n::tr("control-center.notifications.filter-empty-body"));
+    m_emptyBody->setVisible(true);
   } else {
     m_emptyTitle->setText(i18n::tr("control-center.notifications.empty-title"));
     m_emptyBody->setText(i18n::tr("control-center.notifications.empty-body"));
+    m_emptyBody->setVisible(false);
   }
 }
 

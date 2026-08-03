@@ -18,7 +18,7 @@ namespace {
   };
 
   bool blurTraceEnabled() {
-    static const bool enabled = SysUtils::isEnvFlagOn("NOCTALIA_BLUR_TRACE");
+    static const bool enabled = SysUtils::isEnvFlagOn("MONO_SHELL_BLUR_TRACE");
     return enabled;
   }
 

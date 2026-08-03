@@ -3,7 +3,7 @@
 DesktopWidgetsEditorProfile DesktopWidgetsEditorProfile::desktop() {
   return DesktopWidgetsEditorProfile{
       .logSection = "desktop",
-      .layerNamespace = "noctalia-desktop-widgets-editor",
+      .layerNamespace = "mono-shell-desktop-widgets-editor",
       .widgetIdPrefix = "desktop-widget-",
       .showLockscreenLoginPreview = false,
   };
@@ -12,7 +12,7 @@ DesktopWidgetsEditorProfile DesktopWidgetsEditorProfile::desktop() {
 DesktopWidgetsEditorProfile DesktopWidgetsEditorProfile::lockscreen() {
   return DesktopWidgetsEditorProfile{
       .logSection = "lockscreen",
-      .layerNamespace = "noctalia-lockscreen-widgets-editor",
+      .layerNamespace = "mono-shell-lockscreen-widgets-editor",
       .widgetIdPrefix = "lockscreen-widget-",
       .showLockscreenLoginPreview = true,
   };

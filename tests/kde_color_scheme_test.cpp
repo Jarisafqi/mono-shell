@@ -34,7 +34,7 @@ namespace {
   }
 
   TempDir makeTempDir() {
-    std::string pattern = (std::filesystem::temp_directory_path() / "noctalia-kde-colors-XXXXXX").string();
+    std::string pattern = (std::filesystem::temp_directory_path() / "mono-shell-kde-colors-XXXXXX").string();
     std::vector<char> writable(pattern.begin(), pattern.end());
     writable.push_back('\0');
     char* result = ::mkdtemp(writable.data());
@@ -75,7 +75,7 @@ namespace {
       return false;
     }
 
-    const auto scheme = root.path / "noctalia.colors";
+    const auto scheme = root.path / "mono-shell.colors";
     const auto globals = root.path / "kdeglobals";
     bool ok = expect(
         writeFile(
@@ -98,7 +98,7 @@ namespace {
                  scheme,
                  "[General]\n"
                  "ColorScheme=Noctalia\n"
-                 "Name=noctalia\n"
+                 "Name=mono-shell\n"
                  "\n"
                  "[Colors:Button]\n"
                  "ForegroundNormal=9,8,7\n"

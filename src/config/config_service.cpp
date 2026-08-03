@@ -628,7 +628,7 @@ void ConfigService::setNotificationManager(NotificationManager* manager) {
         m_notificationManager->close(m_configErrorNotificationId);
       }
       m_configErrorNotificationId =
-          m_notificationManager->addInternal("Noctalia", "Config error", pendingError, Urgency::Critical, 0);
+          m_notificationManager->addInternal("Mono Shell", "Config error", pendingError, Urgency::Critical, 0);
     });
   }
   if (m_notificationManager != nullptr && m_legacyReminderPending) {
@@ -743,9 +743,9 @@ std::string ConfigService::buildSupportReport() const {
 
   toml::table report;
   report.insert_or_assign("format_version", std::int64_t{1});
-  report.insert_or_assign("generated_by", "noctalia");
+  report.insert_or_assign("generated_by", "mono-shell");
   report.insert_or_assign("generated_at_utc", utcTimestamp());
-  report.insert_or_assign("noctalia_version", std::string(noctalia::build_info::version()));
+  report.insert_or_assign("monoshell_version", std::string(noctalia::build_info::version()));
   report.insert_or_assign("git_revision", std::string(noctalia::build_info::revision()));
   root.insert_or_assign("report", std::move(report));
 
@@ -1296,7 +1296,7 @@ void ConfigService::setConfigParseError(std::string parseError) {
       m_notificationManager->close(m_configErrorNotificationId);
     }
     m_configErrorNotificationId =
-        m_notificationManager->addInternal("Noctalia", "Config error", parseError, Urgency::Critical, 0);
+        m_notificationManager->addInternal("Mono Shell", "Config error", parseError, Urgency::Critical, 0);
   } else {
     m_pendingError = std::move(parseError);
   }
@@ -1360,7 +1360,7 @@ void ConfigService::notifyLegacyConfigIssues() {
   const std::string fingerprint = noctalia::config::legacyConfigIssueFingerprint(m_legacyConfigIssues);
   const std::int64_t now = currentEpochSeconds();
   (void)m_notificationManager->addInternal(
-      "Noctalia", i18n::tr("notifications.internal.config-migration-title"),
+      "Mono Shell", i18n::tr("notifications.internal.config-migration-title"),
       i18n::tr("notifications.internal.config-migration-body", "path", m_legacyConfigIssues.front().path),
       Urgency::Normal
   );

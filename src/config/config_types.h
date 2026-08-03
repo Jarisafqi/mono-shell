@@ -597,7 +597,7 @@ struct DockConfig {
   bool showDots = false;            // show optional running window dots below app icons
   bool showInstanceCount = true;    // show a badge with count when app has >1 window
   DockLauncherPosition launcherPosition = DockLauncherPosition::None;
-  std::string launcherIcon = "grid-dots";   // Tabler glyph name
+  std::string launcherIcon = "grid-dots";   // icon glyph name
   std::string launcherCustomImage = "";     // image path; overrides launcherIcon glyph when set
   bool launcherCustomImageColorize = false; // tint the custom image with the icon color role
   std::vector<std::string> pinned;          // desktop entry IDs to always show
@@ -681,6 +681,7 @@ struct OsdConfig {
   int offsetY = 8;
   std::vector<std::string> monitors;
   OsdKindsConfig kinds;
+  std::optional<std::string> fontFamily; // unset = inherit shell.font_family
 
   bool operator==(const OsdConfig&) const = default;
 };
@@ -873,7 +874,7 @@ struct DmenuEntryConfig {
   // global = true, otherwise it is unreachable (surfaced as a config warning).
   std::optional<std::string> prefix;
   std::optional<std::string> label; // Provider overview title; defaults to the id.
-  std::optional<std::string> glyph; // Tabler glyph name; defaults to "terminal".
+  std::optional<std::string> glyph; // icon glyph name; defaults to "terminal".
   bool global = false;              // Include results in non-prefixed search.
   bool freeform = false;            // Let typed query text become an activatable result.
 
@@ -904,6 +905,7 @@ struct ShellConfig {
   };
 
   struct PanelConfig {
+    bool enabled = true;                   // master switch; false disables all popup panels except notifications
     PanelTransparencyMode transparencyMode = PanelTransparencyMode::Solid;
     bool borders = true;                   // outline on floating panel surfaces
     bool shadow = true;                    // cast the global [shell.shadow] from panel surfaces
@@ -1437,7 +1439,7 @@ struct ThemeConfig {
   };
 
   PaletteSource source = PaletteSource::Builtin;
-  std::string builtinPalette = "Noctalia";
+  std::string builtinPalette = "Mono Shell";
   std::string communityPalette = "Oxocarbon";
   std::string customPalette;
   std::string wallpaperScheme = "m3-content";
@@ -1450,6 +1452,7 @@ struct ThemeConfig {
 
 struct ControlCenterConfig {
   static constexpr std::int32_t kDefaultWidth = 700;
+  static constexpr std::int32_t kDefaultHeight = 640;
 
   struct CalendarTabConfig {
     bool showEventsCard = true;
@@ -1463,7 +1466,10 @@ struct ControlCenterConfig {
   std::vector<std::string> hiddenTabs; // tab keys (see kTabs) the user has hidden; empty = all available shown
   ControlCenterSidebarMode sidebarMode = ControlCenterSidebarMode::Compact;
   ControlCenterSidebarMode sidebarSectionMode = ControlCenterSidebarMode::Compact;
-  std::int32_t width = kDefaultWidth; // full-sidebar logical width; compact/none modes scale down from this
+  std::int32_t width = kDefaultWidth;  // full-sidebar logical width; compact/none modes scale down from this
+  std::int32_t height = kDefaultHeight; // logical height of the panel surface
+  float scale = 1.0f;                   // uniform zoom for the whole panel surface (width + all internal UI)
+  float notificationsScale = 1.0f;    // independent scale for the notifications list content (icon/text/buttons)
   bool showShortcutLabels = true;
   CalendarTabConfig calendarTab;
   bool operator==(const ControlCenterConfig&) const = default;

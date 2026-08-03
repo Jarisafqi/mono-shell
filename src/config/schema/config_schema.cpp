@@ -72,6 +72,23 @@ namespace noctalia::config::schema {
         field(&OsdConfig::offsetX, "offset_x", Range<std::int64_t>{0, std::nullopt}),
         field(&OsdConfig::offsetY, "offset_y", Range<std::int64_t>{0, std::nullopt}),
         field(&OsdConfig::monitors, "monitors"),
+        // font_family is trimmed; empty falls back to inheriting the shell font.
+        custom<OsdConfig>(
+            "font_family",
+            [](const toml::table& tbl, OsdConfig& out, std::string_view, Diagnostics&) {
+              if (auto v = tbl["font_family"].value<std::string>()) {
+                std::string trimmed = StringUtils::trim(*v);
+                if (!trimmed.empty()) {
+                  out.fontFamily = std::move(trimmed);
+                }
+              }
+            },
+            [](toml::table& tbl, const OsdConfig& in) {
+              if (in.fontFamily.has_value()) {
+                tbl.insert_or_assign("font_family", *in.fontFamily);
+              }
+            }
+        ),
         subTable(&OsdConfig::kinds, "kinds", osdKindsSchema()),
     };
     return s;
@@ -491,6 +508,9 @@ namespace noctalia::config::schema {
         enumField(&ControlCenterConfig::sidebarMode, "sidebar", kControlCenterSidebarModes),
         enumField(&ControlCenterConfig::sidebarSectionMode, "sidebar_section", kControlCenterSidebarModes),
         field(&ControlCenterConfig::width, "width", kControlCenterWidthRange),
+        field(&ControlCenterConfig::height, "height", kControlCenterHeightRange),
+        field(&ControlCenterConfig::scale, "scale", kScaleRange),
+        field(&ControlCenterConfig::notificationsScale, "notifications_scale", kScaleRange),
         field(&ControlCenterConfig::showShortcutLabels, "show_shortcut_labels"),
         field(&ControlCenterConfig::hiddenTabs, "hidden_tabs"),
         subTable(&ControlCenterConfig::calendarTab, "calendar", calendarTabSchema()),
@@ -1243,6 +1263,7 @@ namespace noctalia::config::schema {
 
     const Schema<ShellConfig::PanelConfig>& shellPanelSchema() {
       static const Schema<ShellConfig::PanelConfig> s = {
+          field(&ShellConfig::PanelConfig::enabled, "enabled"),
           enumField(&ShellConfig::PanelConfig::transparencyMode, "transparency_mode", kPanelTransparencyModes),
           field(&ShellConfig::PanelConfig::borders, "borders"),
           field(&ShellConfig::PanelConfig::shadow, "shadow"),

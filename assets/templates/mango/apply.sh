@@ -10,7 +10,7 @@ if [[ "$config_dir" == "$HOME"/* ]]; then
 else
     include_dir="$config_dir"
 fi
-include_line="source=$include_dir/mango/noctalia.conf"
+include_line="source=$include_dir/mango/mono-shell.conf"
 
 mkdir -p "$(dirname "$config_file")"
 
@@ -19,7 +19,7 @@ if [ ! -f "$config_file" ]; then
     exit 0
 fi
 
-if ! grep -q 'source=.*noctalia\.conf' "$config_file"; then
+if ! grep -q 'source=.*mono-shell\.conf' "$config_file"; then
     printf '\n%s\n' "$include_line" >>"$config_file"
 fi
 

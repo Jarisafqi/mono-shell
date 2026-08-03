@@ -682,7 +682,7 @@
       "calendar-google-connect-start-failed": "Không thể bắt đầu ủy quyền Google. Vui lòng kiểm tra kết nối mạng và thử lại.",
       "calendar-google-connect-start-http": "Không thể bắt đầu ủy quyền Google. Trình môi giới OAuth đã trả về HTTP {status}.",
       "calendar-google-connect-timeout": "Thời gian ủy quyền Google đã hết. Hãy bắt đầu lại kết nối khi bạn sẵn sàng đăng nhập.",
-      "config-migration-body": "Cấu hình cũ, bao gồm {path}, đang được chuyển đổi tạm thời trong bộ nhớ. Hãy cập nhật cấu hình gốc; Cài đặt và noctalia config validate sẽ hiển thị cấu hình thay thế cần dùng.",
+      "config-migration-body": "Cấu hình cũ, bao gồm {path}, đang được chuyển đổi tạm thời trong bộ nhớ. Hãy cập nhật cấu hình gốc; Cài đặt và mono-shell config validate sẽ hiển thị cấu hình thay thế cần dùng.",
       "config-migration-title": "Cần cập nhật cấu hình",
       "dbus-disabled": "Thông báo DBus đã tắt",
       "desktop-widgets-editor": "Trình chỉnh sửa tiện ích",
@@ -690,10 +690,10 @@
       "greeter-sync": "Noctalia Màn hình chào",
       "greeter-sync-pending": "Đang chờ quyền quản trị viên để viết vào greeter.",
       "greeter-sync-pending-console": "Đang chờ quyền quản trị viên. Chấp thuận ở thông báo polkit, trong TTY hoặc chạy pkexec thủ công.",
-      "greeter-sync-pending-manual": "Đã chuẩn bị tệp. Hãy chạy câu lệnh sau trong terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\". Hoặc đặt shell.greeter_sync.privilege_command (ví dụ như ghostty -e pkexec) và đồng bộ hóa lần nữa.",
+      "greeter-sync-pending-manual": "Đã chuẩn bị tệp. Hãy chạy câu lệnh sau trong terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\". Hoặc đặt shell.greeter_sync.privilege_command (ví dụ như ghostty -e pkexec) và đồng bộ hóa lần nữa.",
       "greeter-sync-success": "Đã đồng bộ giao diện. Các thay đổi sẽ áp dụng vào màn hình đăng nhập tiếp theo.",
       "greeter-sync-timeout": "Đồng bộ hóa màn hình chào vẫn đang chờ quyền phê duyệt của quản trị viên. Hãy kiểm tra TTY hoặc bảng điều khiển để tìm yêu cầu từ polkit, bật tác nhân polkit trong phần cài đặt Bảo mật hoặc tự chạy pkexec thủ công.",
-      "greeter-sync-timeout-manual": "Đồng bộ hóa màn hình chào vẫn cần quyền phê duyệt của quản trị viên. Hãy chạy lệnh sau trong Terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "greeter-sync-timeout-manual": "Đồng bộ hóa màn hình chào vẫn cần quyền phê duyệt của quản trị viên. Hãy chạy lệnh sau trong Terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "keybind-app": "Noctalia",
       "keybind-invalid-modifier": "Phím tắt này nhận một phím không kèm phím bổ trợ.",
       "keybind-invalid-printable": "Các phím ký tự (chữ cái, số, ký hiệu) cần một phím bổ trợ như Ctrl hoặc Alt.",
@@ -1026,7 +1026,7 @@
       "support-report": "Không thể lưu báo cáo hỗ trợ.",
       "sync-greeter": "Không thể đồng bộ giao diện với Noctalia Greeter.",
       "sync-greeter-timeout": "Quá trình đồng bộ màn hình chào vẫn đang chờ quyền phê duyệt của quản trị viên. Hãy kiểm tra TTY hoặc bảng điều khiển để tìm hộp thoại polkit, bật tác nhân polkit trong phần cài đặt Bảo mật hoặc tự chạy pkexec thủ công.",
-      "sync-greeter-timeout-manual": "Đồng bộ hóa màn hình chào vẫn cần quyền phê duyệt của quản trị viên. Hãy chạy lệnh sau trong Terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "sync-greeter-timeout-manual": "Đồng bộ hóa màn hình chào vẫn cần quyền phê duyệt của quản trị viên. Hãy chạy lệnh sau trong Terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "widget": {
         "rename": "Không thể đổi tên tiện ích đã đặt tên."
       },
@@ -1393,8 +1393,8 @@
         },
         "kind-label": "Loại",
         "location-label": "Vị trí",
-        "location-placeholder-git": "https://github.com/me/noctalia-plugins",
-        "location-placeholder-path": "~/dev/noctalia-plugins",
+        "location-placeholder-git": "https://github.com/me/mono-shell-plugins",
+        "location-placeholder-path": "~/dev/mono-shell-plugins",
         "name-label": "Mã nguồn",
         "name-placeholder": "my-plugins",
         "precedence-hint": "Nguồn nằm thấp hơn sẽ ghi đè nguồn nằm cao hơn khi cả hai cung cấp cùng một plugin.",
@@ -1458,7 +1458,7 @@
           "label": "Độ bo góc"
         },
         "custom-palette": {
-          "description": "Chọn bảng màu từ ~/.config/noctalia/palettes/",
+          "description": "Chọn bảng màu từ ~/.config/mono-shell/palettes/",
           "label": "Bảng màu tùy chỉnh",
           "search-placeholder": "Tìm kiếm bảng màu tùy chỉnh..."
         },

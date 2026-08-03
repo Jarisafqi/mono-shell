@@ -49,6 +49,13 @@ public:
 
   [[nodiscard]] ScrollView& scrollView() noexcept { return *m_scroll; }
 
+  // Whether a scroll indicator is drawn when content overflows.
+  void setScrollbarVisible(bool visible);
+
+  // Total height of the measured content (sum of all items + gaps). Valid once
+  // the list has been measured; otherwise 0.
+  [[nodiscard]] float contentHeight() const noexcept { return m_virtualHeight; }
+
 protected:
   void doLayout(Renderer& renderer) override;
   LayoutSize doMeasure(Renderer& renderer, const LayoutConstraints& constraints) override;
@@ -93,6 +100,7 @@ private:
   float m_itemGap = 0.0f;
   float m_virtualWidth = 0.0f;
   float m_virtualHeight = 0.0f;
+  bool m_showScrollbar = true;
   std::size_t m_overscanItems = 3;
   std::size_t m_itemCount = 0;
   std::optional<std::size_t> m_hoveredIndex;

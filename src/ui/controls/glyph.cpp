@@ -113,7 +113,7 @@ LayoutSize Glyph::measureWithConstraints(Renderer& renderer, const LayoutConstra
   }
   auto metrics = renderer.measureGlyph(m_glyphNode->codepoint(), m_glyphNode->fontSize());
 
-  // Tabler icons are designed on a square viewport. Keep layout stable by
+  // Icon fonts are designed on a square viewport. Keep layout stable by
   // exposing that square instead of each icon's ink box; only the internal
   // glyph origin uses measured ink extents for centering.
   const float boxSize = std::round(m_logicalFontSize);

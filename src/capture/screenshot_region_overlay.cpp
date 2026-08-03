@@ -322,7 +322,7 @@ namespace capture {
       inst->output = output.output;
 
       auto config = LayerSurfaceConfig{
-          .nameSpace = "noctalia-screenshot-region",
+          .nameSpace = "mono-shell-screenshot-region",
           .layer = LayerShellLayer::Overlay,
           .anchor = LayerShellAnchor::Top | LayerShellAnchor::Bottom | LayerShellAnchor::Left | LayerShellAnchor::Right,
           .width = 0,

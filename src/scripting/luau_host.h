@@ -46,7 +46,7 @@ public:
       void(std::uint64_t hostId, int callbackRef, bool ok, int status, std::string body, bool isDownload)>;
   using ColorPickerResultHandler =
       std::function<void(std::uint64_t hostId, int callbackRef, std::optional<std::string> color)>;
-  // Registers a `noctalia.state.watch` callback with the shared store (the runtime
+  // Registers a `monoshell.state.watch` callback with the shared store (the runtime
   // owns the token + delivery, so registration is delegated back to it).
   using StateWatchHandler = std::function<void(std::string key, int callbackRef)>;
 
@@ -91,14 +91,14 @@ public:
   [[nodiscard]] const std::string& pluginId() const noexcept { return m_pluginId; }
   void setStateWatchHandler(StateWatchHandler handler) { m_stateWatchHandler = std::move(handler); }
 
-  // noctalia.state.* — host-mediated per-plugin shared data.
+  // monoshell.state.* — host-mediated per-plugin shared data.
   void stateSet(const std::string& key, std::string json);
   [[nodiscard]] std::optional<std::string> stateGet(const std::string& key) const;
   void stateWatch(std::string key, int callbackRef);
   bool callStateWatchCallback(int callbackRef, const std::string& json, std::chrono::milliseconds budget);
   [[nodiscard]] bool hasStateWatchCallback(int callbackRef) const;
 
-  // noctalia.runStream — run a long-lived process and deliver each stdout line to a
+  // monoshell.runStream — run a long-lived process and deliver each stdout line to a
   // Lua callback. Cancellable: every active stream's process is terminated when the
   // host is destroyed (reload / runtime stop), so editing the script or removing the
   // widget kills the subprocess instead of leaking it.
@@ -108,7 +108,7 @@ public:
   bool callStreamCallback(int callbackRef, const std::string& line, std::chrono::milliseconds budget);
   [[nodiscard]] bool hasStreamCallback(int callbackRef) const;
 
-  // noctalia.httpStream — long-lived streaming HTTP request through the main-thread
+  // monoshell.httpStream — long-lived streaming HTTP request through the main-thread
   // HttpClient. Each received line goes to the line callback; the close callback fires
   // exactly once when the transfer ends (unless the stream was stopped). Streams are
   // cancelled on host destruction. `streamKey` identifies the stream (the line ref).
@@ -169,7 +169,7 @@ public:
   void interruptIfBudgetExceeded(lua_State* L);
   void scriptLog(std::string message);
   // Request the runtime tick rate (how often update() fires). A runtime concern, so
-  // it lives on noctalia.* and works for every entry type, including headless services.
+  // it lives on monoshell.* and works for every entry type, including headless services.
   void scriptSetUpdateInterval(int ms);
   [[nodiscard]] bool scriptLoadSound(std::string name, std::string path, int callbackRef);
   void scriptPlaySound(std::string name);

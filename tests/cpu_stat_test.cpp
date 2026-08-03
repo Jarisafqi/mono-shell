@@ -45,7 +45,7 @@ namespace {
   }
 
   std::filesystem::path makeTempDir() {
-    std::string pattern = (std::filesystem::temp_directory_path() / "noctalia-cpu-stat-XXXXXX").string();
+    std::string pattern = (std::filesystem::temp_directory_path() / "mono-shell-cpu-stat-XXXXXX").string();
     std::vector<char> writable(pattern.begin(), pattern.end());
     writable.push_back('\0');
     const char* result = ::mkdtemp(writable.data());

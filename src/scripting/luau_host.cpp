@@ -49,7 +49,7 @@
 
 namespace {
   Logger kLog{"luau"};
-  constexpr const char* kHostKey = "__noctalia_host";
+  constexpr const char* kHostKey = "__monoshell_host";
   constexpr auto kDefaultCommandTimeout = std::chrono::milliseconds(5000);
   constexpr auto kMinCommandTimeout = std::chrono::milliseconds(50);
   constexpr auto kMaxCommandTimeout = std::chrono::milliseconds(60000);
@@ -537,7 +537,7 @@ namespace {
     return 1;
   }
 
-  // nowMs() -> wall-clock milliseconds since the Unix epoch. os.time() and noctalia.formatTime()
+  // nowMs() -> wall-clock milliseconds since the Unix epoch. os.time() and monoshell.formatTime()
   // are both whole-second, so this is the only way a plugin can see sub-second time, e.g. to phase
   // its own updates onto a second boundary.
   int luau_nowMs(lua_State* L) {
@@ -685,7 +685,7 @@ namespace {
     if (auto* host = hostForState(L)) {
       host->scriptNotifyInfo(title, body);
     } else {
-      notify::info("Noctalia", title, body);
+      notify::info("Mono Shell", title, body);
     }
     return 0;
   }
@@ -696,7 +696,7 @@ namespace {
     if (auto* host = hostForState(L)) {
       host->scriptNotifyError(title, body);
     } else {
-      notify::error("Noctalia", title, body);
+      notify::error("Mono Shell", title, body);
     }
     return 0;
   }
@@ -1639,20 +1639,20 @@ namespace {
   };
 
   void registerNoctaliaLib(lua_State* L) {
-    luaL_register(L, "noctalia", kNoctaliaBaseLib);
-    // noctalia.state = { set, get, watch }
+    luaL_register(L, "monoshell", kNoctaliaBaseLib);
+    // monoshell.state = { set, get, watch }
     lua_createtable(L, 0, 0);
     luaL_register(L, nullptr, kNoctaliaStateLib);
     lua_setfield(L, -2, "state");
-    // noctalia.json = { decode, encode }
+    // monoshell.json = { decode, encode }
     lua_createtable(L, 0, 0);
     luaL_register(L, nullptr, kNoctaliaJsonLib);
     lua_setfield(L, -2, "json");
-    // noctalia.sound = { load, play }
+    // monoshell.sound = { load, play }
     lua_createtable(L, 0, 0);
     luaL_register(L, nullptr, kNoctaliaSoundLib);
     lua_setfield(L, -2, "sound");
-    // noctalia.string = { trim, urlEncode, urlDecode }
+    // monoshell.string = { trim, urlEncode, urlDecode }
     lua_createtable(L, 0, 0);
     luaL_register(L, nullptr, kNoctaliaStringLib);
     lua_setfield(L, -2, "string");
@@ -2449,7 +2449,7 @@ void LuauHost::scriptNotifyInfo(std::string title, std::string body) {
     );
     return;
   }
-  notify::info("Noctalia", title, body);
+  notify::info("Mono Shell", title, body);
 }
 
 void LuauHost::scriptNotifyError(std::string title, std::string body) {
@@ -2459,7 +2459,7 @@ void LuauHost::scriptNotifyError(std::string title, std::string body) {
     );
     return;
   }
-  notify::error("Noctalia", title, body);
+  notify::error("Mono Shell", title, body);
 }
 
 bool LuauHost::scriptLoadSound(std::string name, std::string path, int callbackRef) {

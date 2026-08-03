@@ -304,22 +304,25 @@ void BatteryWidget::layoutGlyphMode(Renderer& renderer, float /*containerWidth*/
 
   m_glyph->measure(renderer);
 
+  const float hPad = Style::spaceXs * m_contentScale;
+
   if (m_label != nullptr && m_showLabel) {
     m_label->measure(renderer);
 
     if (m_isVertical) {
       const float w = std::max(m_glyph->width(), m_label->width());
-      m_glyph->setPosition(std::round((w - m_glyph->width()) * 0.5f), 0.0f);
-      m_label->setPosition(std::round((w - m_label->width()) * 0.5f), m_glyph->height());
-      rootNode->setSize(w, m_glyph->height() + m_label->height());
+      m_glyph->setPosition(hPad + std::round((w - m_glyph->width()) * 0.5f), 0.0f);
+      m_label->setPosition(hPad + std::round((w - m_label->width()) * 0.5f), m_glyph->height());
+      rootNode->setSize(w + 2.0f * hPad, m_glyph->height() + m_label->height());
     } else {
       const float h = std::max(m_glyph->height(), m_label->height());
-      m_glyph->setPosition(0.0f, std::round((h - m_glyph->height()) * 0.5f));
-      m_label->setPosition(m_glyph->width() + Style::spaceXs, std::round((h - m_label->height()) * 0.5f));
-      rootNode->setSize(m_label->x() + m_label->width(), h);
+      m_glyph->setPosition(hPad, std::round((h - m_glyph->height()) * 0.5f));
+      m_label->setPosition(hPad + m_glyph->width() + Style::spaceXs, std::round((h - m_label->height()) * 0.5f));
+      rootNode->setSize(m_label->x() + m_label->width() + hPad, h);
     }
   } else {
-    rootNode->setSize(m_glyph->width(), m_glyph->height());
+    m_glyph->setPosition(hPad, 0.0f);
+    rootNode->setSize(m_glyph->width() + 2.0f * hPad, m_glyph->height());
   }
 }
 
@@ -331,7 +334,9 @@ void BatteryWidget::layoutLabelOnlyMode(Renderer& renderer, float /*containerWid
 
   m_label->setFontSize((m_isVertical ? Style::fontSizeCaption : Style::fontSizeBody) * m_contentScale);
   m_label->measure(renderer);
-  rootNode->setSize(m_label->width(), m_label->height());
+  const float hPad = Style::spaceXs * m_contentScale;
+  m_label->setPosition(hPad, 0.0f);
+  rootNode->setSize(m_label->width() + 2.0f * hPad, m_label->height());
 }
 
 void BatteryWidget::updateFillGeometry() {

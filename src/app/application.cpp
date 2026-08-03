@@ -166,7 +166,7 @@ Application::Application()
 
 Application::~Application() {
   // m_systemMonitor is declared after the plugin hosts, so it is destroyed first; drop the script
-  // API's pointer to it here, while both are still alive, or a plugin that used noctalia.cpuCores
+  // API's pointer to it here, while both are still alive, or a plugin that used mono-shell.cpuCores
   // releases its reference through a dangling pointer as its host is torn down.
   m_scriptApi.setSystemMonitor(nullptr);
   TooltipManager::instance().shutdown();
@@ -180,7 +180,7 @@ Application::~Application() {
 void Application::run(std::function<void()> startupReadyCallback) {
   initLogFile();
   initLogLevelFromEnvironment();
-  kLog.info("noctalia {}", noctalia::build_info::displayVersion());
+  kLog.info("mono-shell {}", noctalia::build_info::displayVersion());
   runStartupPhase("initServices", [this]() { initServices(); });
   runStartupPhase("initPlugins", [this]() {
     // Configure the plugin registry from [plugins] before any UI consumes it, and
@@ -196,7 +196,7 @@ void Application::run(std::function<void()> startupReadyCallback) {
   runStartupPhase("initUi", [this]() { initUi(); });
   runStartupPhase("initPluginServices", [this]() {
     // Outputs are enumerated by now (wallpaper created its surfaces in initUi); refresh
-    // the script-visible output snapshot before any service/panel reads noctalia.outputs().
+    // the script-visible output snapshot before any service/panel reads mono-shell.outputs().
     if (m_syncScriptApiOutputs) {
       m_syncScriptApiOutputs();
     }

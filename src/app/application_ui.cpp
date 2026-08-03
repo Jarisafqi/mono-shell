@@ -38,14 +38,6 @@
 #include "i18n/i18n.h"
 #include "i18n/i18n_service.h"
 #include "ipc/ipc_arg_parse.h"
-#include "launcher/app_provider.h"
-#include "launcher/dmenu_provider.h"
-#include "launcher/emoji_provider.h"
-#include "launcher/math_provider.h"
-#include "launcher/plugin_launcher_provider.h"
-#include "launcher/session_provider.h"
-#include "launcher/wallpaper_provider.h"
-#include "launcher/window_provider.h"
 #include "notification/notifications.h"
 #include "pipewire/pipewire_poll_source.h"
 #include "pipewire/pipewire_service.h"
@@ -61,20 +53,9 @@
 #include "scripting/plugin_panel_shell.h"
 #include "scripting/plugin_registry.h"
 #include "scripting/plugin_runtime_context.h"
-#include "shell/clipboard/clipboard_panel.h"
-#include "shell/clipboard/clipboard_paste.h"
 #include "shell/control_center/control_center_panel.h"
 #include "shell/greeter/greeter_appearance_sync.h"
-#include "shell/launcher/launcher_panel.h"
-#include "shell/panel/plugin_panel.h"
-#include "shell/polkit/polkit_panel.h"
-#include "shell/session/session_ipc.h"
-#include "shell/session/session_panel.h"
-#include "shell/setup_wizard/setup_wizard_panel.h"
-#include "shell/test/test_panel.h"
 #include "shell/tooltip/tooltip_manager.h"
-#include "shell/tray/tray_drawer_panel.h"
-#include "shell/wallpaper/panel/wallpaper_panel.h"
 #include "shell/wallpaper/wallpaper_paths.h"
 #include "system/brightness_poll_source.h"
 #include "system/brightness_service.h"
@@ -146,7 +127,7 @@ void Application::initUiRenderSurfacesAndSettings() {
     m_desktopWidgetsController.toggleEdit();
     if (!wasEditing && m_desktopWidgetsController.isEditing()) {
       notify::info(
-          "Noctalia", i18n::tr("notifications.internal.desktop-widgets-editor"),
+          "Mono Shell", i18n::tr("notifications.internal.desktop-widgets-editor"),
           i18n::tr("notifications.internal.desktop-widgets-editor-enabled")
       );
     }
@@ -157,7 +138,7 @@ void Application::initUiRenderSurfacesAndSettings() {
     }
     if (m_lockScreen.isActive()) {
       notify::info(
-          "Noctalia", i18n::tr("notifications.internal.lockscreen-widgets-editor"),
+          "Mono Shell", i18n::tr("notifications.internal.lockscreen-widgets-editor"),
           i18n::tr("notifications.internal.lockscreen-widgets-editor-blocked-locked")
       );
       return;
@@ -172,7 +153,7 @@ void Application::initUiRenderSurfacesAndSettings() {
         DeferredCall::callLater([this]() { m_settingsWindow.close(); });
       }
       notify::info(
-          "Noctalia", i18n::tr("notifications.internal.lockscreen-widgets-editor"),
+          "Mono Shell", i18n::tr("notifications.internal.lockscreen-widgets-editor"),
           i18n::tr("notifications.internal.lockscreen-widgets-editor-enabled")
       );
     }
@@ -190,7 +171,7 @@ void Application::initUiRenderSurfacesAndSettings() {
     m_settingsWindow.onExternalOptionsChanged();
     m_settingsWindow.markSettingsWriteSuccess(true);
     notify::info(
-        "Noctalia", i18n::tr("notifications.internal.wallpaper-palette-export"),
+        "Mono Shell", i18n::tr("notifications.internal.wallpaper-palette-export"),
         i18n::tr("notifications.internal.wallpaper-palette-export-success", "name", paletteName)
     );
   });
@@ -213,7 +194,7 @@ void Application::performGreeterSync(bool quiet) {
       if (!quiet) {
         DeferredCall::callLater([this]() {
           notify::info(
-              "Noctalia", i18n::tr("notifications.internal.greeter-sync"),
+              "Mono Shell", i18n::tr("notifications.internal.greeter-sync"),
               i18n::tr("notifications.internal.greeter-sync-success")
           );
         });
@@ -223,7 +204,7 @@ void Application::performGreeterSync(bool quiet) {
     DeferredCall::callLater([this, quiet]() {
       if (quiet) {
         notify::error(
-            "Noctalia", i18n::tr("notifications.internal.greeter-sync"), i18n::tr("settings.errors.sync-greeter")
+            "Mono Shell", i18n::tr("notifications.internal.greeter-sync"), i18n::tr("settings.errors.sync-greeter")
         );
       } else {
         m_settingsWindow.markSettingsWriteError(i18n::tr("settings.errors.sync-greeter"));
@@ -240,7 +221,7 @@ void Application::performGreeterSync(bool quiet) {
   if (launch == greeter::GreeterSyncLaunch::Failed) {
     if (quiet) {
       notify::error(
-          "Noctalia", i18n::tr("notifications.internal.greeter-sync"), i18n::tr("settings.errors.sync-greeter")
+          "Mono Shell", i18n::tr("notifications.internal.greeter-sync"), i18n::tr("settings.errors.sync-greeter")
       );
     } else {
       m_settingsWindow.markSettingsWriteError(i18n::tr("settings.errors.sync-greeter"));
@@ -250,11 +231,11 @@ void Application::performGreeterSync(bool quiet) {
   if (launch == greeter::GreeterSyncLaunch::StagedOnly) {
     if (quiet) {
       notify::error(
-          "Noctalia", i18n::tr("notifications.internal.greeter-sync"), i18n::tr("settings.errors.sync-greeter")
+          "Mono Shell", i18n::tr("notifications.internal.greeter-sync"), i18n::tr("settings.errors.sync-greeter")
       );
     } else {
       notify::info(
-          "Noctalia", i18n::tr("notifications.internal.greeter-sync"),
+          "Mono Shell", i18n::tr("notifications.internal.greeter-sync"),
           i18n::tr("notifications.internal.greeter-sync-pending-manual")
       );
     }
@@ -272,7 +253,7 @@ void Application::performGreeterSync(bool quiet) {
     } else if (!customPrivilege && !polkitAgentActive) {
       pendingBodyKey = "notifications.internal.greeter-sync-pending-console";
     }
-    notify::info("Noctalia", i18n::tr("notifications.internal.greeter-sync"), i18n::tr(pendingBodyKey));
+    notify::info("Mono Shell", i18n::tr("notifications.internal.greeter-sync"), i18n::tr(pendingBodyKey));
   }
 
   if (!quiet) {
@@ -283,7 +264,7 @@ void Application::performGreeterSync(bool quiet) {
       }
       DeferredCall::callLater([this, inSessionPolkit]() {
         notify::error(
-            "Noctalia", i18n::tr("notifications.internal.greeter-sync"),
+            "Mono Shell", i18n::tr("notifications.internal.greeter-sync"),
             i18n::tr(
                 inSessionPolkit ? "notifications.internal.greeter-sync-timeout"
                                 : "notifications.internal.greeter-sync-timeout-manual"
@@ -532,31 +513,6 @@ void Application::initPanelManagerAndPanels() {
       m_settingsWindow.onExternalOptionsChanged();
     });
   });
-  auto clipboardPanel = std::make_unique<ClipboardPanel>(&m_clipboardService, &m_configService, &m_asyncTextureCache);
-  clipboardPanel->setActivateCallback([this](const ClipboardEntry& entry) {
-    const ClipboardAutoPasteMode mode = m_configService.config().shell.clipboardAutoPaste;
-    if (mode == ClipboardAutoPasteMode::Off) {
-      m_panelManager.close();
-      return;
-    }
-    // Auto-paste injects a keystroke into whatever holds keyboard focus. The animated close keeps
-    // the panel surface (and its keyboard focus) alive for the duration of the reveal animation, so
-    // the keys would land on the closing panel instead of the target window. Close without animation
-    // so focus returns to the toplevel before we paste, mirroring the launcher's app-launch close.
-    m_panelManager.closePanel(false);
-    const bool isImage = entry.isImage();
-    m_clipboardAutoPasteTimer.stop();
-    m_clipboardAutoPasteTimer.start(std::chrono::milliseconds(Style::animFast + 30), [this, isImage]() {
-      DeferredCall::callLater([this, isImage]() {
-        const ClipboardAutoPasteMode activeMode = m_configService.config().shell.clipboardAutoPaste;
-        (void)clipboard_paste::pasteEntry(isImage, activeMode, m_virtualKeyboardService);
-      });
-    });
-  });
-  m_panelManager.registerPanel("clipboard", std::move(clipboardPanel));
-  syncClipboardService();
-  m_panelManager.registerPanel("session", std::make_unique<SessionPanel>(&m_configService, m_sessionActionRunner));
-  m_panelManager.registerPanel("test", std::make_unique<TestPanel>());
   m_panelManager.registerPanel(
       "control-center",
       std::make_unique<ControlCenterPanel>(ControlCenterServices{
@@ -594,51 +550,12 @@ void Application::initPanelManagerAndPanels() {
           .asyncTextures = &m_asyncTextureCache,
       })
   );
-  {
-    auto launcherPanel = std::make_unique<LauncherPanel>(&m_configService, &m_asyncTextureCache);
-    launcherPanel->addProvider(std::make_unique<AppProvider>(&m_configService, &m_compositorPlatform));
-    launcherPanel->addProvider(std::make_unique<WallpaperProvider>(&m_configService, &m_wayland, &m_themeService));
-    launcherPanel->addProvider(std::make_unique<WindowProvider>(&m_compositorPlatform));
-    launcherPanel->addProvider(std::make_unique<SessionProvider>(&m_configService, &m_sessionActionRunner));
-    launcherPanel->addProvider(std::make_unique<MathProvider>(&m_clipboardService, &m_configService, &m_httpClient));
-    launcherPanel->addProvider(std::make_unique<EmojiProvider>(&m_clipboardService));
-    launcherPanel->setCopiedActivationCallback([this]() {
-      const ClipboardAutoPasteMode mode = m_configService.config().shell.launcher.autoPaste;
-      if (mode == ClipboardAutoPasteMode::Off) {
-        return;
-      }
-      m_launcherAutoPasteTimer.stop();
-      m_launcherAutoPasteTimer.start(std::chrono::milliseconds(Style::animFast + 30), [this]() {
-        DeferredCall::callLater([this]() {
-          const ClipboardAutoPasteMode activeMode = m_configService.config().shell.launcher.autoPaste;
-          (void)clipboard_paste::pasteEntry(false, activeMode, m_virtualKeyboardService);
-        });
-      });
-    });
-    m_launcherPanel = launcherPanel.get();
-    m_panelManager.registerPanel("launcher", std::move(launcherPanel));
-  }
-  m_configService.addReloadCallback(
-      [this]() {
-        if (m_launcherPanel != nullptr) {
-          m_launcherPanel->syncUsageTrackingState();
-        }
-      },
-      "launcher-usage"
-  );
-  m_settingsWindow.setResetLauncherUsage([this]() {
-    if (m_launcherPanel != nullptr) {
-      m_launcherPanel->clearUsage();
-    }
-    notify::info(
-        "Noctalia", i18n::tr("notifications.internal.launcher-usage-reset"),
-        i18n::tr("notifications.internal.launcher-usage-reset-success")
-    );
-  });
+  syncClipboardService();
+  if (m_configService.config().shell.panel.enabled) {
   m_settingsWindow.setResetScreenTime([this]() {
     m_screenTimeService.clearAll();
     notify::info(
-        "Noctalia", i18n::tr("notifications.internal.screen-time-reset"),
+        "Mono Shell", i18n::tr("notifications.internal.screen-time-reset"),
         i18n::tr("notifications.internal.screen-time-reset-success")
     );
   });
@@ -680,20 +597,6 @@ void Application::initPanelManagerAndPanels() {
     m_overviewLauncherCapture.setEnabled(m_configService.config().shell.niriOverviewTypeToLaunchEnabled);
   });
   m_overviewLauncherCapture.sync();
-  m_panelManager.registerPanel(
-      "wallpaper",
-      std::make_unique<WallpaperPanel>(
-          &m_wayland, &m_configService, &m_thumbnailService, &m_wallpaperScanner, &m_themeService
-      )
-  );
-  m_panelManager.registerPanel("tray-drawer", std::make_unique<TrayDrawerPanel>(m_trayService.get(), &m_configService));
-  m_panelManager.registerPanel("polkit", std::make_unique<PolkitPanel>(&m_configService, [this]() {
-                                 return m_polkitAgent.get();
-                               }));
-  m_panelManager.registerPanel("setup-wizard", std::make_unique<SetupWizardPanel>(&m_configService, &m_wayland));
-
-  if (SetupWizardPanel::isFirstRun(m_configService)) {
-    DeferredCall::callLater([]() { PanelManager::instance().togglePanel("setup-wizard"); });
   }
 }
 

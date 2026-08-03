@@ -679,7 +679,7 @@
       "desktop-widgets-editor": "Редактор виджетов",
       "desktop-widgets-editor-enabled": "Редактор виджетов рабочего стола включён. Переключитесь на пустое рабочее пространство, чтобы увидеть оверлей редактора.",
       "greeter-sync": "Noctalia Greeter",
-      "greeter-sync-pending-manual": "Файлы подготовлены. Запустите в терминале: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\". Или задайте shell.greeter_sync.privilege_command (например, ghostty -e pkexec) и повторите синхронизацию.",
+      "greeter-sync-pending-manual": "Файлы подготовлены. Запустите в терминале: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\". Или задайте shell.greeter_sync.privilege_command (например, ghostty -e pkexec) и повторите синхронизацию.",
       "greeter-sync-success": "Внешний вид синхронизирован. Изменения вступят в силу на следующем экране входа.",
       "keybind-app": "Noctalia",
       "keybind-invalid-modifier": "Это сочетание клавиш принимает одну клавишу без модификаторов.",
@@ -988,7 +988,7 @@
       "reset-page": "Не удалось сбросить некоторые настройки.",
       "support-report": "Не удалось сохранить отчёт поддержки.",
       "sync-greeter": "Не удалось синхронизировать внешний вид с Noctalia Greeter.",
-      "sync-greeter-timeout-manual": "Для синхронизации Greeter всё ещё требуется подтверждение администратора. Запустите в терминале: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "sync-greeter-timeout-manual": "Для синхронизации Greeter всё ещё требуется подтверждение администратора. Запустите в терминале: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "widget": {
         "rename": "Не удалось переименовать виджет."
       },
@@ -1338,8 +1338,8 @@
         },
         "kind-label": "Тип",
         "location-label": "Местоположение",
-        "location-placeholder-git": "https://github.com/me/noctalia-plugins",
-        "location-placeholder-path": "~/dev/noctalia-plugins",
+        "location-placeholder-git": "https://github.com/me/mono-shell-plugins",
+        "location-placeholder-path": "~/dev/mono-shell-plugins",
         "name-label": "ID источника",
         "name-placeholder": "my-plugins",
         "precedence-hint": "Источники, расположенные ниже, имеют приоритет над высшими при совпадении плагинов.",
@@ -1401,7 +1401,7 @@
           "label": "Скругление углов"
         },
         "custom-palette": {
-          "description": "Выберите палитру из ~/.config/noctalia/palettes/",
+          "description": "Выберите палитру из ~/.config/mono-shell/palettes/",
           "label": "Пользовательская палитра",
           "search-placeholder": "Поиск пользовательских палитр..."
         },

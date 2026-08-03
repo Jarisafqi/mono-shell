@@ -1,4 +1,4 @@
-project('noctalia', ['c', 'cpp'],
+project('mono-shell', ['c', 'cpp'],
   version: '5.0.0',
   default_options: [
     'cpp_std=c++23',
@@ -112,7 +112,7 @@ if is_glibc
   jemalloc_dep = dependency('jemalloc', required: jemalloc_option)
   if jemalloc_dep.found()
     jemalloc_deps += [jemalloc_dep]
-    jemalloc_cpp_args += ['-DNOCTALIA_USE_JEMALLOC=1']
+    jemalloc_cpp_args += ['-DMONO_SHELL_USE_JEMALLOC=1']
   endif
 endif
 
@@ -411,7 +411,7 @@ _protocol_sources += _wlr_ls_c
 _protocol_headers += _wlr_ls_h
 
 # ── Main sources ──────────────────────────────────────────────────────────────
-_noctalia_sources = files(
+_monoshell_sources = files(
   'src/app/application.cpp',
   'src/app/application_events.cpp',
   'src/app/application_ipc.cpp',
@@ -948,14 +948,14 @@ _noctalia_sources = files(
 )
 
 if sanitize
-  _noctalia_sources += files('src/core/lsan_suppressions.cpp')
+  _monoshell_sources += files('src/core/lsan_suppressions.cpp')
 endif
 
 git_program = find_program('git', required: false)
 if git_program.found()
   _git_revision_h = vcs_tag(
     input: 'src/core/git_revision.h.in',
-    output: 'noctalia_git_revision.h',
+    output: 'monoshell_git_revision.h',
     command: [git_program, 'describe', '--tags', '--always', '--dirty=-dirty', '--abbrev=12'],
     fallback: 'unknown',
   )
@@ -964,13 +964,13 @@ else
   _git_revision_config.set('VCS_TAG', 'unknown')
   _git_revision_h = configure_file(
     input: 'src/core/git_revision.h.in',
-    output: 'noctalia_git_revision.h',
+    output: 'monoshell_git_revision.h',
     configuration: _git_revision_config,
   )
 endif
 
 # ── Include directories ────────────────────────────────────────────────────────
-_noctalia_inc = [
+_monoshell_inc = [
   include_directories('src'),
   include_directories('third_party/wuffs', is_system: true),
   # '.' adds both the source root and the corresponding build-dir root, so
@@ -979,7 +979,7 @@ _noctalia_inc = [
 ]
 
 # ── Application library and executable ────────────────────────────────────────
-_noctalia_system_dependencies = [
+_monoshell_system_dependencies = [
   sdbus_cpp_dep,
   wayland_client_dep,
   egl_dep,
@@ -1018,68 +1018,68 @@ _noctalia_system_dependencies = [
   sndfile_dep,
 ] + jemalloc_deps + (dl_dep.found() ? [dl_dep] : [])
 
-_noctalia_dependencies = _noctalia_system_dependencies + [
+_monoshell_dependencies = _monoshell_system_dependencies + [
   fzy_dep,
   mcu_dep,
   luau_dep,
 ]
 
-_noctalia_test_dependencies = _noctalia_system_dependencies + [
+_monoshell_test_dependencies = _monoshell_system_dependencies + [
   _fzy_selective_dep,
   _mcu_selective_dep,
   _luau_selective_dep,
 ]
 
-_noctalia_compile_definitions = [
-  '-DNOCTALIA_SOURCE_ASSETS_DIR="' + meson.project_source_root() / 'assets' + '"',
-  '-DNOCTALIA_INSTALL_PREFIX="' + get_option('prefix') + '"',
-  '-DNOCTALIA_INSTALL_DATADIR="' + get_option('datadir') + '"',
-  '-DNOCTALIA_VERSION="' + meson.project_version() + '"',
+_monoshell_compile_definitions = [
+  '-DMONO_SHELL_SOURCE_ASSETS_DIR="' + meson.project_source_root() / 'assets' + '"',
+  '-DMONO_SHELL_INSTALL_PREFIX="' + get_option('prefix') + '"',
+  '-DMONO_SHELL_INSTALL_DATADIR="' + get_option('datadir') + '"',
+  '-DMONO_SHELL_VERSION="' + meson.project_version() + '"',
 ] + jemalloc_cpp_args
 
-_noctalia_cpp_args = [
+_monoshell_cpp_args = [
   '-Wall', '-Wextra', '-Wno-missing-field-initializers', '-Wpedantic', '-Wconversion', '-Wshadow',
-] + _noctalia_compile_definitions
+] + _monoshell_compile_definitions
 
 # Production sources and generated protocols compile once. The shell links the
 # archive whole; tests link it normally so only the objects they exercise enter
 # each test executable.
-noctalia_core_lib = static_library('noctalia_core',
-  sources: _noctalia_sources + _protocol_sources + _protocol_headers + [_git_revision_h],
-  dependencies: _noctalia_dependencies,
-  include_directories: _noctalia_inc,
-  cpp_args: _noctalia_cpp_args,
+monoshell_core_lib = static_library('mono-shell_core',
+  sources: _monoshell_sources + _protocol_sources + _protocol_headers + [_git_revision_h],
+  dependencies: _monoshell_dependencies,
+  include_directories: _monoshell_inc,
+  cpp_args: _monoshell_cpp_args,
 )
 
-noctalia_core_dep = declare_dependency(
-  link_with: noctalia_core_lib,
-  dependencies: _noctalia_test_dependencies,
-  include_directories: _noctalia_inc,
-  compile_args: _noctalia_compile_definitions,
+monoshell_core_dep = declare_dependency(
+  link_with: monoshell_core_lib,
+  dependencies: _monoshell_test_dependencies,
+  include_directories: _monoshell_inc,
+  compile_args: _monoshell_compile_definitions,
   sources: _protocol_headers,
 )
 
-noctalia_exe = executable('noctalia',
+monoshell_exe = executable('mono-shell',
   sources: files('src/main.cpp') + _protocol_headers,
-  dependencies: _noctalia_dependencies,
-  include_directories: _noctalia_inc,
-  cpp_args: _noctalia_cpp_args,
-  objects: noctalia_core_lib.extract_all_objects(recursive: false),
+  dependencies: _monoshell_dependencies,
+  include_directories: _monoshell_inc,
+  cpp_args: _monoshell_cpp_args,
+  objects: monoshell_core_lib.extract_all_objects(recursive: false),
   install: true,
 )
 
 install_subdir('assets',
-  install_dir: get_option('datadir') / 'noctalia',
-  exclude_files: ['dev.noctalia.Noctalia.desktop'],
+  install_dir: get_option('datadir') / 'mono-shell',
+  exclude_files: ['dev.monoshell.MonoShell.desktop'],
 )
 
 install_data(
-  'assets/dev.noctalia.Noctalia.desktop',
+  'assets/dev.monoshell.MonoShell.desktop',
   install_dir: get_option('datadir') / 'applications',
 )
 
 install_data(
-  'assets/noctalia.svg',
+  'assets/mono-shell.svg',
   install_dir: get_option('datadir') / 'icons' / 'hicolor' / 'scalable' / 'apps',
 )
 
@@ -1154,21 +1154,21 @@ if build_tests
   foreach test_name : _cpp_test_names
     test_exe = executable(test_name + '_test',
       sources: files('tests' / (test_name + '_test.cpp')),
-      dependencies: noctalia_core_dep,
+      dependencies: monoshell_core_dep,
     )
     test(test_name, test_exe)
   endforeach
 
   config_validate_env = environment()
-  config_validate_env.set('NOCTALIA_CONFIG_HOME', meson.current_source_dir() / 'tests/config_validate/config-home')
-  config_validate_env.set('NOCTALIA_STATE_HOME', meson.current_source_dir() / 'tests/config_validate/state-home')
-  config_validate_env.set('NOCTALIA_DATA_HOME', meson.current_source_dir() / 'tests/config_validate/data-home')
+  config_validate_env.set('MONO_SHELL_CONFIG_HOME', meson.current_source_dir() / 'tests/config_validate/config-home')
+  config_validate_env.set('MONO_SHELL_STATE_HOME', meson.current_source_dir() / 'tests/config_validate/state-home')
+  config_validate_env.set('MONO_SHELL_DATA_HOME', meson.current_source_dir() / 'tests/config_validate/data-home')
 
   sh_program = find_program('sh')
   test('config_validate_cli',
     sh_program,
-    args: ['tests/config_validate_cli_test.sh', noctalia_exe.full_path()],
-    depends: noctalia_exe,
+    args: ['tests/config_validate_cli_test.sh', monoshell_exe.full_path()],
+    depends: monoshell_exe,
     workdir: meson.current_source_dir(),
     env: config_validate_env,
   )

@@ -31,11 +31,11 @@ namespace {
 
   constexpr Logger kLog("greeter-sync");
 
-  constexpr std::string_view kApplyHelperName = "noctalia-greeter-apply-appearance";
-  constexpr std::string_view kGreeterName = "noctalia-greeter";
+  constexpr std::string_view kApplyHelperName = "mono-shell-greeter-apply-appearance";
+  constexpr std::string_view kGreeterName = "mono-shell-greeter";
   constexpr std::string_view kGreeterTomlFileName = "greeter.toml";
-  constexpr std::string_view kDefaultGreeterStateDir = "/var/lib/noctalia-greeter";
-  constexpr std::string_view kGreeterStateDirEnv = "NOCTALIA_GREETER_STATE_DIR";
+  constexpr std::string_view kDefaultGreeterStateDir = "/var/lib/mono-shell-greeter";
+  constexpr std::string_view kGreeterStateDirEnv = "MONO_SHELL_GREETER_STATE_DIR";
   constexpr std::string_view kStagedOutputLayoutFileName = "output_layout";
   constexpr std::string_view kStagedOutputTransformsFileName = "output_transforms";
   // Staged sync.toml fragment (appearance + session); apply helper merges into live sync.toml.
@@ -177,7 +177,7 @@ namespace {
   [[nodiscard]] std::string findApplyHelper() {
     return resolveProgramPath(
         kApplyHelperName,
-        {"/usr/bin/noctalia-greeter-apply-appearance", "/usr/local/bin/noctalia-greeter-apply-appearance"}
+        {"/usr/bin/mono-shell-greeter-apply-appearance", "/usr/local/bin/mono-shell-greeter-apply-appearance"}
     );
   }
 
@@ -186,7 +186,7 @@ namespace {
     const std::filesystem::path base = runtimeDir != nullptr && runtimeDir[0] != '\0'
         ? std::filesystem::path(runtimeDir)
         : std::filesystem::temp_directory_path();
-    const auto staging = base / "noctalia-greeter-sync";
+    const auto staging = base / "mono-shell-greeter-sync";
     std::error_code ec;
     std::filesystem::remove_all(staging, ec);
     std::filesystem::create_directories(staging, ec);
@@ -249,7 +249,7 @@ namespace {
     return out.str();
   }
 
-  // Stages a sync.toml fragment (appearance + session) for noctalia-greeter-apply-appearance.
+  // Stages a sync.toml fragment (appearance + session) for mono-shell-greeter-apply-appearance.
   [[nodiscard]] bool writeStagedSyncToml(
       const std::filesystem::path& staging, const Config& config, std::string_view resolvedMode,
       const std::string& wallpaperPath, const std::string& installedWallpaperName,
@@ -334,7 +334,7 @@ namespace {
       kLog.warn("failed to open staged sync.toml '{}'", syncPath.string());
       return false;
     }
-    out << "# noctalia-greeter staged sync.toml (merged into live sync.toml by apply-appearance)\n\n";
+    out << "# mono-shell-greeter staged sync.toml (merged into live sync.toml by apply-appearance)\n\n";
     out << formatToml(root);
     if (!out.good()) {
       kLog.warn("failed to write staged sync.toml '{}'", syncPath.string());
@@ -577,7 +577,7 @@ namespace {
 namespace greeter {
 
   bool appearanceSyncAvailable(const ShellGreeterSyncConfig& greeterSync) noexcept {
-    return programExists(kGreeterName, {"/usr/bin/noctalia-greeter", "/usr/local/bin/noctalia-greeter"})
+    return programExists(kGreeterName, {"/usr/bin/mono-shell-greeter", "/usr/local/bin/mono-shell-greeter"})
         && !findApplyHelper().empty()
         && (process::resolvePrivilegeEscalator().has_value() || hasPrivilegeCommandOverride(greeterSync));
   }
@@ -714,7 +714,7 @@ namespace greeter {
             return "error: usage: greeter-sync\n";
           }
           if (!appearanceSyncAvailable(config.config().shell.greeterSync)) {
-            return "error: noctalia greeter is not installed\n";
+            return "error: mono-shell greeter is not installed\n";
           }
           const bool logind = logindOnSystemBus != nullptr && logindOnSystemBus();
           const GreeterSyncLaunch launch =
@@ -727,7 +727,7 @@ namespace greeter {
           }
           return "ok\n";
         },
-        "", "Sync wallpaper, colors, and monitor layout to Noctalia Greeter",
+        "", "Sync wallpaper, colors, and monitor layout to Mono Shell Greeter",
         IpcService::HandlerOptions{.actionEditorVisibility = IpcService::ActionEditorVisibility::Hidden}
     );
   }

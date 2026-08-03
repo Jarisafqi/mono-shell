@@ -168,8 +168,8 @@ bool PipeWireSpectrum::Stream::start() {
   }
 
   auto* props = pw_properties_new(
-      PW_KEY_MEDIA_TYPE, "Audio", PW_KEY_MEDIA_CATEGORY, "Capture", PW_KEY_MEDIA_NAME, "Noctalia Spectrum",
-      PW_KEY_APP_NAME, "Noctalia Spectrum", PW_KEY_STREAM_MONITOR, "true", PW_KEY_STREAM_CAPTURE_SINK, "true",
+      PW_KEY_MEDIA_TYPE, "Audio", PW_KEY_MEDIA_CATEGORY, "Capture", PW_KEY_MEDIA_NAME, "Mono Shell Spectrum",
+      PW_KEY_APP_NAME, "Mono Shell Spectrum", PW_KEY_STREAM_MONITOR, "true", PW_KEY_STREAM_CAPTURE_SINK, "true",
       PW_KEY_MEDIA_ROLE, "Music", PW_KEY_TARGET_OBJECT, m_targetObject.c_str(), PW_KEY_NODE_PASSIVE, "true", nullptr
   );
   if (props == nullptr) {
@@ -177,7 +177,7 @@ bool PipeWireSpectrum::Stream::start() {
     return false;
   }
 
-  m_stream = pw_stream_new(core, "noctalia-spectrum", props);
+  m_stream = pw_stream_new(core, "mono-shell-spectrum", props);
   if (m_stream == nullptr) {
     pw_properties_free(props);
     kLog.warn("failed to create spectrum stream");
@@ -347,7 +347,7 @@ void PipeWireSpectrum::Stream::handleProcess() {
 }
 
 PipeWireSpectrum::PipeWireSpectrum(PipeWireService& service) : m_service(service) {
-  m_diagEnabled = std::getenv("NOCTALIA_SPECTRUM_DEBUG") != nullptr;
+  m_diagEnabled = std::getenv("MONO_SHELL_SPECTRUM_DEBUG") != nullptr;
   initProcessing();
 }
 

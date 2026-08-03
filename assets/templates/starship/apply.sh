@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-palette_file="${XDG_CACHE_HOME:-$HOME/.cache}/noctalia/starship-palette.toml"
+palette_file="${XDG_CACHE_HOME:-$HOME/.cache}/mono-shell/starship-palette.toml"
 marker_begin="# >>> NOCTALIA STARSHIP PALETTE >>>"
 marker_end="# <<< NOCTALIA STARSHIP PALETTE <<<"
 
@@ -83,14 +83,14 @@ trap cleanup EXIT
 # ! -f covers a missing path and a dangling symlink (write-through creates the target).
 if [ ! -f "$config_file" ]; then
     {
-        echo 'palette = "noctalia"'
+        echo 'palette = "mono-shell"'
         echo ""
         echo "$marker_begin"
         cat "$palette_file"
         echo "$marker_end"
     } >"$tmp_file"
 else
-    # Strip the previous noctalia palette block and any palette= line, keep the rest.
+    # Strip the previous mono-shell palette block and any palette= line, keep the rest.
     body_file="$(mktemp "${config_file}.body.XXXXXX")"
     cleanup_body() {
         rm -f "$tmp_file" "$body_file"
@@ -118,7 +118,7 @@ else
                 /^"\$schema"/ {
                     print
                     if (!inserted) {
-                        print "palette = \"noctalia\""
+                        print "palette = \"mono-shell\""
                         inserted = 1
                     }
                     next
@@ -126,7 +126,7 @@ else
                 { print }
             ' "$body_file"
         else
-            echo 'palette = "noctalia"'
+            echo 'palette = "mono-shell"'
             cat "$body_file"
         fi
         echo ""

@@ -77,7 +77,7 @@ namespace {
   }
 
   bool blurTraceEnabled() {
-    static const bool enabled = SysUtils::isEnvFlagOn("NOCTALIA_BLUR_TRACE");
+    static const bool enabled = SysUtils::isEnvFlagOn("MONO_SHELL_BLUR_TRACE");
     return enabled;
   }
 
@@ -824,7 +824,7 @@ void PanelManager::openPanel(const std::string& panelId, PanelOpenRequest reques
   }
 
   auto surfaceConfig = LayerSurfaceConfig{
-      .nameSpace = "noctalia-panel",
+      .nameSpace = "mono-shell-panel",
       .layer = floatingPanelLayer,
       .anchor = standaloneAnchor,
       .width = requestedSurfaceWidth,
@@ -1068,7 +1068,7 @@ void PanelManager::openPanel(const std::string& panelId, PanelOpenRequest reques
     }
 
     auto attachedConfig = LayerSurfaceConfig{
-        .nameSpace = "noctalia-attached-panel",
+        .nameSpace = "mono-shell-attached-panel",
         .layer = panelLayer,
         .anchor = attachedAnchor,
         .width = surfaceWidth,
@@ -2757,7 +2757,7 @@ void PanelManager::registerIpc(IpcService& ipc) {
       [this](const std::string& args) -> std::string {
         const auto parts = noctalia::ipc::splitWords(args);
         if (parts.size() != 1) {
-          return "error: settings-open-plugin takes <plugin-id> (e.g. noctalia/notes)\n";
+          return "error: settings-open-plugin takes <plugin-id> (e.g. mono-shell/notes)\n";
         }
         const std::string& pluginId = parts[0];
         if (!scripting::isValidPluginId(pluginId)) {
@@ -2772,7 +2772,7 @@ void PanelManager::registerIpc(IpcService& ipc) {
         }
         return "ok\n";
       },
-      "<plugin-id>", "Open the settings window at a plugin's settings (e.g. noctalia/notes)"
+      "<plugin-id>", "Open the settings window at a plugin's settings (e.g. mono-shell/notes)"
   );
 
   ipc.registerHandler(

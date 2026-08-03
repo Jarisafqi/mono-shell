@@ -9,7 +9,13 @@
 #include "ui/style.h"
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
+#include <ctime>
+#include <format>
+#include <linux/input-event-codes.h>
+#include <string>
+#include <string_view>
 
 namespace {
   constexpr float kStackedPrimaryScale = 0.72f;
@@ -24,6 +30,10 @@ namespace {
     }
     return {text.substr(0, newline), text.substr(newline + 1)};
   }
+
+  constexpr std::array<std::string_view, 12> kMonthAbbrevs{
+      "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
+
 } // namespace
 
 ClockWidget::ClockWidget(wl_output* /*output*/, Options options)
@@ -71,6 +81,22 @@ std::string ClockWidget::formatTimeText() const {
   return out;
 }
 
+std::string ClockWidget::formatDateText() const {
+  const auto now = std::chrono::system_clock::now();
+  const std::time_t time = std::chrono::system_clock::to_time_t(now);
+  std::tm local{};
+  localtime_r(&time, &local);
+  const int monthIndex = std::clamp(local.tm_mon, 0, 11);
+  return std::format("{}-{}-{}", local.tm_mday, kMonthAbbrevs[static_cast<std::size_t>(monthIndex)],
+                     local.tm_year + 1900);
+}
+
+void ClockWidget::toggleDateDisplay() {
+  m_showingDate = !m_showingDate;
+  requestUpdate();
+  requestRedraw();
+}
+
 std::string ClockWidget::formatTooltipText() const {
   if (m_tooltipFormat.empty()) {
     return {};
@@ -84,6 +110,11 @@ std::string ClockWidget::formatTooltipText() const {
 
 void ClockWidget::create() {
   auto area = ui::inputArea({});
+  area->setOnPress([this](const InputArea::PointerData& data) {
+    if (!data.pressed && data.button == BTN_LEFT) {
+      toggleDateDisplay();
+    }
+  });
   area->addChild(
       ui::label({
           .out = &m_label,
@@ -160,6 +191,10 @@ void ClockWidget::doLayout(Renderer& renderer, float containerWidth, float conta
     height = m_label->height() + m_secondaryLabel->height();
   }
 
+  // Left/right inset so the widget doesn't hug its neighbours.
+  const float hPad = Style::spaceXs * m_contentScale;
+  width += 2.0f * hPad;
+
   if (showSecondary) {
     const auto primaryMetrics =
         renderer.measureText(m_lastPrimaryText, primaryFontSize, fontWeight, 0.0f, 1, TextAlign::Start);
@@ -174,7 +209,7 @@ void ClockWidget::doLayout(Renderer& renderer, float containerWidth, float conta
     m_label->setPosition(std::round(centerX - primaryInkCenterX), 0.0f);
     m_secondaryLabel->setPosition(std::round(centerX - secondaryInkCenterX), m_label->height());
   } else {
-    m_label->setPosition(0.0f, 0.0f);
+    m_label->setPosition(hPad, 0.0f);
   }
   rootNode->setSize(width, height);
 }
@@ -184,7 +219,7 @@ void ClockWidget::doUpdate(Renderer& renderer) {
     return;
   }
 
-  auto text = formatTimeText();
+  auto text = m_showingDate ? formatDateText() : formatTimeText();
   if (text != m_lastText) {
     m_lastText = std::move(text);
   }

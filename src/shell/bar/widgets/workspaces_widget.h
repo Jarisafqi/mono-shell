@@ -134,6 +134,8 @@ private:
   };
 
   [[nodiscard]] ColorSpec workspaceFillColor(const Workspace& workspace) const;
+  [[nodiscard]] ColorSpec workspaceBorderColor(const Workspace& workspace) const;
+  [[nodiscard]] bool workspaceBorderVisible(const Workspace& workspace) const;
   [[nodiscard]] ColorSpec workspaceTextColor(const Workspace& workspace) const;
   [[nodiscard]] static ColorRole onRoleForFill(ColorRole fill);
   [[nodiscard]] static ColorSpec readableColorForFill(const ColorSpec& fill);

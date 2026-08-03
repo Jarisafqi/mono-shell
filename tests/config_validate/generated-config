@@ -12,13 +12,13 @@ capsule = true
 capsule_radius = "auto"
 
 [plugins]
-enabled = ["noctalia/wallhaven"]
+enabled = ["mono-shell/wallhaven"]
 
 [[plugins.source]]
 name = "test"
 kind = "path"
 location = "tests/config_validate/plugin-source"
 
-[plugin_settings."noctalia/wallhaven"]
+[plugin_settings."mono-shell/wallhaven"]
 browser_placement = "floating"
 browser_position = "center"

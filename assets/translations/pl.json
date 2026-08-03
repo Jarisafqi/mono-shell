@@ -1097,8 +1097,8 @@
         },
         "kind-label": "Rodzaj",
         "location-label": "Lokalizacja",
-        "location-placeholder-git": "https://github.com/me/noctalia-plugins",
-        "location-placeholder-path": "~/dev/noctalia-plugins",
+        "location-placeholder-git": "https://github.com/me/mono-shell-plugins",
+        "location-placeholder-path": "~/dev/mono-shell-plugins",
         "name-label": "Nazwa",
         "name-placeholder": "moje-wtyczki",
         "remove": "Usuń źródło",
@@ -1138,7 +1138,7 @@
           "label": "Zaokrąglenie narożników"
         },
         "custom-palette": {
-          "description": "Wybierz paletę z ~/.config/noctalia/palettes/",
+          "description": "Wybierz paletę z ~/.config/mono-shell/palettes/",
           "label": "Niestandardowa paleta",
           "search-placeholder": "Szukaj niestandardowych palet…"
         },

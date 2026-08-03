@@ -88,7 +88,7 @@ public:
   [[nodiscard]] bool deferExternalRefresh() const override;
   [[nodiscard]] bool deferPointerRelayout() const override;
   [[nodiscard]] float preferredWidth() const override;
-  [[nodiscard]] float preferredHeight() const override { return scaled(520.0f); }
+  [[nodiscard]] float preferredHeight() const override;
   [[nodiscard]] PanelPlacement panelPlacement() const noexcept override;
 
 private:

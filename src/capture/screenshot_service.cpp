@@ -42,7 +42,7 @@
 namespace {
 
   constexpr Logger kLog("screenshot");
-  constexpr const char* kScreenshotPathEnv = "NOCTALIA_SCREENSHOT_PATH";
+  constexpr const char* kScreenshotPathEnv = "MONO_SHELL_SCREENSHOT_PATH";
   constexpr const char* kStateOwner = "screenshot";
   constexpr const char* kLastRegionKey = "last_region";
 
@@ -1489,9 +1489,9 @@ ScreenshotService::makeScreenshotPath(const OutputOptions& options, const std::s
 }
 
 void ScreenshotService::notifySaved(const std::filesystem::path& path) {
-  m_notifications.addInternal("Noctalia", "Screenshot saved", path.string());
+  m_notifications.addInternal("Mono Shell", "Screenshot saved", path.string());
 }
 
 void ScreenshotService::notifyError(const std::string& message) {
-  m_notifications.addInternal("Noctalia", "Screenshot failed", message, Urgency::Critical);
+  m_notifications.addInternal("Mono Shell", "Screenshot failed", message, Urgency::Critical);
 }

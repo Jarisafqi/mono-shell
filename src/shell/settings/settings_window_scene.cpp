@@ -1213,7 +1213,7 @@ std::unique_ptr<Flex> SettingsWindow::buildFilterRow(
   }
   filters->addChild(ui::spacer());
 
-  static const bool translatorMode = SysUtils::isEnvFlagOn("NOCTALIA_TRANSLATOR");
+  static const bool translatorMode = SysUtils::isEnvFlagOn("MONO_SHELL_TRANSLATOR");
   if (translatorMode) {
     auto enLabel =
         makeLabel("en", Style::fontSizeBody * scale, colorSpecFromRole(ColorRole::Error), FontWeight::Normal);

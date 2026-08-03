@@ -29,8 +29,8 @@ namespace {
 } // namespace
 
 int main() {
-  ::setenv("NOCTALIA_STATE_HOME", "/tmp/noctalia-path-test-state", 1);
-  ::setenv("NOCTALIA_DATA_HOME", "/tmp/noctalia-path-test-data", 1);
+  ::setenv("NOCTALIA_STATE_HOME", "/tmp/mono-shell-path-test-state", 1);
+  ::setenv("NOCTALIA_DATA_HOME", "/tmp/mono-shell-path-test-data", 1);
 
   const PluginSourceConfig gitSource{
       .kind = PluginSourceKind::Git,
@@ -40,13 +40,13 @@ int main() {
   const PluginSourceConfig pathSource{
       .kind = PluginSourceKind::Path,
       .name = "dev",
-      .location = "~/dev/noctalia-plugins",
+      .location = "~/dev/mono-shell-plugins",
   };
 
-  const std::filesystem::path stateRoot = "/tmp/noctalia-path-test-state/noctalia";
+  const std::filesystem::path stateRoot = "/tmp/mono-shell-path-test-state/mono-shell";
   bool ok = true;
   ok = expectPath(
-           scripting::plugin_paths::localSourceRoot(), "/tmp/noctalia-path-test-data/noctalia/plugins",
+           scripting::plugin_paths::localSourceRoot(), "/tmp/mono-shell-path-test-data/mono-shell/plugins",
            "local source root"
        )
       && ok;
@@ -73,22 +73,22 @@ int main() {
   ok = expect(isDefaultPluginSourceName("community"), "community source should be protected as a default source") && ok;
   ok = expect(!isDefaultPluginSourceName("dev"), "custom source should not be protected as a default source") && ok;
   ok = expect(
-           scripting::plugin_paths::registryRoot(pathSource).string().ends_with("/dev/noctalia-plugins"),
+           scripting::plugin_paths::registryRoot(pathSource).string().ends_with("/dev/mono-shell-plugins"),
            "path source registry root expands user path"
        )
       && ok;
   ok = expect(
-           scripting::plugin_paths::pathIsInside("/tmp/noctalia/a/b", "/tmp/noctalia"),
+           scripting::plugin_paths::pathIsInside("/tmp/mono-shell/a/b", "/tmp/mono-shell"),
            "child path should be inside parent"
        )
       && ok;
   ok = expect(
-           !scripting::plugin_paths::pathIsInside("/tmp/noctalia", "/tmp/noctalia"),
+           !scripting::plugin_paths::pathIsInside("/tmp/mono-shell", "/tmp/mono-shell"),
            "parent path must not count as inside itself"
        )
       && ok;
   ok = expect(
-           !scripting::plugin_paths::pathIsInside("/tmp/noctalia-other/a", "/tmp/noctalia"),
+           !scripting::plugin_paths::pathIsInside("/tmp/mono-shell-other/a", "/tmp/mono-shell"),
            "sibling prefix must not count as inside parent"
        )
       && ok;

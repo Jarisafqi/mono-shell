@@ -398,7 +398,7 @@ inactive_opacity    = 0.85
 show_dots           = false
 show_instance_count = true
 launcher_position   = "none"       # none | start | end
-launcher_icon       = "grid-dots"  # Tabler glyph name
+launcher_icon       = "grid-dots"  # icon glyph name
 active_monitor_only = false
 pinned              = []            # e.g. ["firefox", "code", "kitty"]
 

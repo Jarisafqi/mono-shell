@@ -27,7 +27,7 @@ namespace noctalia::bar {
     };
 
     // Widgets whose whole-widget gestures are declared here rather than wired by hand in create().
-    constexpr std::array<GestureBinding, 1> kBattery{{{Gesture::Left, "panel-toggle control-center power"}}};
+    constexpr std::array<GestureBinding, 1> kBattery{{{Gesture::Left, "panel-toggle control-center notifications"}}};
     constexpr std::array<GestureBinding, 2> kBluetooth{
         {{Gesture::Left, "panel-toggle control-center bluetooth"}, {Gesture::Right, "bluetooth-toggle"}}
     };
@@ -37,7 +37,10 @@ namespace noctalia::bar {
          {Gesture::ScrollDown, "brightness-down"}}
     };
     constexpr std::array<GestureBinding, 1> kClipboard{{{Gesture::Left, "panel-toggle clipboard"}}};
-    constexpr std::array<GestureBinding, 1> kClock{{{Gesture::Left, "panel-toggle control-center calendar"}}};
+    // Clock owns its left button in ClockWidget (click toggles time <-> date), so no
+    // panel gesture is bound here. Freedom from a binding keeps the left click on the
+    // widget's own input area instead of being consumed by the gesture dispatcher.
+    constexpr std::array<GestureBinding, 0> kClock{};
     constexpr std::array<GestureBinding, 1> kControlCenter{{{Gesture::Left, "panel-toggle control-center home"}}};
     constexpr std::array<GestureBinding, 1> kLauncher{{{Gesture::Left, "panel-toggle launcher"}}};
     constexpr std::array<GestureBinding, 2> kNetwork{

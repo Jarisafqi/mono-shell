@@ -44,23 +44,23 @@ namespace noctalia::theme::firefox_theme::css {
     }
 
     [[nodiscard]] std::filesystem::path cssAssetDir() {
-#ifdef NOCTALIA_SOURCE_ASSETS_DIR
+#ifdef MONO_SHELL_SOURCE_ASSETS_DIR
       {
-        const auto source = std::filesystem::path(NOCTALIA_SOURCE_ASSETS_DIR) / "firefox_theme" / "css";
+        const auto source = std::filesystem::path(MONO_SHELL_SOURCE_ASSETS_DIR) / "firefox_theme" / "css";
         std::error_code ec;
         if (std::filesystem::is_directory(source, ec)) {
           return source;
         }
       }
 #endif
-#ifdef NOCTALIA_INSTALL_PREFIX
-#ifdef NOCTALIA_INSTALL_DATADIR
+#ifdef MONO_SHELL_INSTALL_PREFIX
+#ifdef MONO_SHELL_INSTALL_DATADIR
       {
-        const std::filesystem::path datadir(NOCTALIA_INSTALL_DATADIR);
-        const auto installed = datadir.is_absolute() ? datadir / "noctalia" / "assets" / "firefox_theme" / "css"
-                                                     : std::filesystem::path(NOCTALIA_INSTALL_PREFIX)
+        const std::filesystem::path datadir(MONO_SHELL_INSTALL_DATADIR);
+        const auto installed = datadir.is_absolute() ? datadir / "mono-shell" / "assets" / "firefox_theme" / "css"
+                                                     : std::filesystem::path(MONO_SHELL_INSTALL_PREFIX)
                 / datadir
-                / "noctalia"
+                / "mono-shell"
                 / "assets"
                 / "firefox_theme"
                 / "css";
@@ -75,7 +75,7 @@ namespace noctalia::theme::firefox_theme::css {
       if (!self.empty()) {
         const auto candidate = std::filesystem::path(self).parent_path().parent_path()
             / "share"
-            / "noctalia"
+            / "mono-shell"
             / "assets"
             / "firefox_theme"
             / "css";

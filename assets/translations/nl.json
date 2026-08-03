@@ -1222,8 +1222,8 @@
         },
         "kind-label": "Soort",
         "location-label": "Locatie",
-        "location-placeholder-git": "https://github.com/me/noctalia-plugins",
-        "location-placeholder-path": "~/dev/noctalia-plugins",
+        "location-placeholder-git": "https://github.com/me/mono-shell-plugins",
+        "location-placeholder-path": "~/dev/mono-shell-plugins",
         "name-label": "Naam",
         "name-placeholder": "mijn-plugins",
         "remove": "Verwijder bron",
@@ -1264,7 +1264,7 @@
           "label": "Hoekronding"
         },
         "custom-palette": {
-          "description": "Kies een palet uit ~/.config/noctalia/palettes/",
+          "description": "Kies een palet uit ~/.config/mono-shell/palettes/",
           "label": "Aangepast palet",
           "search-placeholder": "Aangepaste paletten zoeken..."
         },

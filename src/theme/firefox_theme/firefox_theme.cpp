@@ -36,7 +36,7 @@ namespace noctalia::theme {
     // Wire names required by the Pywalfox Firefox/Thunderbird extension.
     constexpr std::string_view kExtensionId = "pywalfox@frewacom.org";
     constexpr std::string_view kManifestName = "pywalfox";
-    constexpr std::string_view kHostVersion = "noctalia-2.9.0-compat";
+    constexpr std::string_view kHostVersion = "mono-shell-2.9.0-compat";
 
     constexpr std::string_view kActionVersion = "debug:version";
     constexpr std::string_view kActionColors = "action:colors";
@@ -106,9 +106,9 @@ namespace noctalia::theme {
     // reach all Firefox profiles, not only the process that owns the Unix socket.
     [[nodiscard]] std::filesystem::path commandNotifyDir() {
       if (const char* runtime = std::getenv("XDG_RUNTIME_DIR"); runtime != nullptr && runtime[0] != '\0') {
-        return std::filesystem::path(runtime) / "noctalia" / "firefox-theme";
+        return std::filesystem::path(runtime) / "mono-shell" / "firefox-theme";
       }
-      return std::filesystem::temp_directory_path() / ("noctalia-firefox-theme-" + std::to_string(::getuid()));
+      return std::filesystem::temp_directory_path() / ("mono-shell-firefox-theme-" + std::to_string(::getuid()));
     }
 
     [[nodiscard]] std::filesystem::path commandNotifyPath() { return commandNotifyDir() / "command"; }
@@ -194,8 +194,8 @@ namespace noctalia::theme {
       if (!self.empty()) {
         return self;
       }
-#ifdef NOCTALIA_INSTALL_PREFIX
-      const auto installed = std::filesystem::path(NOCTALIA_INSTALL_PREFIX) / "bin" / "noctalia";
+#ifdef MONO_SHELL_INSTALL_PREFIX
+      const auto installed = std::filesystem::path(MONO_SHELL_INSTALL_PREFIX) / "bin" / "mono-shell";
       std::error_code ec;
       if (std::filesystem::is_regular_file(installed, ec)) {
         return installed;
@@ -206,7 +206,7 @@ namespace noctalia::theme {
 
     [[nodiscard]] bool pathLooksLikeNoctaliaHost(const std::filesystem::path& path) {
       const std::string name = path.filename().string();
-      return name == "noctalia" || name == "noctalia-pywalfox";
+      return name == "mono-shell" || name == "mono-shell-pywalfox";
     }
 
     [[nodiscard]] std::optional<std::filesystem::path> readExistingManifestHostPath() {
@@ -233,7 +233,7 @@ namespace noctalia::theme {
     bool installManifest(const std::filesystem::path& hostExecutable, std::string* error) {
       if (hostExecutable.empty() || !std::filesystem::is_regular_file(hostExecutable)) {
         if (error != nullptr) {
-          *error = "noctalia executable not found";
+          *error = "mono-shell executable not found";
         }
         return false;
       }
@@ -260,7 +260,7 @@ namespace noctalia::theme {
 
       const nlohmann::json body = {
           {"name", std::string(kManifestName)},
-          {"description", "Noctalia Firefox theme native messaging host"},
+          {"description", "Mono Shell Firefox theme native messaging host"},
           {"path", path.string()},
           {"type", "stdio"},
           {"allowed_extensions", nlohmann::json::array({std::string(kExtensionId)})},
@@ -298,12 +298,12 @@ namespace noctalia::theme {
       return true;
     }
 
-    // Install only when absent or already owned by noctalia — never clobber a foreign host.
+    // Install only when absent or already owned by mono-shell — never clobber a foreign host.
     bool ensureManifestOwnedByNoctalia(std::string* error, std::string* warning) {
       const auto host = resolveNoctaliaExecutable();
       if (host.empty()) {
         if (error != nullptr) {
-          *error = "noctalia executable not found";
+          *error = "mono-shell executable not found";
         }
         return false;
       }
@@ -631,9 +631,9 @@ namespace noctalia::theme {
 
     void printCliHelp() {
       std::println(
-          "noctalia firefox-theme — Firefox theme host helpers (Pywalfox-compatible)\n"
+          "mono-shell firefox-theme — Firefox theme host helpers (Pywalfox-compatible)\n"
           "\n"
-          "Usage: noctalia firefox-theme <ACTION>\n"
+          "Usage: mono-shell firefox-theme <ACTION>\n"
           "\n"
           "Actions:\n"
           "  host           Run as Firefox native messaging host\n"

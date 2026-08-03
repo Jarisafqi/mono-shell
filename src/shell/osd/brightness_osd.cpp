@@ -1,5 +1,6 @@
 #include "shell/osd/brightness_osd.h"
 
+#include "i18n/i18n.h"
 #include "shell/osd/osd_overlay.h"
 #include "system/brightness_service.h"
 
@@ -21,6 +22,7 @@ namespace {
     return OsdContent{
         .kind = OsdKind::Brightness,
         .icon = brightnessIconName(brightness),
+        .label = i18n::tr("osd.brightness.label"),
         .value = std::to_string(percent) + "%",
         .progress = std::clamp(brightness, 0.0f, 1.0f),
     };

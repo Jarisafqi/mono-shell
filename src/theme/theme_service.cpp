@@ -60,8 +60,8 @@ namespace noctalia::theme {
     ResolvedTheme resolveBuiltin(const ThemeConfig& cfg, std::string_view mode) {
       const auto* palette = findBuiltinPalette(cfg.builtinPalette);
       if (palette == nullptr) {
-        kLog.warn("unknown builtin palette '{}', falling back to Noctalia", cfg.builtinPalette);
-        palette = findBuiltinPalette("Noctalia");
+        kLog.warn("unknown builtin palette '{}', falling back to Mono Shell", cfg.builtinPalette);
+        palette = findBuiltinPalette("Mono Shell");
       }
       const GeneratedPalette generated = expandBuiltinPalette(*palette);
       return {

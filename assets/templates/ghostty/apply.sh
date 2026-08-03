@@ -16,15 +16,15 @@ for config_file in "${config_files[@]}"; do
     [ -f "$config_file" ] || continue
     found=true
 
-    if grep -qE '^theme\s*=\s*noctalia$' "$config_file"; then
+    if grep -qE '^theme\s*=\s*mono-shell$' "$config_file"; then
         :
     elif grep -qE '^theme\s*=' "$config_file"; then
         tmp_file="$(mktemp "${config_file}.tmp.XXXXXX")"
-        sed -E 's/^theme\s*=.*/theme = noctalia/' "$config_file" >"$tmp_file"
+        sed -E 's/^theme\s*=.*/theme = mono-shell/' "$config_file" >"$tmp_file"
         write_if_changed "$config_file" "$tmp_file"
     else
         [ -s "$config_file" ] && [ -n "$(tail -c1 "$config_file")" ] && echo >>"$config_file"
-        echo "theme = noctalia" >>"$config_file"
+        echo "theme = mono-shell" >>"$config_file"
     fi
 done
 

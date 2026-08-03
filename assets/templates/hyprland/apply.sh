@@ -14,13 +14,13 @@ config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/hypr"
 lua_config_file="$config_dir/hyprland.lua"
 conf_config_file="$config_dir/hyprland.conf"
 
-lua_output_file="$config_dir/noctalia.lua"
-conf_output_file="$config_dir/noctalia.conf"
+lua_output_file="$config_dir/mono-shell.lua"
+conf_output_file="$config_dir/mono-shell.conf"
 
 # hyprland expands ~ in source paths; tilde the include for portability while
 # the rendered file is still written to the real conf_output_file path.
 if [[ "$config_dir" == "$HOME"/* ]]; then
-  conf_source_path="~/${config_dir#"$HOME"/}/noctalia.conf"
+  conf_source_path="~/${config_dir#"$HOME"/}/mono-shell.conf"
 else
   conf_source_path="$conf_output_file"
 fi
@@ -33,7 +33,7 @@ detect_mode() {
     return
   fi
 
-  # Fallback for cases where noctalia applies templates where hyprland
+  # Fallback for cases where mono-shell applies templates where hyprland
   # is not reachable. If the user has hyprland.lua, assume Lua config mode.
   if [ -f "$lua_config_file" ]; then
     printf 'lua\n'
@@ -44,7 +44,7 @@ detect_mode() {
 
 apply_lua() {
   local include_line='-- For Noctalia Color templates
-require("noctalia").apply_theme()'
+require("mono-shell").apply_theme()'
 
   mkdir -p "$config_dir"
 
@@ -54,7 +54,7 @@ require("noctalia").apply_theme()'
   fi
 
   # Append only if there is no Noctalia include at all
-  if ! grep -qF 'require("noctalia")' "$lua_config_file"; then
+  if ! grep -qF 'require("mono-shell")' "$lua_config_file"; then
     printf '\n%s\n' "$include_line" >>"$lua_config_file"
   fi
 }
@@ -71,7 +71,7 @@ source = $conf_source_path"
   fi
 
   # Avoid appending duplicate Noctalia includes
-  if ! grep -qE 'source\s*=.*noctalia\.conf' "$conf_config_file"; then
+  if ! grep -qE 'source\s*=.*mono-shell\.conf' "$conf_config_file"; then
     printf '\n%s\n' "$include_line" >>"$conf_config_file"
   fi
 }

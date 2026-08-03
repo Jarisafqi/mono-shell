@@ -33,8 +33,8 @@ namespace noctalia::theme {
   namespace {
 
     constexpr const char* kHelpText =
-        "Usage: noctalia theme <image> [options]\n"
-        "       noctalia theme --list-templates [-c <file>]\n"
+        "Usage: mono-shell theme <image> [options]\n"
+        "       mono-shell theme --list-templates [-c <file>]\n"
         "\n"
         "Generate a color palette from an image. Material You and custom\n"
         "schemes produce very different results.\n"
@@ -505,7 +505,7 @@ namespace noctalia::theme {
     }
 
     if (!imagePath && !themeJsonPath) {
-      std::println(stderr, "error: theme requires an image path or --theme-json (try: noctalia theme --help)");
+      std::println(stderr, "error: theme requires an image path or --theme-json (try: mono-shell theme --help)");
       return 1;
     }
 

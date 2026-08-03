@@ -847,7 +847,7 @@ void LockScreen::tryAuthenticate() {
 
   const PamAuthenticator authenticator = m_authenticator;
   // Authenticate against the "login" stack. If fingerprint is enabled, strip
-  // pam_fprintd from it: noctalia drives the reader itself over D-Bus and the
+  // pam_fprintd from it: mono-shell drives the reader itself over D-Bus and the
   // two can't share the sensor. See docs/fingerprint.md.
   const std::string pamService = "login";
   std::thread([this, generation, password = std::move(password), authenticator, pamService]() mutable {

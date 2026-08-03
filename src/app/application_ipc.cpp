@@ -286,7 +286,7 @@ void Application::initIpc() {
           return "error: notification-show requires <summary> or <json-payload>\n";
         }
 
-        std::string appName = "Noctalia";
+        std::string appName = "Mono Shell";
         std::string summary;
         std::string body;
         Urgency urgency = Urgency::Normal;
@@ -397,23 +397,23 @@ void Application::initIpc() {
 
         if (icon.has_value()) {
           const std::string& iconValue = *icon;
-          const bool hasExplicitPrefix = iconValue.starts_with("noctalia-glyph:");
+          const bool hasExplicitPrefix = iconValue.starts_with("mono-shell-glyph:");
           const bool looksLikePath =
               iconValue.starts_with('/') || iconValue.starts_with("~/") || iconValue.contains('/');
           const bool looksLikeFileUri = iconValue.starts_with("file:");
           const bool looksLikeRemoteUrl = iconValue.starts_with("http://") || iconValue.starts_with("https://");
           if (!hasExplicitPrefix && !looksLikePath && !looksLikeFileUri && !looksLikeRemoteUrl) {
-            icon = "noctalia-glyph:" + iconValue;
+            icon = "mono-shell-glyph:" + iconValue;
           }
         }
 
         (void)m_notificationManager.addInternal(
             std::move(appName), std::move(summary), std::move(body), urgency, timeoutMs, std::move(icon), std::nullopt,
-            std::move(category), std::move(desktopEntry)
+            std::move(category), std::move(desktopEntry), /*persistToHistory=*/true
         );
         return "ok\n";
       },
-      "<summary [-- body]|json>", "Show an internal Noctalia notification"
+      "<summary [-- body]|json>", "Show an internal Mono Shell notification"
   );
 
   m_ipcService.registerHandler(

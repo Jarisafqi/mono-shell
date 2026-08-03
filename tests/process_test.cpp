@@ -150,11 +150,11 @@ namespace {
 
   bool detachedAsyncInheritsLaunchEnvironment() {
     const std::filesystem::path outPath =
-        std::filesystem::temp_directory_path() / ("noctalia_process_env_test_" + std::to_string(::getpid()));
+        std::filesystem::temp_directory_path() / ("mono-shell_process_env_test_" + std::to_string(::getpid()));
     std::error_code ec;
     std::filesystem::remove(outPath, ec);
 
-    ::setenv("NOCTALIA_WALLPAPER_PATH", "/tmp/noctalia test/wallpaper.png", 1);
+    ::setenv("NOCTALIA_WALLPAPER_PATH", "/tmp/mono-shell test/wallpaper.png", 1);
     ::setenv("NOCTALIA_WALLPAPER_CONNECTOR", "DP-1", 1);
 
     const std::string command = R"(printf '%s\n%s' "$NOCTALIA_WALLPAPER_PATH" "$NOCTALIA_WALLPAPER_CONNECTOR" > )"
@@ -171,14 +171,14 @@ namespace {
     for (int i = 0; i < 50; ++i) {
       std::ifstream in(outPath);
       contents.assign(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>());
-      if (contents == "/tmp/noctalia test/wallpaper.png\nDP-1") {
+      if (contents == "/tmp/mono-shell test/wallpaper.png\nDP-1") {
         break;
       }
       std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
 
     std::filesystem::remove(outPath, ec);
-    return expect(contents == "/tmp/noctalia test/wallpaper.png\nDP-1", "detached async env was not visible in child");
+    return expect(contents == "/tmp/mono-shell test/wallpaper.png\nDP-1", "detached async env was not visible in child");
   }
 
   bool commandExistsRejectsDirectories() {
@@ -204,28 +204,28 @@ namespace {
         && ok;
     ok = expect(
              process::cgroupIndicatesSystemdUserManager(
-                 "0::/user.slice/user-1000.slice/user@1000.service/app.slice/noctalia.service\n", 1000
+                 "0::/user.slice/user-1000.slice/user@1000.service/app.slice/mono-shell.service\n", 1000
              ),
-             "noctalia user service should be detected as user-manager managed"
+             "mono-shell user service should be detected as user-manager managed"
          )
         && ok;
     ok = expect(
              !process::cgroupIndicatesSystemdUserManager(
-                 "0::/user.slice/user-1000.slice/session-2.scope/noctalia\n", 1000
+                 "0::/user.slice/user-1000.slice/session-2.scope/mono-shell\n", 1000
              ),
              "login session scope should not be detected as user-manager managed"
          )
         && ok;
     ok = expect(
              !process::cgroupIndicatesSystemdUserManager(
-                 "0::/user.slice/user-1001.slice/user@1001.service/app.slice/noctalia.service\n", 1000
+                 "0::/user.slice/user-1001.slice/user@1001.service/app.slice/mono-shell.service\n", 1000
              ),
              "another user's manager should not be detected as ours"
          )
         && ok;
     ok = expect(
              process::cgroupIndicatesSystemdUserManager(
-                 "1:name=systemd:/user.slice/user-1000.slice/user@1000.service/app.slice/noctalia.service\n", 1000
+                 "1:name=systemd:/user.slice/user-1000.slice/user@1000.service/app.slice/mono-shell.service\n", 1000
              ),
              "legacy cgroup v1 dump should be detected as user-manager managed"
          )
@@ -236,7 +236,7 @@ namespace {
 
   bool detachedMissingBinaryReturnsFalse() {
     return expect(
-        !process::runAsync(std::vector<std::string>{"/nonexistent/noctalia-missing-binary-xyz"}),
+        !process::runAsync(std::vector<std::string>{"/nonexistent/mono-shell-missing-binary-xyz"}),
         "detached launch of a missing binary should return false"
     );
   }

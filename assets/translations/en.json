@@ -289,8 +289,8 @@
       "clear-all": "Clear all notifications",
       "dnd-off": "Turn Do Not Disturb Off",
       "dnd-on": "Turn Do Not Disturb On",
-      "empty-body": "Recent notifications will show here.",
-      "empty-title": "No notifications",
+      "empty-body": "",
+      "empty-title": "No Notification",
       "filter": {
         "all": "All",
         "older": "Older",
@@ -725,7 +725,7 @@
       "calendar-google-connect-start-failed": "Could not start Google authorization. Check your network connection and try again.",
       "calendar-google-connect-start-http": "Could not start Google authorization. The OAuth broker returned HTTP {status}.",
       "calendar-google-connect-timeout": "Google authorization timed out. Start the connection again when you are ready to sign in.",
-      "config-migration-body": "Legacy configuration is being migrated in memory, including {path}. Update the source configuration; Settings and noctalia config validate show the required replacement.",
+      "config-migration-body": "Legacy configuration is being migrated in memory, including {path}. Update the source configuration; Settings and mono-shell config validate show the required replacement.",
       "config-migration-title": "Configuration update needed",
       "dbus-disabled": "DBus notifications disabled",
       "desktop-widgets-editor": "Widget editor",
@@ -733,10 +733,10 @@
       "greeter-sync": "Noctalia Greeter",
       "greeter-sync-pending": "Waiting for administrator approval to write to the greeter.",
       "greeter-sync-pending-console": "Waiting for administrator approval. Approve the polkit prompt in Noctalia, on a TTY or console, or run pkexec manually.",
-      "greeter-sync-pending-manual": "Files are staged. Run in a terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\". Or set shell.greeter_sync.privilege_command (for example ghostty -e pkexec) and sync again.",
+      "greeter-sync-pending-manual": "Files are staged. Run in a terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\". Or set shell.greeter_sync.privilege_command (for example ghostty -e pkexec) and sync again.",
       "greeter-sync-success": "Appearance synced. Changes apply on the next login screen.",
       "greeter-sync-timeout": "Greeter sync is still waiting for administrator approval. Check a TTY or console for a polkit prompt, enable the polkit agent in Security settings, or run pkexec manually.",
-      "greeter-sync-timeout-manual": "Greeter sync still needs administrator approval. Run in a terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "greeter-sync-timeout-manual": "Greeter sync still needs administrator approval. Run in a terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "keybind-app": "Noctalia",
       "keybind-invalid-modifier": "This shortcut accepts a single key without modifiers.",
       "keybind-invalid-printable": "Printable keys (letters, numbers, symbols) require a modifier such as Ctrl or Alt.",
@@ -762,6 +762,9 @@
       "off": "Bluetooth Off",
       "on": "Bluetooth On"
     },
+    "brightness": {
+      "label": "Screen"
+    },
     "caffeine": {
       "off": "Caffeine Off",
       "on": "Caffeine On"
@@ -773,6 +776,10 @@
     "effects": {
       "input": "Input Effects",
       "output": "Output Effects"
+    },
+    "input": {
+      "label": "Mic",
+      "muted": "Mic Muted"
     },
     "lock-keys": {
       "caps-off": "Caps Lock Off",
@@ -799,6 +806,10 @@
     "wifi": {
       "off": "Wi-Fi Off",
       "on": "Wi-Fi On"
+    },
+    "volume": {
+      "label": "Volume",
+      "muted": "Muted"
     }
   },
   "plugins": {
@@ -1091,7 +1102,7 @@
       "support-report": "Failed to save support report.",
       "sync-greeter": "Could not sync appearance to Noctalia Greeter.",
       "sync-greeter-timeout": "Greeter sync is still waiting for administrator approval. Check a TTY or console for a polkit prompt, enable the polkit agent in Security settings, or run pkexec manually.",
-      "sync-greeter-timeout-manual": "Greeter sync still needs administrator approval. Run in a terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "sync-greeter-timeout-manual": "Greeter sync still needs administrator approval. Run in a terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "widget": {
         "rename": "Could not rename named widget."
       },
@@ -1476,8 +1487,8 @@
         },
         "kind-label": "Kind",
         "location-label": "Location",
-        "location-placeholder-git": "https://github.com/me/noctalia-plugins",
-        "location-placeholder-path": "~/dev/noctalia-plugins",
+        "location-placeholder-git": "https://github.com/me/mono-shell-plugins",
+        "location-placeholder-path": "~/dev/mono-shell-plugins",
         "name-label": "Source ID",
         "name-placeholder": "my-plugins",
         "precedence-hint": "Lower sources override higher ones when they offer the same plugin.",
@@ -1557,7 +1568,7 @@
           "label": "Corner Roundness"
         },
         "custom-palette": {
-          "description": "Choose a palette from ~/.config/noctalia/palettes/",
+          "description": "Choose a palette from ~/.config/mono-shell/palettes/",
           "label": "Custom Palette",
           "search-placeholder": "Search custom palettes…"
         },
@@ -2241,6 +2252,18 @@
         "control-center-width": {
           "description": "Width of the control center panel in pixels (compact and no-sidebar modes scale down from this)",
           "label": "Control Center Width"
+        },
+        "control-center-height": {
+          "description": "Height of the control center panel in pixels",
+          "label": "Control Center Height"
+        },
+        "control-center-scale": {
+          "description": "Uniform zoom for the whole control center panel surface (width and all content)",
+          "label": "Control Center Scale"
+        },
+        "control-center-notifications-scale": {
+          "description": "Scale for the notifications list content (icons, text, buttons), independent of the panel zoom",
+          "label": "Notifications List Scale"
         },
         "floating-layer": {
           "description": "Use Top if input method candidate windows are hidden behind floating panels; Overlay keeps panels above fullscreen content",
@@ -3804,7 +3827,7 @@
       "export-config": "Export Config…",
       "export-config-saved": "Config export saved.",
       "filter-overridden": "Overridden",
-      "legacy-config-warning": "Legacy configuration is being migrated in memory: {issue}. Run noctalia config validate for all required changes.",
+      "legacy-config-warning": "Legacy configuration is being migrated in memory: {issue}. Run mono-shell config validate for all required changes.",
       "native-title": "Noctalia Settings",
       "no-results": "No settings found",
       "no-results-hint": "Try a different setting name or config key.",

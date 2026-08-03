@@ -520,5 +520,5 @@ void NotificationService::emitActionInvoked(uint32_t id, const std::string& acti
 }
 
 std::tuple<std::string, std::string, std::string, std::string> NotificationService::onGetServerInformation() {
-  return {"noctalia", "noctalia-dev", NOCTALIA_VERSION, "1.2"};
+  return {"mono-shell", "noctalia-dev", MONO_SHELL_VERSION, "1.2"};
 }

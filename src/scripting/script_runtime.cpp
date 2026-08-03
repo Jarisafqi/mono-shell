@@ -145,10 +145,10 @@ namespace scripting {
           kLog.info("{}", effect.title);
           break;
         case ScriptSideEffectKind::NotifyInfo:
-          notify::info("Noctalia", effect.title, effect.body);
+          notify::info("Mono Shell", effect.title, effect.body);
           break;
         case ScriptSideEffectKind::NotifyError:
-          notify::error("Noctalia", effect.title, effect.body);
+          notify::error("Mono Shell", effect.title, effect.body);
           break;
         case ScriptSideEffectKind::CopyToClipboard:
           if (clipboard == nullptr || !clipboard->copyText(effect.title, effect.body)) {
@@ -888,7 +888,7 @@ namespace scripting {
       DeferredCall::callLater([name, reason = std::move(reason)] {
         const std::string bodyKey =
             reason == "timeouts" ? "plugins.auto-disabled.body-timeouts" : "plugins.auto-disabled.body-errors";
-        notify::error("Noctalia", i18n::tr("plugins.auto-disabled.title"), i18n::tr(bodyKey, "plugin", name));
+        notify::error("Mono Shell", i18n::tr("plugins.auto-disabled.title"), i18n::tr(bodyKey, "plugin", name));
       });
     }
 

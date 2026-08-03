@@ -134,7 +134,7 @@ namespace scripting {
             continue;
           }
 
-          // getConfig is universal and lives only under noctalia.*. Record the old
+          // getConfig is universal and lives only under monoshell.*. Record the old
           // entry-specific aliases so the author gets a useful error instead of a
           // nil-global runtime failure.
           std::size_t receiverEnd = i;
@@ -360,10 +360,10 @@ namespace noctalia::plugins {
   namespace {
 
     constexpr const char* kHelpText =
-        "Usage: noctalia plugins <command> [paths]\n"
+        "Usage: monoshell plugins <command> [paths]\n"
         "\n"
         "Offline tools for plugin authors (no running shell required).\n"
-        "To manage installed plugins on the running instance, use 'noctalia msg plugins'.\n"
+        "To manage installed plugins on the running instance, use 'monoshell msg plugins'.\n"
         "\n"
         "Commands:\n"
         "  lint [path ...]\n"
@@ -437,7 +437,7 @@ namespace noctalia::plugins {
           break;
         }
         case Kind::ObsoleteConfigAccessor:
-          std::println("  error  {}  '{}' was removed; use noctalia.getConfig", where, f.key);
+          std::println("  error  {}  '{}' was removed; use monoshell.getConfig", where, f.key);
           ++errors;
           break;
         case Kind::MissingEntryFile:
@@ -498,7 +498,7 @@ namespace noctalia::plugins {
   } // namespace
 
   int runCli(int argc, char* argv[]) {
-    // argv[0] = "noctalia", argv[1] = "plugins"; commands start at argv[2].
+    // argv[0] = "monoshell", argv[1] = "plugins"; commands start at argv[2].
     if (argc < 3) {
       std::println(stderr, "{}", kHelpText);
       return 1;

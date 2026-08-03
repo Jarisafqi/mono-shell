@@ -78,9 +78,9 @@ int main() {
     scripting::ScriptRuntime runtime("test/enable:service", {}, api, {});
     runtime.start(
         "=enable",
-        "noctalia.state.set('loaded', true)\n"
+        "mono-shell.state.set('loaded', true)\n"
         "function onEnable()\n"
-        "  noctalia.state.set('enabled', true)\n"
+        "  mono-shell.state.set('enabled', true)\n"
         "end\n",
         {}
     );
@@ -98,10 +98,10 @@ int main() {
     scripting::ScriptRuntime runtime("test/deactivate:service", {}, api, {});
     runtime.start(
         "=deactivate",
-        "noctalia.state.set('loaded', true)\n"
+        "mono-shell.state.set('loaded', true)\n"
         "function onExit(signal, reason)\n"
-        "  noctalia.state.set('exit_signal', signal)\n"
-        "  noctalia.state.set('exit_reason', reason)\n"
+        "  mono-shell.state.set('exit_signal', signal)\n"
+        "  mono-shell.state.set('exit_reason', reason)\n"
         "end\n",
         {}
     );
@@ -124,10 +124,10 @@ int main() {
     scripting::ScriptRuntime runtime("test/remove:service", {}, api, {});
     runtime.start(
         "=remove",
-        "noctalia.state.set('loaded', true)\n"
+        "mono-shell.state.set('loaded', true)\n"
         "function onExit(signal, reason)\n"
-        "  noctalia.state.set('exit_signal', signal)\n"
-        "  noctalia.state.set('exit_reason', reason)\n"
+        "  mono-shell.state.set('exit_signal', signal)\n"
+        "  mono-shell.state.set('exit_reason', reason)\n"
         "end\n",
         {}
     );
@@ -150,10 +150,10 @@ int main() {
     scripting::ScriptRuntime runtime("test/ordinary-stop:service", {}, api, {});
     runtime.start(
         "=ordinary-stop",
-        "noctalia.state.set('loaded', true)\n"
+        "mono-shell.state.set('loaded', true)\n"
         "function onExit(signal, reason)\n"
-        "  noctalia.state.set('exit_signal', signal)\n"
-        "  noctalia.state.set('exit_reason', reason)\n"
+        "  mono-shell.state.set('exit_signal', signal)\n"
+        "  mono-shell.state.set('exit_reason', reason)\n"
         "end\n",
         {}
     );
@@ -173,9 +173,9 @@ int main() {
     scripting::ScriptRuntime runtime("test/non-service:widget", {}, api, {});
     runtime.start(
         "=non-service-disable",
-        "noctalia.state.set('loaded', true)\n"
+        "mono-shell.state.set('loaded', true)\n"
         "function onExit(_signal, reason)\n"
-        "  noctalia.state.set('exit_reason', reason)\n"
+        "  mono-shell.state.set('exit_reason', reason)\n"
         "end\n",
         {}
     );
@@ -193,15 +193,15 @@ int main() {
     scripting::ScriptRuntime runtime("test/reload:service", {}, api, {});
     runtime.start(
         "=before-reload",
-        "noctalia.state.set('loaded', true)\n"
+        "mono-shell.state.set('loaded', true)\n"
         "function onExit(signal, reason)\n"
-        "  noctalia.state.set('exit_signal', signal)\n"
-        "  noctalia.state.set('exit_reason', reason)\n"
+        "  mono-shell.state.set('exit_signal', signal)\n"
+        "  mono-shell.state.set('exit_reason', reason)\n"
         "end\n",
         {}
     );
     ok = expect(waitForState("test/reload", "loaded"), "reload service did not load") && ok;
-    runtime.reload("=after-reload", "noctalia.state.set('reloaded', true)\n", {});
+    runtime.reload("=after-reload", "mono-shell.state.set('reloaded', true)\n", {});
     ok = expect(waitForState("test/reload", "reloaded"), "service did not reload") && ok;
     ok = expect(
              scripting::PluginStateStore::instance().get("test/reload", "exit_signal") == "0"
@@ -215,10 +215,10 @@ int main() {
     scripting::ScriptRuntime runtime("test/shutdown:service", {}, api, {});
     runtime.start(
         "=shutdown",
-        "noctalia.state.set('loaded', true)\n"
+        "mono-shell.state.set('loaded', true)\n"
         "function onExit(signal, reason)\n"
-        "  noctalia.state.set('exit_signal', signal)\n"
-        "  noctalia.state.set('exit_reason', reason)\n"
+        "  mono-shell.state.set('exit_signal', signal)\n"
+        "  mono-shell.state.set('exit_reason', reason)\n"
         "end\n",
         {}
     );
@@ -236,7 +236,7 @@ int main() {
       && ok;
 
   const auto root =
-      std::filesystem::temp_directory_path() / ("noctalia-plugin-lifecycle-test-" + std::to_string(::getpid()));
+      std::filesystem::temp_directory_path() / ("mono-shell-plugin-lifecycle-test-" + std::to_string(::getpid()));
   std::filesystem::remove_all(root);
   std::filesystem::create_directories(root / "config");
   std::filesystem::create_directories(root / "state");
@@ -286,18 +286,18 @@ int main() {
     scripting::ScriptRuntime runtime("test/sound-outcomes:service", {}, api, soundPluginDir);
     runtime.start(
         "=sound-outcomes",
-        "local successAccepted = noctalia.sound.load('click', 'sounds/click.wav', function(ok, err)\n"
-        "  noctalia.state.set('success_ok', ok)\n"
-        "  noctalia.state.set('success_error_nil', err == nil)\n"
-        "  if ok then noctalia.sound.play('click') end\n"
+        "local successAccepted = mono-shell.sound.load('click', 'sounds/click.wav', function(ok, err)\n"
+        "  mono-shell.state.set('success_ok', ok)\n"
+        "  mono-shell.state.set('success_error_nil', err == nil)\n"
+        "  if ok then mono-shell.sound.play('click') end\n"
         "end)\n"
-        "noctalia.state.set('success_accepted', successAccepted)\n"
-        "local failureAccepted = noctalia.sound.load('broken', 'sounds/broken.wav', function(ok, err)\n"
-        "  noctalia.state.set('failure_ok', ok)\n"
-        "  noctalia.state.set('failure_error', err)\n"
-        "  if ok then noctalia.sound.play('broken') end\n"
+        "mono-shell.state.set('success_accepted', successAccepted)\n"
+        "local failureAccepted = mono-shell.sound.load('broken', 'sounds/broken.wav', function(ok, err)\n"
+        "  mono-shell.state.set('failure_ok', ok)\n"
+        "  mono-shell.state.set('failure_error', err)\n"
+        "  if ok then mono-shell.sound.play('broken') end\n"
         "end)\n"
-        "noctalia.state.set('failure_accepted', failureAccepted)\n",
+        "mono-shell.state.set('failure_accepted', failureAccepted)\n",
         {}
     );
     ok =
@@ -356,15 +356,15 @@ int main() {
         "=sound-limits",
         "local accepted = 0\n"
         "for index = 1, 8 do\n"
-        "  if noctalia.sound.load('pending' .. index, 'sound.wav', function() end) then\n"
+        "  if mono-shell.sound.load('pending' .. index, 'sound.wav', function() end) then\n"
         "    accepted = accepted + 1\n"
         "  end\n"
         "end\n"
-        "local duplicate = noctalia.sound.load('pending1', 'other.wav', function() end)\n"
-        "local ninth = noctalia.sound.load('pending9', 'sound.wav', function() end)\n"
-        "noctalia.state.set('accepted_count', accepted)\n"
-        "noctalia.state.set('duplicate_accepted', duplicate)\n"
-        "noctalia.state.set('ninth_accepted', ninth)\n",
+        "local duplicate = mono-shell.sound.load('pending1', 'other.wav', function() end)\n"
+        "local ninth = mono-shell.sound.load('pending9', 'sound.wav', function() end)\n"
+        "mono-shell.state.set('accepted_count', accepted)\n"
+        "mono-shell.state.set('duplicate_accepted', duplicate)\n"
+        "mono-shell.state.set('ninth_accepted', ninth)\n",
         {}
     );
     ok = expect(waitForState("test/sound-limits", "ninth_accepted"), "sound pending-limit script did not run") && ok;
@@ -391,14 +391,14 @@ int main() {
     runtime.start(
         "=sound-unhealthy",
         "for index = 1, 5 do\n"
-        "  noctalia.sound.load('failure' .. index, 'sound.wav', function()\n"
+        "  mono-shell.sound.load('failure' .. index, 'sound.wav', function()\n"
         "    error('deliberate callback failure')\n"
         "  end)\n"
         "end\n"
-        "local accepted = noctalia.sound.load('after-errors', 'sound.wav', function(ok, err)\n"
-        "  noctalia.state.set('completion_after_unhealthy', ok and err == nil)\n"
+        "local accepted = mono-shell.sound.load('after-errors', 'sound.wav', function(ok, err)\n"
+        "  mono-shell.state.set('completion_after_unhealthy', ok and err == nil)\n"
         "end)\n"
-        "noctalia.state.set('after_errors_accepted', accepted)\n",
+        "mono-shell.state.set('after_errors_accepted', accepted)\n",
         {}
     );
     ok = expect(
@@ -433,8 +433,8 @@ int main() {
   {
     scripting::ScriptRuntime first("test/sound-isolation:service", {}, api, root / "sound-first");
     scripting::ScriptRuntime second("test/sound-isolation:service", {}, api, root / "sound-second");
-    const std::string source = "noctalia.sound.load('click', 'click.wav', function(ok)\n"
-                               "  if ok then noctalia.sound.play('click') end\n"
+    const std::string source = "mono-shell.sound.load('click', 'click.wav', function(ok)\n"
+                               "  if ok then mono-shell.sound.play('click') end\n"
                                "end)\n";
     first.start("=sound-first", source, {});
     second.start("=sound-second", source, {});
@@ -486,15 +486,15 @@ int main() {
     onSoundLoad = [&runtime] {
       runtime.reload(
           "=sound-replacement",
-          "noctalia.state.set('replacement_loaded', true)\n"
-          "noctalia.state.set('stale_callback_reached', false)\n",
+          "mono-shell.state.set('replacement_loaded', true)\n"
+          "mono-shell.state.set('stale_callback_reached', false)\n",
           {}
       );
     };
     runtime.start(
         "=sound-stale",
-        "noctalia.sound.load('stale', 'stale.wav', function()\n"
-        "  noctalia.state.set('stale_callback_reached', true)\n"
+        "mono-shell.sound.load('stale', 'stale.wav', function()\n"
+        "  mono-shell.state.set('stale_callback_reached', true)\n"
         "end)\n",
         {}
     );
@@ -541,9 +541,9 @@ int main() {
            )
                && writeText(
                    root / "path-plugins/api16/service.luau",
-                   "noctalia.state.set('loaded', true)\n"
+                   "mono-shell.state.set('loaded', true)\n"
                    "function onEnable()\n"
-                   "  noctalia.state.set('enabled', true)\n"
+                   "  mono-shell.state.set('enabled', true)\n"
                    "end\n"
                )
                && writeText(
@@ -558,9 +558,9 @@ int main() {
                )
                && writeText(
                    root / "path-plugins/api17/service.luau",
-                   "noctalia.state.set('loaded', true)\n"
+                   "mono-shell.state.set('loaded', true)\n"
                    "function onEnable()\n"
-                   "  noctalia.state.set('enabled', true)\n"
+                   "  mono-shell.state.set('enabled', true)\n"
                    "end\n"
                ),
            "failed to create service API fixtures"
@@ -617,9 +617,9 @@ int main() {
         std::make_unique<scripting::ScriptRuntime>("test/plugin:widget", scripting::ScriptSettings{}, api, root);
     lifecycleRuntime->start(
         "=manager-disable",
-        "noctalia.state.set('disable_loaded', true)\n"
+        "mono-shell.state.set('disable_loaded', true)\n"
         "function onExit(_signal, reason)\n"
-        "  noctalia.state.set('disable_reason', reason)\n"
+        "  mono-shell.state.set('disable_reason', reason)\n"
         "end\n",
         {}
     );
@@ -646,9 +646,9 @@ int main() {
         std::make_unique<scripting::ScriptRuntime>("test/plugin:panel", scripting::ScriptSettings{}, api, root);
     lifecycleRuntime->start(
         "=manager-uninstall",
-        "noctalia.state.set('uninstall_loaded', true)\n"
+        "mono-shell.state.set('uninstall_loaded', true)\n"
         "function onExit(_signal, reason)\n"
-        "  noctalia.state.set('uninstall_reason', reason)\n"
+        "  mono-shell.state.set('uninstall_reason', reason)\n"
         "end\n",
         {}
     );
@@ -680,9 +680,9 @@ int main() {
         std::make_unique<scripting::ScriptRuntime>("test/api16:widget", scripting::ScriptSettings{}, api, root);
     lifecycleRuntime->start(
         "=legacy-disable",
-        "noctalia.state.set('legacy_loaded', true)\n"
+        "mono-shell.state.set('legacy_loaded', true)\n"
         "function onExit(_signal, reason)\n"
-        "  noctalia.state.set('exit_reason', reason)\n"
+        "  mono-shell.state.set('exit_reason', reason)\n"
         "end\n",
         {}
     );

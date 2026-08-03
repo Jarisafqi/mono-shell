@@ -374,7 +374,7 @@ void PluginPanel::reloadScript() {
   auto name = m_sourcePath.filename().string();
   if (source.empty() || m_runtime == nullptr) {
     kLog.warn("hot reload: failed to reload '{}'", name);
-    notify::error("Noctalia", i18n::tr("bar.widgets.scripted.reload-failed"), name);
+    notify::error("Mono Shell", i18n::tr("bar.widgets.scripted.reload-failed"), name);
     return;
   }
 
@@ -390,5 +390,5 @@ void PluginPanel::reloadScript() {
   }
   startTickTimer();
   kLog.info("hot reload: reloaded '{}'", name);
-  notify::info("Noctalia", i18n::tr("bar.widgets.scripted.reloaded"), name);
+  notify::info("Mono Shell", i18n::tr("bar.widgets.scripted.reloaded"), name);
 }

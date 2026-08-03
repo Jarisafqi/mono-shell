@@ -228,6 +228,7 @@ uint32_t NotificationManager::addOrReplace(NotificationRequest request) {
   auto& category = request.category;
   auto& desktopEntry = request.desktopEntry;
   const auto& forcedId = request.forcedId;
+  const bool persistToHistory = request.persistToHistory;
 
   if (actions.size() > kMaxNotificationActions * 2) {
     kLog.warn(
@@ -250,6 +251,10 @@ uint32_t NotificationManager::addOrReplace(NotificationRequest request) {
 
   const ExternalNotificationDispatch dispatch =
       evaluateExternalDispatch(origin, urgency, appName, category, desktopEntry, summary, body, transient);
+  (void)persistToHistory; // consumed via the saveHistory override below
+
+  // IPC test tooling can force Internal notifications into the history panel.
+  const bool saveToHistory = dispatch.saveHistory || persistToHistory;
 
   if (dispatch.overrideDuration.has_value()) {
     timeout = normalizeNotifyExpireTimeout(*dispatch.overrideDuration);
@@ -305,7 +310,7 @@ uint32_t NotificationManager::addOrReplace(NotificationRequest request) {
       n.expiryWallClock = scheduleExpiryWall(wallNow, timeout);
 
       logNotification(n, "updated");
-      if (dispatch.saveHistory) {
+      if (saveToHistory) {
         const bool hadUnreadBefore = computeHasUnreadNotificationHistory();
         upsertHistory(n, true, std::nullopt);
         notifyUnreadStateChangedIfNeeded(hadUnreadBefore);
@@ -365,7 +370,7 @@ uint32_t NotificationManager::addOrReplace(NotificationRequest request) {
 
   const auto& n = m_notifications.back();
   logNotification(n, "added");
-  if (dispatch.saveHistory) {
+  if (saveToHistory) {
     const bool hadUnreadBefore = computeHasUnreadNotificationHistory();
     upsertHistory(n, true, std::nullopt);
     notifyUnreadStateChangedIfNeeded(hadUnreadBefore);
@@ -410,7 +415,7 @@ uint32_t NotificationManager::adoptExternal(uint32_t id, NotificationRequest req
 uint32_t NotificationManager::addInternal(
     std::string appName, std::string summary, std::string body, Urgency urgency, int32_t timeout,
     std::optional<std::string> icon, std::optional<NotificationImageData> imageData,
-    std::optional<std::string> category, std::optional<std::string> desktopEntry
+    std::optional<std::string> category, std::optional<std::string> desktopEntry, bool persistToHistory
 ) {
   return addOrReplace(
       NotificationRequest{
@@ -424,6 +429,7 @@ uint32_t NotificationManager::addInternal(
           .imageData = std::move(imageData),
           .category = std::move(category),
           .desktopEntry = std::move(desktopEntry),
+          .persistToHistory = persistToHistory,
       }
   );
 }

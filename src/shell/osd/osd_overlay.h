@@ -13,9 +13,7 @@ class ConfigService;
 class IpcService;
 class Box;
 class Flex;
-class Glyph;
 class Label;
-class ProgressBar;
 class RenderContext;
 class WaylandConnection;
 struct WaylandOutput;
@@ -41,6 +39,7 @@ enum class OsdKind : std::uint8_t {
 struct OsdContent {
   OsdKind kind = OsdKind::Volume;
   std::string icon;
+  std::string label;
   std::string value;
   float progress = 0.0f;
   bool showProgress = true;
@@ -88,20 +87,15 @@ private:
     std::unique_ptr<Node> sceneRoot;
     wl_surface* wlSurface = nullptr;
 
-    Node* card = nullptr;
+    Node* cardGroup = nullptr;
     Flex* row = nullptr;
     Box* background = nullptr;
-    Glyph* glyph = nullptr;
+    Label* label = nullptr;
     Label* value = nullptr;
-    ProgressBar* progress = nullptr;
-    float progressValueMinWidth = 0.0f;
-    float rowBaseX = 0.0f;
-    float rowBaseY = 0.0f;
     AnimationManager::Id showAnimId = 0;
     AnimationManager::Id hideAnimId = 0;
     bool showPending = false;
     bool visible = false;
-    float appliedCornerRadiusScale = -1.0f;
   };
 
   [[nodiscard]] SurfaceMargins surfaceMarginsForPosition(const std::string& position) const;
@@ -122,10 +116,7 @@ private:
   RenderContext* m_renderContext = nullptr;
   OsdContent m_content;
   std::string m_lastPosition;
-  std::string m_lastOrientation;
-  bool m_lastShowProgress = true;
   float m_lastLayoutScale = 1.0f;
-  float m_lastCornerRadiusScale = 1.0f;
   std::vector<std::string> m_lastMonitorSelectors;
   std::optional<bool> m_runtimeEnabledOverride;
   bool m_lastConfiguredEnabled = true;

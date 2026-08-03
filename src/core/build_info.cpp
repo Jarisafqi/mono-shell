@@ -1,12 +1,12 @@
 #include "core/build_info.h"
 
-#include "noctalia_git_revision.h"
+#include "monoshell_git_revision.h"
 
 namespace noctalia::build_info {
 
-  std::string_view version() noexcept { return NOCTALIA_VERSION; }
+  std::string_view version() noexcept { return MONO_SHELL_VERSION; }
 
-  std::string_view revision() noexcept { return NOCTALIA_GIT_REVISION; }
+  std::string_view revision() noexcept { return MONO_SHELL_GIT_REVISION; }
 
   std::string displayVersion() {
     std::string label = "v";

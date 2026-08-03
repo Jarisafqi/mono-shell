@@ -18,11 +18,11 @@ namespace greeter {
 
   using SyncCompletion = std::function<void(bool success)>;
 
-  // True when noctalia-greeter and the privileged apply helper are installed.
+  // True when mono-shell-greeter and the privileged apply helper are installed.
   [[nodiscard]] bool appearanceSyncAvailable(const ShellGreeterSyncConfig& greeterSync) noexcept;
 
   // Stages sync.toml + wallpapers (+ optional layout/transforms), then runs the
-  // configured privilege prefix (or pkexec|run0) plus noctalia-greeter-apply-appearance
+  // configured privilege prefix (or pkexec|run0) plus mono-shell-greeter-apply-appearance
   // and the staging path. When session polkit is unavailable and no privilege_command
   // override is set, returns StagedOnly after writing the staging directory.
   [[nodiscard]] GreeterSyncLaunch syncAppearanceToGreeterAsync(

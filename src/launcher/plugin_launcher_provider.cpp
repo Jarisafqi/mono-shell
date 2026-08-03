@@ -144,12 +144,12 @@ void PluginLauncherProvider::reloadScript() {
   auto name = m_sourcePath.filename().string();
   if (code.empty()) {
     kLog.warn("launcher provider '{}': failed to reload '{}'", m_entryId, m_sourcePath.string());
-    notify::error("Noctalia", i18n::tr("bar.widgets.scripted.reload-failed"), name);
+    notify::error("Mono Shell", i18n::tr("bar.widgets.scripted.reload-failed"), name);
     return;
   }
   if (m_runtime == nullptr) {
     kLog.warn("launcher provider '{}': runtime unavailable for reload", m_entryId);
-    notify::error("Noctalia", i18n::tr("bar.widgets.scripted.reload-failed"), name);
+    notify::error("Mono Shell", i18n::tr("bar.widgets.scripted.reload-failed"), name);
     return;
   }
 
@@ -160,7 +160,7 @@ void PluginLauncherProvider::reloadScript() {
     m_onResultsChanged();
   }
   kLog.info("hot reload: reloaded launcher provider '{}'", m_entryId);
-  notify::info("Noctalia", i18n::tr("bar.widgets.scripted.reloaded"), name);
+  notify::info("Mono Shell", i18n::tr("bar.widgets.scripted.reloaded"), name);
 }
 
 std::string PluginLauncherProvider::buildProviderInput(std::string_view sub) const {

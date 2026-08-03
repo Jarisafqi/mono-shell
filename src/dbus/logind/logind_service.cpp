@@ -152,7 +152,7 @@ bool LogindService::acquireIdleInhibit() {
     sdbus::UnixFd fd;
     m_managerProxy->callMethod("Inhibit")
         .onInterface(kLogindManagerInterface)
-        .withArguments(std::string("idle"), std::string("noctalia"), std::string("Caffeine"), std::string("block"))
+        .withArguments(std::string("idle"), std::string("mono-shell"), std::string("Caffeine"), std::string("block"))
         .storeResultsTo(fd);
     m_idleInhibitFd = fd.release();
     if (m_idleInhibitFd < 0) {
@@ -191,7 +191,7 @@ bool LogindService::acquireSleepDelayInhibit() {
     m_managerProxy->callMethod("Inhibit")
         .onInterface(kLogindManagerInterface)
         .withArguments(
-            std::string("sleep"), std::string("noctalia"), std::string("Lock before sleep"), std::string("delay")
+            std::string("sleep"), std::string("mono-shell"), std::string("Lock before sleep"), std::string("delay")
         )
         .storeResultsTo(fd);
     m_sleepDelayInhibitFd = fd.release();

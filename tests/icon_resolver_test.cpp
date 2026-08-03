@@ -22,7 +22,7 @@ namespace {
 } // namespace
 
 int main() {
-  char tempDir[] = "/tmp/noctalia-icon-resolver-test-XXXXXX";
+  char tempDir[] = "/tmp/mono-shell-icon-resolver-test-XXXXXX";
   if (mkdtemp(tempDir) == nullptr) {
     std::perror("mkdtemp");
     return 1;

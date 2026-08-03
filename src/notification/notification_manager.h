@@ -60,6 +60,10 @@ struct NotificationRequest {
   std::optional<std::string> category = std::nullopt;
   std::optional<std::string> desktopEntry = std::nullopt;
   std::optional<uint32_t> forcedId = std::nullopt;
+  // Overrides origin/history tracking: forces this notification to be recorded
+  // in the control-center history even when it is Internal origin. Used by the
+  // IPC test tooling so pushed notifications show up in the history panel.
+  bool persistToHistory = false;
 };
 
 class NotificationManager {
@@ -86,7 +90,7 @@ public:
       std::string appName, std::string summary, std::string body, Urgency urgency = Urgency::Normal,
       int32_t timeout = kDefaultNotificationTimeout, std::optional<std::string> icon = std::nullopt,
       std::optional<NotificationImageData> imageData = std::nullopt, std::optional<std::string> category = std::nullopt,
-      std::optional<std::string> desktopEntry = std::nullopt
+      std::optional<std::string> desktopEntry = std::nullopt, bool persistToHistory = false
   );
 
   void setActionInvokeCallback(ActionInvokeCallback callback);

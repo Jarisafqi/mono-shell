@@ -1166,8 +1166,8 @@
         },
         "kind-label": "Tipus",
         "location-label": "Ubicació",
-        "location-placeholder-git": "https://github.com/jo/noctalia-plugins",
-        "location-placeholder-path": "~/dev/noctalia-plugins",
+        "location-placeholder-git": "https://github.com/jo/mono-shell-plugins",
+        "location-placeholder-path": "~/dev/mono-shell-plugins",
         "name-label": "ID de la font",
         "name-placeholder": "els-meus-plugins",
         "remove": "Elimina la font",
@@ -1208,7 +1208,7 @@
           "label": "Arrodoniment de cantonades"
         },
         "custom-palette": {
-          "description": "Tria una paleta de ~/.config/noctalia/palettes/",
+          "description": "Tria una paleta de ~/.config/mono-shell/palettes/",
           "label": "Paleta personalitzada",
           "search-placeholder": "Cerca paletes personalitzades..."
         },

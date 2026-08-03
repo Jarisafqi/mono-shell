@@ -27,7 +27,7 @@ namespace noctalia::config {
   namespace {
 
     constexpr const char* kHelpText =
-        "Usage: noctalia config <command> [options]\n"
+        "Usage: mono-shell config <command> [options]\n"
         "\n"
         "Commands:\n"
         "  validate [path]\n"
@@ -42,13 +42,13 @@ namespace noctalia::config {
         "      Count Settings UI controls by registry, visibility state, and section.\n"
         "\n"
         "  replay-report <report.toml> --target <dir> [--force]\n"
-        "      Reconstruct config-home/noctalia and state-home/noctalia from a support report.\n"
+        "      Reconstruct config-home/mono-shell and state-home/mono-shell from a support report.\n"
         "\n"
         "  replay-report <report.toml> --target <dir> --flattened [--force]\n"
-        "      Reconstruct a single config-home/noctalia/config.toml from the report's merged config.\n";
+        "      Reconstruct a single config-home/mono-shell/config.toml from the report's merged config.\n";
 
     constexpr const char* kValidateHelpText =
-        "Usage: noctalia config validate [path]\n"
+        "Usage: mono-shell config validate [path]\n"
         "\n"
         "With no path, validates the merged configuration the way the shell loads it:\n"
         "  - every *.toml in the active config dir, then\n"
@@ -61,14 +61,14 @@ namespace noctalia::config {
         "(wrong type, out-of-range, invalid enum/color). Exits 1 if any error is found.\n";
 
     constexpr const char* kReplayHelpText =
-        "Usage: noctalia config replay-report <report.toml> --target <dir> [--flattened] [--force]\n"
+        "Usage: mono-shell config replay-report <report.toml> --target <dir> [--flattened] [--force]\n"
         "\n"
         "Options:\n"
         "  --target <dir>  Directory where replay files are written\n"
         "  --flattened     Write only merged_config.content as config.toml\n"
         "  --force         Remove an existing target directory before writing\n";
 
-    constexpr const char* kExportHelpText = "Usage: noctalia config export [merged|full]\n"
+    constexpr const char* kExportHelpText = "Usage: mono-shell config export [merged|full]\n"
                                             "\n"
                                             "Prints TOML to stdout from the same config stack used by the shell:\n"
                                             "  - every *.toml in the active config dir, then\n"
@@ -79,7 +79,7 @@ namespace noctalia::config {
                                             "  full    Export full effective config, including built-in defaults\n";
 
     constexpr const char* kSettingsCountHelpText =
-        "Usage: noctalia config settings-count\n"
+        "Usage: mono-shell config settings-count\n"
         "\n"
         "Counts one Settings UI row/control per SettingEntry: toggles, sliders, lists,\n"
         "and pickers. Dropdown options and SettingsWindow-only action buttons are not\n"
@@ -142,7 +142,7 @@ namespace noctalia::config {
           return 0;
         }
         std::println(stderr, "error: unexpected argument: {}", argv[i]);
-        std::println(stderr, "Run 'noctalia config settings-count --help' for usage.");
+        std::println(stderr, "Run 'mono-shell config settings-count --help' for usage.");
         return 1;
       }
 
@@ -310,8 +310,8 @@ namespace noctalia::config {
 
       const std::filesystem::path configHome = target / "config-home";
       const std::filesystem::path stateHome = target / "state-home";
-      const std::filesystem::path configDir = configHome / "noctalia";
-      const std::filesystem::path stateDir = stateHome / "noctalia";
+      const std::filesystem::path configDir = configHome / "mono-shell";
+      const std::filesystem::path stateDir = stateHome / "mono-shell";
 
       if (options.force) {
         std::error_code ec;
@@ -414,7 +414,7 @@ namespace noctalia::config {
       std::println();
       std::println("Run with:");
       std::println(
-          "  NOCTALIA_CONFIG_HOME={} NOCTALIA_STATE_HOME={} {}", StringUtils::shellQuote(configHome.string()),
+          "  MONO_SHELL_CONFIG_HOME={} MONO_SHELL_STATE_HOME={} {}", StringUtils::shellQuote(configHome.string()),
           StringUtils::shellQuote(stateHome.string()), StringUtils::shellQuote(argv0)
       );
       return 0;
@@ -439,7 +439,7 @@ namespace noctalia::config {
           continue;
         }
         std::println(stderr, "error: unexpected argument: {}", argv[i]);
-        std::println(stderr, "Run 'noctalia config validate --help' for usage.");
+        std::println(stderr, "Run 'mono-shell config validate --help' for usage.");
         return 1;
       }
 
@@ -520,7 +520,7 @@ namespace noctalia::config {
           continue;
         }
         std::println(stderr, "error: unexpected argument: {}", argv[i]);
-        std::println(stderr, "Run 'noctalia config export --help' for usage.");
+        std::println(stderr, "Run 'mono-shell config export --help' for usage.");
         return 1;
       }
 
@@ -574,7 +574,7 @@ namespace noctalia::config {
       const auto parsed = parseReplayOptions(argc, argv);
       if (!parsed) {
         std::println(stderr, "error: {}", parsed.error());
-        std::println(stderr, "Run 'noctalia config replay-report --help' for usage.");
+        std::println(stderr, "Run 'mono-shell config replay-report --help' for usage.");
         return 1;
       }
       if (parsed->helpRequested) {
@@ -584,7 +584,7 @@ namespace noctalia::config {
     }
 
     std::println(stderr, "error: unknown config command: {}", argv[2]);
-    std::println(stderr, "Run 'noctalia config --help' for usage.");
+    std::println(stderr, "Run 'mono-shell config --help' for usage.");
     return 1;
   }
 

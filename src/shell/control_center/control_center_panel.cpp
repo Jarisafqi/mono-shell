@@ -61,7 +61,8 @@ ControlCenterPanel::ControlCenterPanel(const ControlCenterServices& services) {
   );
   m_tabs[tabIndex(TabId::Weather)] = std::make_unique<WeatherTab>(services.weather, services.config);
   m_tabs[tabIndex(TabId::Calendar)] = std::make_unique<CalendarTab>(services.config, services.calendar);
-  m_tabs[tabIndex(TabId::Notifications)] = std::make_unique<NotificationsTab>(services.notifications);
+  m_tabs[tabIndex(TabId::Notifications)] =
+      std::make_unique<NotificationsTab>(services.notifications, services.network, services.bluetooth);
   m_tabs[tabIndex(TabId::Network)] =
       std::make_unique<NetworkTab>(services.network, services.networkSecrets, services.externalIp);
   m_tabs[tabIndex(TabId::Bluetooth)] = std::make_unique<BluetoothTab>(services.bluetooth, services.bluetoothAgent);
@@ -77,15 +78,71 @@ ControlCenterPanel::ControlCenterPanel(const ControlCenterServices& services) {
 float ControlCenterPanel::preferredWidth() const {
   const float fullSize = m_config != nullptr ? static_cast<float>(m_config->config().controlCenter.width)
                                              : static_cast<float>(ControlCenterConfig::kDefaultWidth);
+  const float panelScale =
+      m_config != nullptr ? m_config->config().controlCenter.scale : 1.0f;
   switch (sidebarModeForOpen(pendingOpenContext())) {
   case ControlCenterSidebarMode::Full:
-    return fullSize * m_contentScale;
+    return fullSize * m_contentScale * panelScale;
   case ControlCenterSidebarMode::None:
-    return fullSize * 0.75f * m_contentScale;
+    return fullSize * 0.75f * m_contentScale * panelScale;
   default:
   case ControlCenterSidebarMode::Compact:
-    return fullSize * 0.85f * m_contentScale;
+    return fullSize * 0.85f * m_contentScale * panelScale;
   }
+}
+
+float ControlCenterPanel::preferredHeight() const {
+  const float fullSize = m_config != nullptr ? static_cast<float>(m_config->config().controlCenter.height)
+                                             : static_cast<float>(ControlCenterConfig::kDefaultHeight);
+  const float panelScale =
+      m_config != nullptr ? m_config->config().controlCenter.scale : 1.0f;
+
+  // Physical maximum: the configured logical height scaled to real pixels.
+  const float maxHeight = fullSize * m_contentScale * panelScale;
+
+  // Only the Notifications tab adapts its height to its content. Other tabs
+  // keep the full configured height.
+  if (m_activeTab != TabId::Notifications) {
+    return maxHeight;
+  }
+
+  // Header row (title + actions) plus shared vertical padding, in the panel's
+  // scaled units. This is common to every tab and covers the empty-state card.
+  const float baseScale = m_contentScale * panelScale;
+  // The title/action header row is only rendered when a sidebar is shown.
+  // Without one, reserve only a small top margin so the notification content
+  // sits tight against the top instead of leaving a phantom-header gap.
+  const bool hasHeader = sidebarModeForOpen(pendingOpenContext()) != ControlCenterSidebarMode::None;
+  const float headerAllowance =
+      hasHeader
+          ? (Style::controlHeight + Style::spaceLg * 2.0f + Style::spaceSm * 2.0f) * baseScale
+          : (Style::spaceMd) * baseScale;
+
+  const auto* notificationsTab =
+      dynamic_cast<const NotificationsTab*>(m_tabs[tabIndex(TabId::Notifications)].get());
+  const float contentHeight =
+      notificationsTab != nullptr ? notificationsTab->estimatedContentHeight() : 0.0f;
+  // Fixed chrome of the tab (quick-toggle row + its gap) that sits around the
+  // notification list, so the card and the toggles below it both fit.
+  const float tabChrome = notificationsTab != nullptr ? notificationsTab->chromeHeight() : 0.0f;
+
+  // Real, measured content (>= 1 card): follow it exactly. ChromeHeight() is a
+  // prediction, and the fixed chrome around the list can sit a few px taller than
+  // predicted, which would leave the last card slightly over the viewport edge and
+  // force an unwanted scroll. Reserve a small fit margin under the content so the
+  // card always has a strictly larger viewport than it needs (no scroll) while the
+  // panel still tracks the content closely. margin is capped so the panel can never
+  // grow past its configured maximum.
+  if (contentHeight > 0.5f) {
+    const float fitMargin = (Style::spaceLg + Style::spaceMd) * baseScale;
+    return std::min(headerAllowance + tabChrome + contentHeight + fitMargin, maxHeight);
+  }
+
+  // Empty list (or not yet measured on the first frame): fall back to a single
+  // collapsed-card floor so the panel keeps a comfortable height instead of
+  // collapsing to nothing.
+  const float cardFloor = notificationsTab != nullptr ? notificationsTab->collapsedCardHeight() : 0.0f;
+  return std::min(headerAllowance + tabChrome + cardFloor, maxHeight);
 }
 
 PanelPlacement ControlCenterPanel::panelPlacement() const noexcept {
@@ -98,7 +155,8 @@ bool ControlCenterPanel::dismissTransientUi() {
 }
 
 void ControlCenterPanel::create() {
-  const float scale = contentScale();
+  const float panelScale = m_config != nullptr ? m_config->config().controlCenter.scale : 1.0f;
+  const float scale = contentScale() * panelScale;
   const ControlCenterSidebarMode sidebarMode = sidebarModeForOpen(pendingOpenContext());
   m_compact = sidebarMode == ControlCenterSidebarMode::Compact;
   m_showSidebar = sidebarMode != ControlCenterSidebarMode::None;
@@ -106,6 +164,13 @@ void ControlCenterPanel::create() {
   for (auto& tab : m_tabs) {
     tab->setContentScale(scale);
     tab->setPanelCardOpacity(panelCardOpacity());
+  }
+
+  // Notifications content scale is independent of the panel-width scale so the
+  // card text/icons stay readable when the whole panel is zoomed down.
+  if (m_config != nullptr) {
+    const float notifScale = m_config->config().controlCenter.notificationsScale;
+    m_tabs[tabIndex(TabId::Notifications)]->setContentScale(contentScale() * notifScale);
   }
 
   auto rootLayout = ui::row({
@@ -237,6 +302,7 @@ void ControlCenterPanel::create() {
   });
   m_contentDismissArea = static_cast<InputArea*>(content->addChild(std::move(dismissArea)));
 
+  if (m_showSidebar) {
   auto header = ui::row({
       .out = &m_contentHeader,
       .align = FlexAlign::Center,
@@ -281,6 +347,7 @@ void ControlCenterPanel::create() {
   header->addChild(std::move(headerActions));
 
   content->addChild(std::move(header));
+  }
 
   auto bodies = ui::column({
       .out = &m_tabBodies,
@@ -849,7 +916,7 @@ void ControlCenterPanel::layoutFullSidebarWidth(Renderer& renderer) {
     return;
   }
 
-  const float scale = contentScale();
+  const float scale = contentScale() * ((m_config != nullptr) ? m_config->config().controlCenter.scale : 1.0f);
   const float fontSize = Style::fontSizeBody * scale;
   const float paddingH = Style::spaceSm * scale * 2.0f;
   const float gap = Style::spaceSm * scale;
@@ -888,7 +955,8 @@ void ControlCenterPanel::scrollSidebarNodeIntoView(const Node* node) {
   if (node == nullptr || m_sidebarScrollView == nullptr) {
     return;
   }
-  scrollNodeIntoScrollView(*m_sidebarScrollView, &m_sidebarScrollState, *node, Style::spaceXs * contentScale());
+  scrollNodeIntoScrollView(*m_sidebarScrollView, &m_sidebarScrollState, *node,
+                           Style::spaceXs * contentScale() * ((m_config != nullptr) ? m_config->config().controlCenter.scale : 1.0f));
   PanelManager::instance().requestLayout();
 }
 
@@ -900,7 +968,9 @@ void ControlCenterPanel::scrollFocusedInputIntoView(InputArea* area) {
   if (m_sidebarScrollView != nullptr && m_sidebarScrollView->content() != nullptr) {
     for (const Node* node = area; node != nullptr; node = node->parent()) {
       if (node == m_sidebarScrollView->content()) {
-        scrollNodeIntoScrollView(*m_sidebarScrollView, &m_sidebarScrollState, *area, Style::spaceXs * contentScale());
+        scrollNodeIntoScrollView(*m_sidebarScrollView, &m_sidebarScrollState, *area,
+                                 Style::spaceXs * contentScale()
+                                     * ((m_config != nullptr) ? m_config->config().controlCenter.scale : 1.0f));
         PanelManager::instance().requestLayout();
         return;
       }
@@ -908,7 +978,8 @@ void ControlCenterPanel::scrollFocusedInputIntoView(InputArea* area) {
   }
 
   if (ScrollView* scrollView = findEnclosingScrollView(area)) {
-    scrollNodeIntoScrollView(*scrollView, nullptr, *area, Style::spaceMd * contentScale());
+    scrollNodeIntoScrollView(*scrollView, nullptr, *area,
+                           Style::spaceMd * contentScale() * ((m_config != nullptr) ? m_config->config().controlCenter.scale : 1.0f));
     PanelManager::instance().requestLayout();
   }
 }

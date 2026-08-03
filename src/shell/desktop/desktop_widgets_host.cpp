@@ -37,7 +37,7 @@ namespace {
     if (uid.starts_with(kIdPrefix)) {
       uid.remove_prefix(kIdPrefix.size());
     }
-    return "noctalia-desktop-widget-" + state.type + "-" + std::string(uid);
+    return "mono-shell-desktop-widget-" + state.type + "-" + std::string(uid);
   }
 
 } // namespace

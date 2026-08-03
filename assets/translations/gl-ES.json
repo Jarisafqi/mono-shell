@@ -683,7 +683,7 @@
       "calendar-google-connect-start-failed": "Non se puido iniciar a autorización de Google. Revisa a conexión de rede e téntao de novo.",
       "calendar-google-connect-start-http": "Non se puido iniciar a autorización de Google. O broker OAuth devolveu HTTP {status}.",
       "calendar-google-connect-timeout": "A autorización de Google esgotou o tempo de espera. Inicia a conexión de novo cando esteas listo para iniciar sesión.",
-      "config-migration-body": "A configuración antiga estase migrando na memoria, incluído {path}. Actualiza a configuración de orixe; Configuración e noctalia config validate mostran a substitución requirida.",
+      "config-migration-body": "A configuración antiga estase migrando na memoria, incluído {path}. Actualiza a configuración de orixe; Configuración e mono-shell config validate mostran a substitución requirida.",
       "config-migration-title": "Cómpre actualizar a configuración",
       "dbus-disabled": "Notificacións DBus desactivadas",
       "desktop-widgets-editor": "Editor de widgets do escritorio",
@@ -691,10 +691,10 @@
       "greeter-sync": "Noctalia Greeter",
       "greeter-sync-pending": "Agardando pola aprobación do administrador para escribir no Greeter.",
       "greeter-sync-pending-console": "Agardando pola aprobación do administrador. Aproba a solicitude de polkit en Noctalia, nunha TTY ou consola, ou executa pkexec manualmente.",
-      "greeter-sync-pending-manual": "Os ficheiros están preparados. Executa nun terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\". Ou configura shell.greeter_sync.privilege_command (por exemplo ghostty -e pkexec) e sincroniza de novo.",
+      "greeter-sync-pending-manual": "Os ficheiros están preparados. Executa nun terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\". Ou configura shell.greeter_sync.privilege_command (por exemplo ghostty -e pkexec) e sincroniza de novo.",
       "greeter-sync-success": "A aparencia sincronizouse. Os cambios aplicaranse na próxima pantalla de inicio de sesión.",
       "greeter-sync-timeout": "A sincronización do Greeter segue agardando pola aprobación do administrador. Revisa se hai unha solicitude de polkit nunha TTY ou consola, activa o axente de polkit nos axustes de Seguridade ou executa pkexec manualmente.",
-      "greeter-sync-timeout-manual": "A sincronización do Greeter segue precisando aprobación do administrador. Executa nun terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "greeter-sync-timeout-manual": "A sincronización do Greeter segue precisando aprobación do administrador. Executa nun terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "keybind-app": "Noctalia",
       "keybind-invalid-modifier": "Este atallo acepta unha soa tecla sen modificadores.",
       "keybind-invalid-printable": "As teclas imprimibles (letras, números e símbolos) requiren un modificador como Ctrl ou Alt.",
@@ -1028,7 +1028,7 @@
       "support-report": "Non se puido gardar o informe de asistencia.",
       "sync-greeter": "Non se puido sincronizar a aparencia co Noctalia Greeter.",
       "sync-greeter-timeout": "A sincronización do Greeter segue agardando pola aprobación do administrador. Revisa se hai unha solicitude de polkit nunha TTY ou consola, activa o axente de polkit nos axustes de Seguridade ou executa pkexec manualmente.",
-      "sync-greeter-timeout-manual": "A sincronización do Greeter segue precisando aprobación do administrador. Executa nun terminal: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "sync-greeter-timeout-manual": "A sincronización do Greeter segue precisando aprobación do administrador. Executa nun terminal: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "widget": {
         "rename": "Non se puido renomear o widget con nome."
       },
@@ -1402,8 +1402,8 @@
         },
         "kind-label": "Tipo",
         "location-label": "Localización",
-        "location-placeholder-git": "https://github.com/me/noctalia-plugins",
-        "location-placeholder-path": "~/dev/noctalia-plugins",
+        "location-placeholder-git": "https://github.com/me/mono-shell-plugins",
+        "location-placeholder-path": "~/dev/mono-shell-plugins",
         "name-label": "ID da orixe",
         "name-placeholder": "my-plugins",
         "precedence-hint": "As orixes de abaixo substitúen as de arriba cando ofrecen o mesmo complemento.",
@@ -1467,7 +1467,7 @@
           "label": "Redondez dos cantos"
         },
         "custom-palette": {
-          "description": "Escolle unha paleta de ~/.config/noctalia/palettes/",
+          "description": "Escolle unha paleta de ~/.config/mono-shell/palettes/",
           "label": "Paleta personalizada",
           "search-placeholder": "Buscar paletas personalizadas..."
         },
@@ -3359,7 +3359,7 @@
     "window": {
       "export-config": "Exportar configuración…",
       "export-config-saved": "Exportación da configuración gardada.",
-      "legacy-config-warning": "A configuración antiga estase migrando na memoria: {issue}. Executa noctalia config validate para ver todos os cambios requiridos.",
+      "legacy-config-warning": "A configuración antiga estase migrando na memoria: {issue}. Executa mono-shell config validate para ver todos os cambios requiridos.",
       "native-title": "Axustes de Noctalia",
       "no-results": "Non se atoparon axustes",
       "no-results-hint": "Proba cun nome de axuste ou key de configuración diferente.",

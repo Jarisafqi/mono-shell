@@ -137,7 +137,7 @@ namespace settings {
         {.type = "bluetooth", .labelKey = "settings.widgets.types.bluetooth", .glyph = "bluetooth"},
         {.type = "brightness", .labelKey = "settings.widgets.types.brightness", .glyph = "brightness-high"},
         {.type = "clock", .labelKey = "settings.widgets.types.clock", .glyph = "clock"},
-        {.type = "control-center", .labelKey = "settings.widgets.types.control-center", .glyph = "noctalia"},
+        {.type = "control-center", .labelKey = "settings.widgets.types.control-center", .glyph = "mono-shell"},
         {.type = "clipboard", .labelKey = "settings.widgets.types.clipboard", .glyph = "clipboard"},
         {.type = "custom_button", .labelKey = "settings.widgets.types.custom-button", .glyph = "circuit-pushbutton"},
         {.type = "caffeine", .labelKey = "settings.widgets.types.caffeine", .glyph = "caffeine-off"},
@@ -198,7 +198,7 @@ namespace settings {
         return nonEmptyGlyph(config->getString("glyph", "clipboard"), "clipboard");
       }
       if (type == "control-center") {
-        return nonEmptyGlyph(config->getString("glyph", "noctalia"), "search");
+        return nonEmptyGlyph(config->getString("glyph", "mono-shell"), "search");
       }
       if (type == "custom_button") {
         return nonEmptyGlyph(config->getString("glyph", "heart"), "heart");

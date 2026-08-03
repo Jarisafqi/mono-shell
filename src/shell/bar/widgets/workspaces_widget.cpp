@@ -157,8 +157,15 @@ void WorkspacesWidget::setWorkspaceClickHandler(InputArea& area, const Workspace
 
 void WorkspacesWidget::applyItemVisualStyle(Item& item) {
   if (item.indicator != nullptr) {
-    item.indicator->setFill(workspaceFillColor(item.visualWorkspace));
-    item.indicator->clearBorder();
+    // noctadark outline style: every workspace gets the same 1:1 box; boxes are
+    // unfilled, the active workspace is marked with a border outline.
+    item.indicator->setFill(clearColorSpec());
+    item.indicator->setVisible(workspaceBorderVisible(item.visualWorkspace));
+    if (item.visualWorkspace.active) {
+      item.indicator->setBorder(widgetForegroundOr(colorSpecFromRole(ColorRole::OnSurface)), 0.80f);
+    } else {
+      item.indicator->setBorder(workspaceBorderColor(item.visualWorkspace), 0.80f);
+    }
   }
   if (item.text != nullptr && item.showLabel) {
     item.text->setColor(workspaceTextColor(item.visualWorkspace));
@@ -542,11 +549,20 @@ void WorkspacesWidget::rebuild(Renderer& renderer) {
       const float indicatorH = m_isVertical ? w : m_indicatorHeight;
       item.indicator = static_cast<Box*>(area->addChild(
           ui::box({
-              .fill = workspaceFillColor(ws),
+              .fill = clearColorSpec(),
               .radius = workspacePillRadius(indicatorW, indicatorH),
               .width = w,
               .height = m_indicatorHeight,
-              .configure = [](Box& box) { box.clearBorder(); },
+              .configure = [this, ws](Box& box) {
+                // noctadark outline style: unfilled boxes; the active workspace gets a
+                // white outline, occupied workspaces get a dim outline.
+                box.setVisible(workspaceBorderVisible(ws));
+                if (ws.active) {
+                  box.setBorder(widgetForegroundOr(colorSpecFromRole(ColorRole::OnSurface)), 0.80f);
+                } else {
+                  box.setBorder(workspaceBorderColor(ws), 0.80f);
+                }
+              },
           })
       ));
     }
@@ -1176,7 +1192,9 @@ void WorkspacesWidget::updateHoverOverlay() {
     for (auto& item : m_items) {
       if (&item == &hoveredItem) {
         if (item.indicator != nullptr) {
+          item.indicator->setVisible(true);
           item.indicator->setFill(colorSpecFromRole(ColorRole::Hover));
+          item.indicator->clearBorder();
         }
         if (item.text != nullptr) {
           item.text->setColor(colorSpecFromRole(ColorRole::OnHover));
@@ -1443,11 +1461,35 @@ ColorSpec WorkspacesWidget::workspaceFillColor(const Workspace& workspace) const
   return color;
 }
 
+// noctadark outline style: only the active workspace (and an urgent one) draw a
+// solid outline; occupied workspaces get a dim outline; empty workspaces show none.
+ColorSpec WorkspacesWidget::workspaceBorderColor(const Workspace& workspace) const {
+  if (workspace.urgent) {
+    return m_urgentColor;
+  }
+  ColorSpec color = widgetForegroundOr(colorSpecFromRole(ColorRole::OnSurface));
+  if (workspace.occupied || workspace.active) {
+    color.alpha = 1.0f;
+  } else {
+    color.alpha = 0.0f;
+  }
+  return color;
+}
+
+// noctadark outline style: only the currently active workspace draws the pill
+// outline; the rest are shown as plain numbers.
+bool WorkspacesWidget::workspaceBorderVisible(const Workspace& workspace) const {
+  return workspace.active;
+}
+
 ColorSpec WorkspacesWidget::workspaceTextColor(const Workspace& workspace) const {
   if (workspace.urgent) {
     return m_minimal ? m_urgentColor : readableColorForFill(m_urgentColor);
   }
   if (!m_minimal) {
+    if (workspace.active) {
+      return widgetForegroundOr(colorSpecFromRole(ColorRole::OnSurface));
+    }
     return readableColorForFill(workspaceFillColor(workspace));
   }
   if (workspace.active) {

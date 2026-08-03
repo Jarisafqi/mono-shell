@@ -46,11 +46,11 @@ int main() {
     return true;
   });
 
-  hooks.fire(HookKind::WallpaperChanged, {{kPathName, "/tmp/noctalia test/wallpaper.png"}, {kConnectorName, "DP-1"}});
+  hooks.fire(HookKind::WallpaperChanged, {{kPathName, "/tmp/mono-shell test/wallpaper.png"}, {kConnectorName, "DP-1"}});
 
   assert(commands.size() == 1);
   assert(commands[0] == "record-wallpaper-hook");
-  assert(pathSeen == "/tmp/noctalia test/wallpaper.png");
+  assert(pathSeen == "/tmp/mono-shell test/wallpaper.png");
   assert(connectorSeen == "DP-1");
   assert(std::getenv(kPathName) == nullptr);
   assert(std::getenv(kConnectorName) == nullptr);

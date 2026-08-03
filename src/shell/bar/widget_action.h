@@ -45,7 +45,7 @@ namespace noctalia::bar {
   };
 
   // Grammar-level parse. Whether an Ipc verb is actually registered is settled at dispatch time
-  // against the live registry: bars are built before any IPC handler exists, and `noctalia config
+  // against the live registry: bars are built before any IPC handler exists, and `mono-shell config
   // validate` has no running service either. Returns a human-readable reason on failure.
   [[nodiscard]] std::expected<WidgetAction, std::string> parseWidgetAction(std::string_view value);
 

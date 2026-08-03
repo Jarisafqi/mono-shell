@@ -23,7 +23,9 @@ public:
 
 private:
   [[nodiscard]] std::string formatTimeText() const;
+  [[nodiscard]] std::string formatDateText() const;
   [[nodiscard]] std::string formatTooltipText() const;
+  void toggleDateDisplay();
   void doLayout(Renderer& renderer, float containerWidth, float containerHeight) override;
   void doUpdate(Renderer& renderer) override;
   std::string m_format;
@@ -37,4 +39,5 @@ private:
   std::string m_lastPrimaryText;
   std::string m_lastSecondaryText;
   std::string m_lastTooltipText;
+  bool m_showingDate = false;
 };

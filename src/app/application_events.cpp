@@ -22,7 +22,7 @@ namespace {
   std::string_view powerProfileOriginName(PowerProfilesChangeOrigin origin) {
     switch (origin) {
     case PowerProfilesChangeOrigin::Noctalia:
-      return "noctalia";
+      return "mono-shell";
     case PowerProfilesChangeOrigin::External:
       return "external";
     }
@@ -179,9 +179,9 @@ void Application::onPowerProfileChangedForEvents(const PowerProfilesState& state
     }
     m_hookManager.fire(
         HookKind::PowerProfileChanged,
-        {{"NOCTALIA_POWER_PROFILE", state.activeProfile},
-         {"NOCTALIA_POWER_PROFILE_PREVIOUS", prev},
-         {"NOCTALIA_POWER_PROFILE_ORIGIN", std::string(powerProfileOriginName(origin))}}
+        {{"MONO_SHELL_POWER_PROFILE", state.activeProfile},
+         {"MONO_SHELL_POWER_PROFILE_PREVIOUS", prev},
+         {"MONO_SHELL_POWER_PROFILE_ORIGIN", std::string(powerProfileOriginName(origin))}}
     );
   }
   m_prevPowerProfileActiveForEvents = state.activeProfile;

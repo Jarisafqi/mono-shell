@@ -1,5 +1,6 @@
 #include "shell/osd/audio_osd.h"
 
+#include "i18n/i18n.h"
 #include "pipewire/pipewire_service.h"
 #include "pipewire/sound_player.h"
 #include "shell/osd/osd_overlay.h"
@@ -20,6 +21,7 @@ namespace {
     return OsdContent{
         .kind = OsdKind::Volume,
         .icon = audioVolumeGlyph(volume, muted, false),
+        .label = i18n::tr(muted ? "osd.volume.muted" : "osd.volume.label"),
         .value = std::to_string(percent) + "%",
         .progress = std::clamp(volume, 0.0f, 1.0f),
         .overLimit = percent > 100,
@@ -42,6 +44,7 @@ namespace {
     return OsdContent{
         .kind = OsdKind::Microphone,
         .icon = audioVolumeGlyph(volume, muted, true),
+        .label = i18n::tr(muted ? "osd.input.muted" : "osd.input.label"),
         .value = std::to_string(percent) + "%",
         .progress = std::clamp(volume, 0.0f, 1.0f),
         .overLimit = percent > 100,

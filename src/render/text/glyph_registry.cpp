@@ -19,116 +19,200 @@ namespace {
   constexpr Logger kLog("glyph");
   constexpr char32_t kMissingGlyph = 0xF292; // skull
 
-  // Hand-curated alias -> native Tabler icon name map.
+  // Hand-curated Noctalia alias -> Material Design Icon name map.
   // Use these for semantic shell states and stable Noctalia-facing names.
   // clang-format off
 const std::unordered_map<std::string, std::string_view> kAliases = {
-    // General
-    {"close", "x"},
-    {"add", "plus"},
-    {"more-vertical", "dots-vertical"},
-    {"person", "user"},
-    {"info", "file-description"},
-    {"unpin", "pinned-off"},
-    {"image", "photo"},
-    {"capslock", "keyboard"},
-    {"numlock", "keyboard"},
-    {"scrolllock", "keyboard"},
-    {"plugin", "plug-connected"},
-    {"official-plugin", "shield-filled"},
-
-    // Toast / warnings
-    {"toast-notice", "circle-check"},
-    {"toast-warning", "alert-circle"},
-    {"toast-error", "circle-x"},
-    {"warning", "exclamation-circle"},
-
-    // Media
-    {"media-pause", "player-pause-filled"},
-    {"media-play", "player-play-filled"},
-    {"media-prev", "player-skip-back-filled"},
-    {"media-next", "player-skip-forward-filled"},
-    {"shuffle", "arrows-shuffle"},
-    {"stop", "player-stop-filled"},
-    {"microphone-mute", "microphone-off"},
-
-    // Volume
-    {"volume-high", "volume"},
-    {"volume-low", "volume-2"},
-    {"volume-mute", "volume-off"},
-    {"volume-x", "volume-3"},
-    {"volume-zero", "volume-3"},
-
-    // Network speed
-    {"download-speed", "download"},
-    {"upload-speed", "upload"},
-
-    // System monitor
-    {"cpu-intensive", "alert-octagon"},
-    {"cpu-usage", "brand-speedtest"},
-    {"cpu-temperature", "flame"},
-    {"gpu-usage", "device-desktop"},
-    {"memory", "cpu"},
-    {"storage", "database"},
-    {"busy", "hourglass-empty"},
-
-    // Power
-    {"performance", "gauge"},
-    {"balanced", "scale"},
-    {"powersaver", "leaf"},
-    {"shutdown", "power"},
-    {"reboot", "refresh"},
-    {"suspend", "player-pause"},
-    {"hibernate", "zzz"},
-
-    // Night light / dark mode
-    {"nightlight-on", "moon"},
-    {"nightlight-off", "moon-off"},
-    {"nightlight-forced", "moon-stars"},
-    {"theme-mode", "contrast-filled"},
-
-    // Caffeine (idle inhibitor)
-    {"caffeine-on", "mug-filled"},
-    {"caffeine-off", "mug"},
-
-    // Brightness / Display
-    {"brightness-low", "brightness-down-filled"},
-    {"brightness-high", "brightness-up-filled"},
-
-    // Wallpaper / color
-    {"wallpaper-selector", "library-photo"},
-
-    // Battery
-    {"battery-0", "battery"},
-    {"battery-plugged", "battery-charging-2"},
-
-    // Bluetooth devices
+    {"activity", "timeline"},
+    {"add", "add"},
+    {"alert-triangle", "warning_amber"},
+    {"app-window", "sensor_window"},
+    {"apps", "apps"},
+    {"arrow-big-up", "arrow_upward"},
+    {"arrows-exchange", "swap_vert"},
+    {"arrows-horizontal", "swap_horiz"},
+    {"balanced", "tune"},
+    {"ball-football", "sports_soccer"},
+    {"battery-0", "battery_alert"},
+    {"battery-1", "battery_std"},
+    {"battery-2", "battery_std"},
+    {"battery-3", "battery_std"},
+    {"battery-4", "battery_full"},
+    {"battery-charging", "battery_charging_full"},
+    {"battery-exclamation", "battery_alert"},
+    {"battery-plugged", "battery_charging_full"},
+    {"bell", "notifications"},
+    {"bell-off", "notifications_off"},
+    {"blob-filled", "lens"},
+    {"bluetooth", "bluetooth"},
+    {"bluetooth-off", "bluetooth_disabled"},
+    {"bluetooth-device-earbuds", "headset"},
+    {"bluetooth-device-gamepad", "sports_esports"},
     {"bluetooth-device-generic", "bluetooth"},
-    {"bluetooth-device-gamepad", "device-gamepad-2"},
-    {"bluetooth-device-microphone", "microphone"},
+    {"bluetooth-device-headphones", "headset"},
     {"bluetooth-device-headset", "headset"},
-    {"bluetooth-device-earbuds", "device-airpods"},
-    {"bluetooth-device-headphones", "headphones"},
-    {"bluetooth-device-mouse", "mouse-2"},
-    {"bluetooth-device-keyboard", "bluetooth"},
-    {"bluetooth-device-phone", "device-mobile"},
-    {"bluetooth-device-watch", "device-watch"},
-    {"bluetooth-device-speaker", "device-speaker"},
-    {"bluetooth-device-tv", "device-tv"},
-
-    // Weather
-    {"weather-sun", "sun"},
-    {"weather-moon", "moon"},
-    {"weather-moon-stars", "moon-stars"},
+    {"bluetooth-device-keyboard", "keyboard"},
+    {"bluetooth-device-microphone", "mic"},
+    {"bluetooth-device-mouse", "mouse"},
+    {"bluetooth-device-phone", "smartphone"},
+    {"bluetooth-device-speaker", "speaker"},
+    {"bluetooth-device-tv", "tv"},
+    {"bluetooth-device-watch", "watch"},
+    {"bolt", "flash_on"},
+    {"border-corner-pill", "crop_square"},
+    {"brand-apple", "laptop_mac"},
+    {"brand-git", "code"},
+    {"brand-google", "public"},
+    {"brightness-high", "brightness_high"},
+    {"brightness-low", "brightness_low"},
+    {"bug", "bug_report"},
+    {"busy", "hourglass_empty"},
+    {"caffeine-off", "local_cafe"},
+    {"caffeine-on", "local_cafe"},
+    {"calculator", "calculate"},
+    {"calendar-cog", "event"},
+    {"camera-off", "videocam_off"},
+    {"capslock", "keyboard"},
+    {"check", "check"},
+    {"chevron-down", "keyboard_arrow_down"},
+    {"chevron-left", "chevron_left"},
+    {"chevron-right", "chevron_right"},
+    {"chevron-up", "keyboard_arrow_up"},
+    {"circle-filled", "lens"},
+    {"circuit-pushbutton", "toggle_on"},
+    {"clipboard", "content_paste"},
+    {"clock", "access_time"},
+    {"close", "close"},
+    {"color-picker", "colorize"},
+    {"copy-plus", "content_copy"},
+    {"cpu-intensive", "speed"},
+    {"cpu-temperature", "thermostat"},
+    {"cpu-usage", "memory"},
+    {"device-desktop", "desktop_windows"},
+    {"device-floppy", "save"},
+    {"disc", "album"},
+    {"disc-filled", "disc_full"},
+    {"download", "download"},
+    {"download-speed", "download"},
+    {"external-link", "open_in_new"},
+    {"eye", "visibility"},
+    {"file-lock", "enhanced_encryption"},
+    {"flask", "science"},
+    {"flip-horizontal", "flip"},
+    {"flip-vertical", "flip"},
+    {"folder", "folder"},
+    {"gpu-usage", "memory"},
+    {"grid-dots", "grid_on"},
+    {"guitar-pick-filled", "album"},
+    {"headphones", "headset"},
+    {"heart", "favorite"},
+    {"hibernate", "bedtime"},
+    {"home", "home"},
+    {"hourglass-empty", "hourglass_empty"},
+    {"image", "image"},
+    {"info", "info"},
+    {"key", "vpn_key"},
+    {"keyboard", "keyboard"},
+    {"layers-intersect", "layers"},
+    {"layout-grid", "grid_on"},
+    {"letter-t", "title"},
+    {"lock", "lock"},
+    {"map-pin-off", "location_off"},
+    {"media-next", "skip_next"},
+    {"media-pause", "pause"},
+    {"media-play", "play_arrow"},
+    {"media-prev", "skip_previous"},
+    {"memory", "memory"},
+    {"menu-2", "menu"},
+    {"michelin-star-filled", "star_half"},
+    {"microphone", "mic"},
+    {"microphone-mute", "mic_off"},
+    {"microphone-off", "mic_off"},
+    {"moon", "bedtime"},
+    {"more-vertical", "more_vert"},
+    {"mountain", "terrain"},
+    {"music-off", "music_off"},
+    {"nightlight-forced", "bedtime"},
+    {"nightlight-off", "bedtime"},
+    {"nightlight-on", "bedtime"},
+    {"mono-shell", "star"},
+    {"numlock", "keyboard"},
+    {"official-plugin", "verified_user"},
+    {"pentagon-filled", "stop"},
+    {"performance", "speed"},
+    {"person", "person"},
+    {"photo-off", "no_photography"},
+    {"pin", "push_pin"},
+    {"plug-off", "power_off"},
+    {"plugin", "extension"},
+    {"plus", "add"},
+    {"powersaver", "eco"},
+    {"puzzle", "extension"},
+    {"reboot", "refresh"},
+    {"refresh", "refresh"},
+    {"repeat", "repeat"},
+    {"screen-share-off", "stop_screen_share"},
+    {"screenshot", "photo_camera"},
+    {"scrolllock", "keyboard"},
+    {"search", "search"},
+    {"send", "send"},
+    {"settings", "settings"},
+    {"shield-check", "verified_user"},
+    {"shield-lock", "security"},
+    {"shuffle", "shuffle"},
+    {"shutdown", "power_settings_new"},
+    {"square-rounded-filled", "square_foot"},
+    {"stack-2", "layers"},
+    {"stack-back", "flip_to_back"},
+    {"stack-front", "flip_to_front"},
+    {"stack-pop", "open_in_full"},
+    {"star", "star"},
+    {"star-filled", "star"},
+    {"stop", "stop"},
+    {"storage", "storage"},
+    {"sun", "wb_sunny"},
+    {"suspend", "pause"},
+    {"temperature", "thermostat"},
+    {"temperature-sun", "wb_sunny"},
+    {"terminal", "code"},
+    {"theme-mode", "invert_colors"},
+    {"toast-error", "error_outline"},
+    {"toast-notice", "check_circle"},
+    {"toast-warning", "warning_amber"},
+    {"trash", "delete"},
+    {"triangle-filled", "play_arrow"},
+    {"unpin", "push_pin"},
+    {"upload-speed", "upload"},
+    {"video", "videocam"},
+    {"volume-high", "volume_up"},
+    {"volume-low", "volume_down"},
+    {"volume-mute", "volume_mute"},
+    {"volume-x", "volume_off"},
+    {"volume-zero", "volume_off"},
+    {"wallpaper-selector", "wallpaper"},
+    {"warning", "warning_amber"},
+    {"wave-sine", "graphic_eq"},
     {"weather-cloud", "cloud"},
-    {"weather-cloud-off", "cloud-off"},
-    {"weather-cloud-haze", "cloud-fog"},
-    {"weather-cloud-lightning", "cloud-bolt"},
-    {"weather-cloud-rain", "cloud-rain"},
-    {"weather-cloud-snow", "cloud-snow"},
-    {"weather-cloud-sun", "cloud-sun"},
-    {"weather-sunrise", "sunrise"},
-    {"weather-sunset", "sunset"},
+    {"weather-cloud-haze", "blur_on"},
+    {"weather-cloud-lightning", "flash_on"},
+    {"weather-cloud-off", "cloud_off"},
+    {"weather-cloud-rain", "umbrella"},
+    {"weather-cloud-snow", "ac_unit"},
+    {"weather-cloud-sun", "wb_cloudy"},
+    {"weather-moon", "bedtime"},
+    {"weather-moon-stars", "nights_stay"},
+    {"weather-sun", "wb_sunny"},
+    {"weather-sunrise", "wb_sunny"},
+    {"weather-sunset", "wb_sunny"},
+    {"wifi", "wifi"},
+    {"wifi-0", "wifi_off"},
+    {"wifi-1", "wifi"},
+    {"wifi-2", "wifi"},
+    {"wifi-3", "wifi"},
+    {"wifi-off", "wifi_off"},
+    {"wind", "flag"},
+    {"world", "language"},
+
 };
   // clang-format on
 
@@ -150,6 +234,12 @@ const std::unordered_map<std::string, std::string_view> kAliases = {
       return std::nullopt;
     }
 
+    // A glyph name may itself contain trailing hex-ish characters (e.g. "a-b-2");
+    // only treat the value as a codepoint literal when it is a pure hex token.
+    if (hex.find_first_not_of("0123456789abcdefABCDEF") != std::string_view::npos) {
+      return std::nullopt;
+    }
+
     std::uint32_t codepoint = 0;
     const auto* begin = hex.data();
     const auto* end = begin + hex.size();
@@ -160,19 +250,19 @@ const std::unordered_map<std::string, std::string_view> kAliases = {
     return static_cast<char32_t>(codepoint);
   }
 
-  [[nodiscard]] std::unordered_map<std::string, GlyphRegistry::TablerGlyphMetadata> loadTablerMetadata() {
-    std::unordered_map<std::string, GlyphRegistry::TablerGlyphMetadata> icons;
-    const std::filesystem::path path = paths::assetPath("fonts/tabler.json");
+  [[nodiscard]] std::unordered_map<std::string, GlyphRegistry::MaterialGlyphMetadata> loadMaterialMetadata() {
+    std::unordered_map<std::string, GlyphRegistry::MaterialGlyphMetadata> icons;
+    const std::filesystem::path path = paths::assetPath("fonts/material-icons.json");
     std::ifstream file(path);
     if (!file.is_open()) {
-      kLog.warn("failed to open Tabler glyph metadata: {}", path.string());
+      kLog.warn("failed to open Material glyph metadata: {}", path.string());
       return icons;
     }
 
     try {
       const auto root = nlohmann::json::parse(file);
       if (!root.is_object()) {
-        kLog.warn("Tabler glyph metadata is not an object: {}", path.string());
+        kLog.warn("Material glyph metadata is not an object: {}", path.string());
         return icons;
       }
 
@@ -193,29 +283,29 @@ const std::unordered_map<std::string, std::string_view> kAliases = {
         if (auto parsed = parseCodepointLiteral(codepoint)) {
           icons.emplace(
               name,
-              GlyphRegistry::TablerGlyphMetadata{
+              GlyphRegistry::MaterialGlyphMetadata{
                   .codepoint = *parsed,
                   .category = categoryIt->get<std::string>(),
               }
           );
         }
       }
-      kLog.debug("loaded {} Tabler glyph names from {}", icons.size(), path.string());
+      kLog.debug("loaded {} Material glyph names from {}", icons.size(), path.string());
     } catch (const nlohmann::json::exception& e) {
-      kLog.warn("failed to parse Tabler glyph metadata '{}': {}", path.string(), e.what());
+      kLog.warn("failed to parse Material glyph metadata '{}': {}", path.string(), e.what());
     }
     return icons;
   }
 
-  [[nodiscard]] const std::unordered_map<std::string, GlyphRegistry::TablerGlyphMetadata>& tablerMetadata() {
-    static const std::unordered_map<std::string, GlyphRegistry::TablerGlyphMetadata> icons = loadTablerMetadata();
+  [[nodiscard]] const std::unordered_map<std::string, GlyphRegistry::MaterialGlyphMetadata>& materialMetadata() {
+    static const std::unordered_map<std::string, GlyphRegistry::MaterialGlyphMetadata> icons = loadMaterialMetadata();
     return icons;
   }
 
-  [[nodiscard]] const std::unordered_map<std::string, char32_t>& tablerIcons() {
+  [[nodiscard]] const std::unordered_map<std::string, char32_t>& materialIcons() {
     static const std::unordered_map<std::string, char32_t> icons = [] {
       std::unordered_map<std::string, char32_t> flat;
-      const auto& metadata = tablerMetadata();
+      const auto& metadata = materialMetadata();
       flat.reserve(metadata.size());
       for (const auto& [name, entry] : metadata) {
         flat.emplace(name, entry.codepoint);
@@ -225,19 +315,28 @@ const std::unordered_map<std::string, std::string_view> kAliases = {
     return icons;
   }
 
+  [[nodiscard]] const char32_t* resolveToMaterial(std::string_view name) {
+    const auto& icons = materialIcons();
+    const std::string key{name};
+    if (const auto alias = kAliases.find(key); alias != kAliases.end()) {
+      if (const auto it = icons.find(std::string(alias->second)); it != icons.end()) {
+        return &it->second;
+      }
+      return nullptr;
+    }
+    if (const auto it = icons.find(key); it != icons.end()) {
+      return &it->second;
+    }
+    return nullptr;
+  }
+
 } // namespace
 
 bool GlyphRegistry::contains(std::string_view name) {
   if (parseCodepointLiteral(name).has_value()) {
     return true;
   }
-
-  const auto& tabler = tablerIcons();
-  const std::string key{name};
-  if (const auto alias = kAliases.find(key); alias != kAliases.end()) {
-    return tabler.contains(std::string(alias->second));
-  }
-  return tabler.contains(key);
+  return resolveToMaterial(name) != nullptr;
 }
 
 char32_t GlyphRegistry::lookup(std::string_view name) {
@@ -245,45 +344,36 @@ char32_t GlyphRegistry::lookup(std::string_view name) {
     return *codepoint;
   }
 
-  const auto& tabler = tablerIcons();
-  const std::string key{name};
-  if (const auto alias = kAliases.find(key); alias != kAliases.end()) {
-    const auto it = tabler.find(std::string(alias->second));
-    if (it != tabler.end()) {
-      return it->second;
-    }
-
-    kLog.warn("missing Tabler glyph '{}' for alias '{}'", alias->second, name);
-    return kMissingGlyph;
-  }
-
-  const auto it = tabler.find(key);
-  if (it != tabler.end()) {
-    return it->second;
+  if (const char32_t* codepoint = resolveToMaterial(name)) {
+    return *codepoint;
   }
 
   kLog.warn("missing glyph: {}", name);
   return kMissingGlyph;
 }
 
-const std::unordered_map<std::string, GlyphRegistry::TablerGlyphMetadata>& GlyphRegistry::tablerGlyphMetadata() {
-  return ::tablerMetadata();
+const std::unordered_map<std::string, GlyphRegistry::MaterialGlyphMetadata>& GlyphRegistry::materialGlyphMetadata() {
+  return ::materialMetadata();
 }
 
-const std::unordered_map<std::string, char32_t>& GlyphRegistry::tablerIcons() { return ::tablerIcons(); }
+const std::unordered_map<std::string, char32_t>& GlyphRegistry::materialIcons() { return ::materialIcons(); }
 
 std::optional<std::string_view> GlyphRegistry::categoryFor(std::string_view name) {
-  const auto& metadata = tablerGlyphMetadata();
-  const std::string key{name};
-  if (const auto alias = kAliases.find(key); alias != kAliases.end()) {
-    if (const auto it = metadata.find(std::string(alias->second)); it != metadata.end()) {
-      return it->second.category;
-    }
+  if (resolveToMaterial(name) == nullptr) {
     return std::nullopt;
   }
-
+  const auto& metadata = materialMetadata();
+  const std::string key{name};
   if (const auto it = metadata.find(key); it != metadata.end()) {
     return it->second.category;
+  }
+  for (const auto& [aliasKey, target] : kAliases) {
+    if (aliasKey == name) {
+      if (const auto it = metadata.find(std::string(target)); it != metadata.end()) {
+        return it->second.category;
+      }
+      break;
+    }
   }
   return std::nullopt;
 }

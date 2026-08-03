@@ -83,6 +83,21 @@ namespace {
 
   std::string formatStrftimeRaw(std::string_view fmt, const std::tm& tm) {
     std::string spec(fmt);
+    // LC_TIME=ms_MY returns an empty string for %p/%P, so substitute a literal
+    // English AM/PM before handing the format to strftime.
+    const bool isAm = tm.tm_hour < 12;
+    std::size_t pos = 0;
+    while ((pos = spec.find('%', pos)) != std::string::npos && pos + 1 < spec.size()) {
+      if (spec[pos + 1] == 'p') {
+        spec.replace(pos, 2, isAm ? "AM" : "PM");
+        pos += 2;
+      } else if (spec[pos + 1] == 'P') {
+        spec.replace(pos, 2, isAm ? "am" : "pm");
+        pos += 2;
+      } else {
+        pos += 1;
+      }
+    }
     std::size_t size = std::max<std::size_t>(64, spec.size() * 4 + 16);
     for (int attempt = 0; attempt < 6; ++attempt) {
       std::string buffer(size, '\0');

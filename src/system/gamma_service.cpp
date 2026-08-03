@@ -32,10 +32,10 @@ namespace {
   constexpr int kTargetStepKelvin = 50;
   constexpr auto kMinTickInterval = std::chrono::seconds(2);
 
-  // NOCTALIA_GAMMA_PROFILE=1 times each upload against an empty roundtrip, isolating what set_gamma
+  // MONO_SHELL_GAMMA_PROFILE=1 times each upload against an empty roundtrip, isolating what set_gamma
   // costs the compositor. It adds two blocking roundtrips per upload, so it is diagnostics only.
   bool gammaProfiling() {
-    static const bool enabled = std::getenv("NOCTALIA_GAMMA_PROFILE") != nullptr;
+    static const bool enabled = std::getenv("MONO_SHELL_GAMMA_PROFILE") != nullptr;
     return enabled;
   }
 

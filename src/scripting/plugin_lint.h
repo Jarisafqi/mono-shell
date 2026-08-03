@@ -10,7 +10,7 @@ namespace scripting {
   struct PluginLintFinding {
     enum class Kind {
       ReadUndeclared,         // getConfig("key") where "key" is not declared in plugin.toml (a runtime loud miss)
-      ObsoleteConfigAccessor, // entry-specific getConfig alias removed in favor of noctalia.getConfig
+      ObsoleteConfigAccessor, // entry-specific getConfig alias removed in favor of monoshell.getConfig
       DeclaredUnread,         // a declared setting that no entry ever reads
       MissingEntryFile,       // an [[entry]] points at a .luau file that does not exist
     };
@@ -43,7 +43,7 @@ namespace scripting {
 
 namespace noctalia::plugins {
 
-  // Entry point for `noctalia plugins <command> [paths]`. Returns a process exit
+  // Entry point for `monoshell plugins <command> [paths]`. Returns a process exit
   // code. Offline author tool; does not start Application or talk to a running shell.
   int runCli(int argc, char* argv[]);
 

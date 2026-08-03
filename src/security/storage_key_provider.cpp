@@ -22,10 +22,10 @@ namespace security {
     };
 
     constexpr std::array<char, crypto_kdf_CONTEXTBYTES> kClipboardContext = {
-        'N', 'O', 'C', 'T', 'C', 'L', 'I', 'P',
+        'M', 'O', 'N', 'S', 'C', 'L', 'I', 'P',
     };
     constexpr std::array<char, crypto_kdf_CONTEXTBYTES> kCalendarContext = {
-        'N', 'O', 'C', 'T', 'C', 'A', 'L', 'E',
+        'M', 'O', 'N', 'S', 'C', 'A', 'L', 'E',
     };
 
     std::optional<std::uint8_t> decodeLowerHex(char value) {
@@ -245,7 +245,7 @@ namespace security {
     auto key = std::make_shared<SecureKey>(std::move(*generated));
     SecureBuffer storedValue(key->bytes());
     m_operation = m_secretStore.store(
-        kStorageMasterKeyId, std::move(storedValue), "Noctalia encrypted storage key",
+        kStorageMasterKeyId, std::move(storedValue), "Mono Shell encrypted storage key",
         [this, key = std::move(key)](SecretStoreStatus status) mutable {
           if (status == SecretStoreStatus::Success) {
             activateKey(std::move(*key));

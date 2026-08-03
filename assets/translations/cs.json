@@ -685,10 +685,10 @@
       "greeter-sync": "Noctalia Greeter",
       "greeter-sync-pending": "Čeká se na schválení administrátorem pro zápis do greetera.",
       "greeter-sync-pending-console": "Čeká se na schválení administrátorem. Potvrď polkit výzvu v Noctalia, na TTY nebo konzoli, nebo spusť pkexec ručně.",
-      "greeter-sync-pending-manual": "Claude responded: Soubory jsou připraveny.Soubory jsou připraveny. Spusť v terminálu: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\". Nebo nastav shell.greeter_sync.privilege_command (např. ghostty -e pkexec) a synchronizuj znovu.",
+      "greeter-sync-pending-manual": "Claude responded: Soubory jsou připraveny.Soubory jsou připraveny. Spusť v terminálu: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\". Nebo nastav shell.greeter_sync.privilege_command (např. ghostty -e pkexec) a synchronizuj znovu.",
       "greeter-sync-success": "Vzhled synchronizován. Změny se projeví při příští přihlašovací obrazovce.",
       "greeter-sync-timeout": "Claude responded: Synchronizace greetera stále čeká na schválení administrátorem.Synchronizace greetera stále čeká na schválení administrátorem. Zkontroluj TTY nebo konzoli pro polkit výzvu, povol polkit agenta v nastavení Zabezpečení, nebo spusť pkexec ručně.",
-      "greeter-sync-timeout-manual": "Synchronizace greetera stále vyžaduje schválení administrátorem. Spusť v terminálu: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "greeter-sync-timeout-manual": "Synchronizace greetera stále vyžaduje schválení administrátorem. Spusť v terminálu: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "keybind-app": "Noctalia",
       "keybind-invalid-modifier": "Tato zkratka přijímá pouze jednu klávesu bez modifikátorů.",
       "keybind-invalid-printable": "Tisknutelné klávesy (písmena, čísla, symboly) vyžadují modifikátor jako Ctrl nebo Alt.",
@@ -990,7 +990,7 @@
       "support-report": "Nepodařilo se uložit podpůrnou zprávu.",
       "sync-greeter": "Nepodařilo se synchronizovat vzhled s Noctalia Greeter.",
       "sync-greeter-timeout": "Synchronizace uvítací obrazovky stále čeká na schválení správcem. Zkontrolujte TTY nebo konzoli, zda se nezobrazila výzva polkit, povolte agenta polkit v nastavení Zabezpečení, nebo spusťte pkexec ručně.",
-      "sync-greeter-timeout-manual": "Synchronizace uvítací obrazovky stále vyžaduje schválení správcem. Spusťte v terminálu: pkexec noctalia-greeter-apply-appearance \"$XDG_RUNTIME_DIR/noctalia-greeter-sync\"",
+      "sync-greeter-timeout-manual": "Synchronizace uvítací obrazovky stále vyžaduje schválení správcem. Spusťte v terminálu: pkexec mono-shell-greeter-apply-appearance \"$XDG_RUNTIME_DIR/mono-shell-greeter-sync\"",
       "widget": {
         "rename": "Nepodařilo se přejmenovat pojmenovaný widget."
       },
@@ -1340,8 +1340,8 @@
         },
         "kind-label": "Typ",
         "location-label": "Umístění",
-        "location-placeholder-git": "https://github.com/me/noctalia-plugins",
-        "location-placeholder-path": "~/dev/noctalia-plugins",
+        "location-placeholder-git": "https://github.com/me/mono-shell-plugins",
+        "location-placeholder-path": "~/dev/mono-shell-plugins",
         "name-label": "ID zdroje",
         "name-placeholder": "moje-pluginy",
         "precedence-hint": "Zdroje níže přepisují zdroje výše, pokud nabízejí stejný plugin.",
@@ -1394,7 +1394,7 @@
           "label": "Zaoblení rohů"
         },
         "custom-palette": {
-          "description": "Vybrat paletu z ~/.config/noctalia/palettes/",
+          "description": "Vybrat paletu z ~/.config/mono-shell/palettes/",
           "label": "Vlastní paleta",
           "search-placeholder": "Hledat vlastní palety..."
         },

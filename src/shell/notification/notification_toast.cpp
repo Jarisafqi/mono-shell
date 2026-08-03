@@ -61,7 +61,7 @@ namespace {
     const float baseRadius = Style::radiusMd * (iconSize / kNotificationIconReferenceSize);
     return std::min(iconSize * 0.5f, Style::scaledRadius(baseRadius, localScale));
   }
-  constexpr std::string_view kNoctaliaGlyphIconPrefix = "noctalia-glyph:";
+  constexpr std::string_view kNoctaliaGlyphIconPrefix = "mono-shell-glyph:";
   constexpr float kIconTextGap = Style::spaceSm;
   constexpr float kActionGap = Style::spaceXs;
   constexpr float kActionRowGap = Style::spaceSm;
@@ -297,8 +297,10 @@ namespace {
     }
   }
 
-  bool showToastProgressAccent(Urgency urgency, int displayDurationMs) {
-    return displayDurationMs >= 0 || urgency == Urgency::Critical;
+  bool showToastProgressAccent(Urgency urgency, int /*displayDurationMs*/) {
+    // Timer indicator hidden: no progress accent is drawn on the toast.
+    (void)urgency;
+    return false;
   }
 
   std::vector<std::unique_ptr<Button>>
@@ -482,7 +484,7 @@ namespace {
   }
 
   std::filesystem::path remoteIconCachePath(std::string_view url) {
-    const std::filesystem::path cacheDir = std::filesystem::path("/tmp") / "noctalia-notification-icons";
+    const std::filesystem::path cacheDir = std::filesystem::path("/tmp") / "mono-shell-notification-icons";
     const std::size_t hash = std::hash<std::string_view>{}(url);
     return cacheDir / (std::to_string(hash) + ".img");
   }
@@ -1972,7 +1974,7 @@ void NotificationToast::ensureSurfaces() {
     inst->output = output.output;
 
     auto surfaceConfig = LayerSurfaceConfig{
-        .nameSpace = "noctalia-notification",
+        .nameSpace = "mono-shell-notification",
         .layer = layer == "overlay" ? LayerShellLayer::Overlay : LayerShellLayer::Top,
         .anchor = anchor,
         .width = surfaceWidth,

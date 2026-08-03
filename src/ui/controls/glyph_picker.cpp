@@ -21,23 +21,23 @@ public:
   };
 
   GlyphGridAdapter(float chromeScale) : m_chromeScale(chromeScale) {
-    const auto& tabler = GlyphRegistry::tablerGlyphMetadata();
+    const auto& material = GlyphRegistry::materialGlyphMetadata();
     const auto& aliases = GlyphRegistry::aliases();
     std::set<std::string> categories;
 
     std::unordered_set<std::string> seen;
-    seen.reserve(tabler.size() + aliases.size());
-    m_master.reserve(tabler.size() + aliases.size());
+    seen.reserve(material.size() + aliases.size());
+    m_master.reserve(material.size() + aliases.size());
 
     for (const auto& [name, target] : aliases) {
       if (seen.insert(name).second) {
-        if (const auto it = tabler.find(std::string(target)); it != tabler.end()) {
+        if (const auto it = material.find(std::string(target)); it != material.end()) {
           m_master.push_back({name, it->second.codepoint, it->second.category});
           categories.insert(it->second.category);
         }
       }
     }
-    for (const auto& [name, metadata] : tabler) {
+    for (const auto& [name, metadata] : material) {
       if (seen.insert(name).second) {
         m_master.push_back({name, metadata.codepoint, metadata.category});
         categories.insert(metadata.category);

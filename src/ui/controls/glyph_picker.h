@@ -22,7 +22,7 @@ struct GlyphPickerResult {
   char32_t codepoint = 0;
 };
 
-// Title + search/category filters + virtualized grid of every Tabler glyph +
+// Title + search/category filters + virtualized grid of every icon glyph +
 // Cancel/Apply row. Reusable chrome for dialogs or embedded UIs.
 class GlyphPicker : public Flex {
 public:

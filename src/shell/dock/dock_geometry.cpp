@@ -247,7 +247,7 @@ namespace shell::dock {
   makeLayerSurfaceConfig(const DockConfig& cfg, const ShellConfig::ShadowConfig& shadow, std::size_t itemCount) {
     const auto geometry = computeSurfaceGeometry(cfg, shadow, itemCount);
     return LayerSurfaceConfig{
-        .nameSpace = "noctalia-dock",
+        .nameSpace = "mono-shell-dock",
         .layer = layerShellLayerFromConfig(cfg.layer),
         .anchor = positionToAnchor(cfg.position),
         .width = geometry.surfaceW,

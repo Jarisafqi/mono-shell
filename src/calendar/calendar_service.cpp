@@ -253,7 +253,7 @@ void CalendarService::notifyGoogleConnectFailure(const std::string& body) const 
   m_notifications->addInternal(
       i18n::tr("notifications.internal.calendar"),
       i18n::tr("notifications.internal.calendar-google-connect-failed-title"), body, Urgency::Critical,
-      kDefaultNotificationTimeout * 2, std::string("noctalia-glyph:calendar-x")
+      kDefaultNotificationTimeout * 2, std::string("mono-shell-glyph:calendar-x")
   );
 }
 
@@ -935,7 +935,7 @@ std::filesystem::path CalendarService::cacheFilePath() {
   } else {
     base = "/tmp";
   }
-  return base / "noctalia" / "calendar" / "events.enc";
+  return base / "mono-shell" / "calendar" / "events.enc";
 }
 
 std::filesystem::path CalendarService::legacyCacheFilePath() {

@@ -118,7 +118,7 @@ namespace {
 
   std::string userHostLine() { return std::format("{}@{}", sessionDisplayName(), hostName()); }
 
-  std::string noctaliaVersionLine() { return std::format("Noctalia {}", noctalia::build_info::displayVersion()); }
+  std::string monoshellVersionLine() { return std::format("Mono Shell {}", noctalia::build_info::displayVersion()); }
 
   void applyHomeCardStyle(Flex& card, float scale, float fillOpacity) {
     applySectionCardStyle(card, scale, fillOpacity);
@@ -265,7 +265,7 @@ std::unique_ptr<Flex> HomeTab::create() {
         return;
       }
       notify::error(
-          "Noctalia", i18n::tr("control-center.home.avatar-error-title"),
+          "Mono Shell", i18n::tr("control-center.home.avatar-error-title"),
           i18n::tr(shell::avatarApplyErrorTranslationKey(applyResult.error))
       );
     });
@@ -347,7 +347,7 @@ std::unique_ptr<Flex> HomeTab::create() {
           }),
           ui::label({
               .out = &m_userVersion,
-              .text = noctaliaVersionLine(),
+              .text = monoshellVersionLine(),
               .fontSize = Style::fontSizeCaption * scale,
               .color = colorSpecFromRole(ColorRole::OnSurfaceVariant),
               .configure = configureUserDetailLabel,
@@ -1380,7 +1380,7 @@ void HomeTab::sync(Renderer& renderer) {
     m_userUptime->setText(i18n::tr("control-center.home.uptime", "uptime", uptimeText));
   }
   if (m_userVersion != nullptr) {
-    m_userVersion->setText(noctaliaVersionLine());
+    m_userVersion->setText(monoshellVersionLine());
   }
 
   if (m_weatherGlyph != nullptr && m_weatherLine != nullptr) {
