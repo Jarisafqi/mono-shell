@@ -1,12 +1,11 @@
 # mono-shell
 
-mono-shell is a native Wayland desktop shell for people who want a polished, configurable Linux desktop without stitching
-together a separate bar, launcher, notification daemon, lock screen, wallpaper tool, and settings UI.
+mono-shell is a native Wayland bar and notification panel for people who want a polished, configurable Linux desktop
+without stitching together a separate bar, notification daemon, and settings UI.
 
-It provides the shell layer around your compositor: bars, widgets, dock, launcher, control center, notifications,
-wallpaper, lock screen, session actions, clipboard history, OSDs, tray integration, and desktop widgets. The project is
-built directly on Wayland and OpenGL ES with no Qt or GTK dependency, so the UI, rendering, configuration, and IPC model
-are designed as one cohesive shell instead of a collection of unrelated panels and scripts.
+It provides the shell layer around your compositor: a configurable bar with widgets and a notification panel with a
+quick toggle. The project is built directly on Wayland and OpenGL ES with no Qt or GTK dependency, so the UI, rendering,
+configuration, and IPC model are designed as one cohesive shell instead of a collection of unrelated panels and scripts.
 
 > [!IMPORTANT]
 > mono-shell v5 is currently in Beta. While the core features and architecture are stabilizing, you may still encounter occasional configuration or behavior adjustments as we prepare for the final release.
@@ -26,12 +25,12 @@ are designed as one cohesive shell instead of a collection of unrelated panels a
 
 ## Why mono-shell?
 
-Most Wayland setups leave the desktop shell to a stack of small tools: one bar, another launcher, another notification
-daemon, a lock screen, a wallpaper daemon, scripts for session actions, and separate config formats for each piece. That
-can be flexible, but it also makes a complete desktop feel fragile and hard to keep visually consistent.
+Most Wayland setups leave the desktop bar and notifications to a stack of small tools: one bar, another notification
+daemon, and separate config formats for each piece. That can be flexible, but it also makes a complete desktop feel
+fragile and hard to keep visually consistent.
 
-mono-shell solves that by providing one configurable shell layer that owns the common desktop surfaces and services while
-still fitting into compositor-driven Wayland workflows. It is meant for users who want the control of a custom desktop
+mono-shell solves that by providing one configurable shell layer that owns the bar and notification surfaces while still
+fitting into compositor-driven Wayland workflows. It is meant for users who want the control of a custom desktop
 environment with fewer moving parts and a consistent UI.
 
 ## Wayland Compositor Support
@@ -47,8 +46,7 @@ session-action integration depending on the protocols and IPC they expose.
 ## Scope
 
 mono-shell is a desktop shell, not a full desktop environment. It provides the visual and service layer around your
-Wayland compositor: bars, panels, launcher, notifications, dock, lock screen, idle behavior, OSDs, theming, wallpapers,
-desktop widgets, and multi-monitor shell surfaces.
+Wayland compositor: a configurable bar with widgets, a notification panel, and a quick toggle.
 
 Window management, tiling, file management, removable-drive mounting, printers management and screen mirroring/casting
 belong to the compositor, dedicated desktop applications, or system services.
@@ -57,8 +55,8 @@ mono-shell is a fork of the [Noctalia](https://github.com/noctalia-dev/noctalia)
 architecture, features, and configuration format.
 
 The plugin system is available for user-installed extensions. Features that are useful to some users but not essential
-to the core shell can live there: extra bar widgets, launcher providers, desktop widgets, panels, shortcuts, background
-services, compositor-specific extras, hardware-specific controls, and third-party service integrations.
+to the core shell can live there: extra bar widgets, panels, shortcuts, background services, compositor-specific extras,
+hardware-specific controls, and third-party service integrations.
 
 ## Dependencies
 
