@@ -262,16 +262,11 @@ bundle/
   share/mono-shell/assets/
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md#runtime-assets) for the full runtime asset lookup order.
-
 ## Configuration
 
 A ready-to-use starting config with all defaults is at [example.toml](example.toml).
 
 ## Contributing
-
-Developer notes, architecture overview, code style, project layout, and debugging commands live in
-[CONTRIBUTING.md](CONTRIBUTING.md).
 
 Bug reports, fixes, documentation updates, themes, and configuration examples are welcome. Report issues and start
 discussions on [GitHub Issues](https://github.com/Jarisafqi/mono-shell/issues).
@@ -282,10 +277,6 @@ mono-shell is a fork of the [Noctalia](https://github.com/noctalia-dev/noctalia)
 design, architecture, and implementation goes to the
 [Noctalia contributors](https://github.com/noctalia-dev/noctalia/graphs/contributors). Detailed credits for assets,
 sounds, and dependencies are in [CREDITS.md](CREDITS.md).
-
-## License
-
-MIT License. See [LICENSE](LICENSE) for details.
 
 ## Packaging
 

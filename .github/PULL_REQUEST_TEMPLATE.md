@@ -45,7 +45,6 @@
 ## Checklist
 
 - [ ] This PR is ready for review, or it is marked as Draft.
-- [ ] I read and followed the relevant guidance in `CONTRIBUTING.md`.
 - [ ] I ran `just format` with clang-format v22+ installed, or this PR has no code changes.
 - [ ] I ran the relevant build or test commands, or explained why they were not run.
 - [ ] I self-reviewed the changes.

@@ -37,7 +37,7 @@ v5 is already packaged for:
 | Name | `mono-shell` |
 | Homepage | https://github.com/Jarisafqi/mono-shell |
 | Docs | https://github.com/Jarisafqi/mono-shell |
-| License | MIT ([LICENSE](LICENSE)); also see vendored licenses under `third_party/` for SPDX completeness |
+| License | MIT (see vendored licenses under `third_party/` for SPDX completeness) |
 | Version | Meson `project(... version: ...)` in [`meson.build`](meson.build) |
 | Binary | `mono-shell` |
 | Desktop entry | `dev.monoshell.MonoShell.desktop` |
@@ -108,9 +108,8 @@ Prefix/datadir are baked into the binary via `MONO_SHELL_INSTALL_PREFIX` /
 ```
 
 The shipped `assets/` tree is **required at runtime**. Shipping only the binary
-breaks fonts, translations, templates, glyphs, and sounds. See
-[CONTRIBUTING.md](CONTRIBUTING.md#runtime-assets) for lookup order (including
-`MONO_SHELL_ASSETS_DIR` overrides for unusual layouts).
+breaks fonts, translations, templates, glyphs, and sounds. Lookup order supports
+`MONO_SHELL_ASSETS_DIR` overrides for unusual layouts.
 
 Not shipped (don’t look for them in the install): AppStream / metainfo XML, man
 pages, systemd units.

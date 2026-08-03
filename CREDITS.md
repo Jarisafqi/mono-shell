@@ -71,8 +71,4 @@ External tools mono-shell integrates with at runtime when present:
 - The **Niri**, **Hyprland**, **Sway**, **Labwc**, and **MangoWC** teams for their excellent Wayland compositors
 - All the contributors and users who have helped make mono-shell better
 
-## License
-
-mono-shell is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
 Each dependency listed above is governed by its own respective license. Please refer to their individual projects for licensing information.
