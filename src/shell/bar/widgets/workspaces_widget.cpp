@@ -457,6 +457,7 @@ void WorkspacesWidget::rebuild(Renderer& renderer) {
   const float baseSize = std::round(pillHeight);
   const float padding = m_minimal ? (Style::spaceXs * m_contentScale) : (baseSize * 0.6f);
   float maxLabelHeight = labelFontSize;
+  m_maxLabelTextWidth = 0.0f;
 
   for (std::size_t i = 0; i < entries.size(); ++i) {
     auto& slot = slots[i];
@@ -467,6 +468,9 @@ void WorkspacesWidget::rebuild(Renderer& renderer) {
       slot.activeWidth = 0.0f;
       continue;
     }
+    if (entry.showLabel) {
+      m_maxLabelTextWidth = std::max(m_maxLabelTextWidth, slot.textWidth);
+    }
 
     if (m_minimal) {
       const float minWidth = baseSize;
@@ -474,7 +478,7 @@ void WorkspacesWidget::rebuild(Renderer& renderer) {
         slot.inactiveWidth = minWidth;
         slot.activeWidth = minWidth;
       } else {
-        const float textBasedWidth = slot.textWidth + padding * 2.0f;
+        const float textBasedWidth = m_maxLabelTextWidth + padding * 2.0f;
         slot.inactiveWidth = std::max(minWidth, textBasedWidth);
         slot.activeWidth = slot.inactiveWidth;
       }
@@ -509,7 +513,7 @@ void WorkspacesWidget::rebuild(Renderer& renderer) {
       slot.inactiveWidth = minWidth;
       slot.activeWidth = minActiveWidth;
     } else {
-      const float textBasedWidth = slot.textWidth + padding;
+      const float textBasedWidth = m_maxLabelTextWidth + padding;
       slot.inactiveWidth = std::max(minWidth, textBasedWidth);
       slot.activeWidth = std::max(minActiveWidth, textBasedWidth);
     }
@@ -852,6 +856,7 @@ void WorkspacesWidget::recalculateItemMetrics(
     textWidth = std::max(tm.right - tm.left, tm.inkRight - tm.inkLeft);
     textHeight = tm.bottom - tm.top;
   }
+  const float referenceTextWidth = std::max(m_maxLabelTextWidth, textWidth);
 
   if (m_minimal) {
     const float minWidth = baseSize;
@@ -859,7 +864,7 @@ void WorkspacesWidget::recalculateItemMetrics(
       item.inactiveWidth = minWidth;
       item.activeWidth = minWidth;
     } else {
-      const float textBasedWidth = textWidth + padding * 2.0f;
+      const float textBasedWidth = referenceTextWidth + padding * 2.0f;
       item.inactiveWidth = std::max(minWidth, textBasedWidth);
       item.activeWidth = item.inactiveWidth;
     }
@@ -881,7 +886,7 @@ void WorkspacesWidget::recalculateItemMetrics(
       item.inactiveWidth = minWidth;
       item.activeWidth = minActiveWidth;
     } else {
-      const float textBasedWidth = textWidth + padding;
+      const float textBasedWidth = referenceTextWidth + padding;
       item.inactiveWidth = std::max(minWidth, textBasedWidth);
       item.activeWidth = std::max(minActiveWidth, textBasedWidth);
     }

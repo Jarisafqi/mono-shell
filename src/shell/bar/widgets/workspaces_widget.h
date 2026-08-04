@@ -172,6 +172,7 @@ private:
 
   float m_gap = 0.0f;
   float m_indicatorHeight = 0.0f;
+  float m_maxLabelTextWidth = 0.0f;
   Box* m_hoverOverlay = nullptr;
   float m_hoverProgress = 0.0f;
   InputArea* m_hoveredArea = nullptr;
