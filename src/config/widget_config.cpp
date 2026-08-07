@@ -56,75 +56,15 @@ namespace noctalia::config {
   void seedBuiltinWidgets(Config& config) {
     auto seed = [&](const char* name, WidgetConfig wc) { config.widgets.emplace(name, std::move(wc)); };
 
-    WidgetConfig cpu;
-    cpu.type = "sysmon";
-    cpu.settings["stat"] = std::string("cpu_usage");
-    seed("cpu", std::move(cpu));
-
-    WidgetConfig temp;
-    temp.type = "sysmon";
-    temp.settings["stat"] = std::string("cpu_temp");
-    seed("temp", std::move(temp));
-
-    WidgetConfig ram;
-    ram.type = "sysmon";
-    ram.settings["stat"] = std::string("ram_used");
-    seed("ram", std::move(ram));
-
-    WidgetConfig netTx;
-    netTx.type = "sysmon";
-    netTx.settings["stat"] = std::string("net_tx");
-    seed("network_tx", std::move(netTx));
-
-    WidgetConfig netRx;
-    netRx.type = "sysmon";
-    netRx.settings["stat"] = std::string("net_rx");
-    seed("network_rx", std::move(netRx));
-
-    WidgetConfig outputVolume;
-    outputVolume.type = "volume";
-    outputVolume.settings["device"] = std::string("output");
-    seed("output_volume", std::move(outputVolume));
-
-    WidgetConfig inputVolume;
-    inputVolume.type = "volume";
-    inputVolume.settings["device"] = std::string("input");
-    seed("input_volume", std::move(inputVolume));
-
     WidgetConfig date;
     date.type = "clock";
     date.settings["format"] = std::string("{:%a %d %b}");
     seed("date", std::move(date));
 
-    WidgetConfig activeWindow;
-    activeWindow.type = "active_window";
-    activeWindow.settings["max_length"] = 260.0;
-    activeWindow.settings["min_length"] = 80.0;
-    activeWindow.settings["icon_size"] = static_cast<double>(Style::fontSizeBody);
-    activeWindow.settings["title_scroll"] = std::string("none");
-    seed("active_window", std::move(activeWindow));
-
-    WidgetConfig media;
-    media.type = "media";
-    media.settings["max_length"] = 220.0;
-    media.settings["min_length"] = 80.0;
-    media.settings["art_size"] = 16.0;
-    media.settings["title_scroll"] = std::string("none");
-    seed("media", std::move(media));
-
     WidgetConfig keyboardLayout;
     keyboardLayout.type = "keyboard_layout";
     keyboardLayout.settings["hide_when_single_layout"] = false;
     seed("keyboard_layout", std::move(keyboardLayout));
-
-    WidgetConfig lockKeys;
-    lockKeys.type = "lock_keys";
-    lockKeys.settings["show_caps_lock"] = true;
-    lockKeys.settings["show_num_lock"] = true;
-    lockKeys.settings["show_scroll_lock"] = false;
-    lockKeys.settings["hide_when_off"] = false;
-    lockKeys.settings["display"] = std::string("short");
-    seed("lock_keys", std::move(lockKeys));
 
     WidgetConfig spacer;
     spacer.type = "spacer";

@@ -19,6 +19,15 @@ const noctalia::bar::WidgetDefinition<ClockWidget::Options>& clockWidgetDefiniti
           field<&Options::timezone>({
               .key = "timezone",
           }),
+          field<&Options::tooltip>({
+              .key = "tooltip",
+          }),
+          field<&Options::hPadding>({
+              .key = "h_padding",
+              .minValue = 0.0,
+              .maxValue = 32.0,
+              .step = 1.0,
+          }),
       },
   };
   return definition;

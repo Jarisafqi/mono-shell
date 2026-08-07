@@ -18,7 +18,6 @@
 #include "shell/bar/widget.h"
 #include "shell/bar/widget_gesture_defaults.h"
 #include "shell/bar/widgets/plugin_widget.h"
-#include "shell/bar/widgets/taskbar_widget.h"
 #include "shell/panel/panel_manager.h"
 #include "shell/surface/shadow.h"
 #include "shell/tooltip/tooltip_manager.h"
@@ -913,6 +912,13 @@ namespace {
   ) {
     const float slotCross = isVertical ? barAreaW : barAreaH;
 
+    // Anchor bar content to the docked screen edge instead of centering it in the bar's cross
+    // axis: bottom/right bars hug their screen edge, top/left hug theirs. Without this, a bar
+    // thinner than its content cross-size (bar thickness - content height) leaves a dead gap on
+    // the screen-edge side.
+    const bool flushToEdgeEnd = isVertical ? (instance.barConfig.position == "right")
+                                           : (instance.barConfig.position == "bottom");
+
     auto layoutWidgets = [&](std::vector<std::unique_ptr<Widget>>& widgets) {
       for (auto& widget : widgets) {
         if (widget->root() != nullptr) {
@@ -927,7 +933,8 @@ namespace {
     // Capsule cross-size is a fraction of the bar thickness (capsule_thickness), the same for every capsule
     // regardless of per-widget content scale. The max() guard keeps a thin bar from yielding a 0px capsule.
     const float capsuleCross = std::max(1.0f, std::round(slotCross * instance.barConfig.capsuleThickness));
-    auto finalizeCapsules = [isVertical, capsuleCross, widgetHoverPadding = instance.barConfig.widgetCapsulePadding,
+    auto finalizeCapsules = [isVertical, capsuleCross, flushToEdgeEnd,
+                             widgetHoverPadding = instance.barConfig.widgetCapsulePadding,
                              &renderer](std::vector<BarCapsuleRun>& runs) {
       for (auto& run : runs) {
         Node* shell = run.shell;
@@ -942,12 +949,14 @@ namespace {
 
         bool hasVisibleContent = false;
         bool hasVisibleInk = false;
+        bool flushRunToEdge = false;
         for (Widget* widget : run.widgets) {
           if (widget == nullptr || widget->root() == nullptr) {
             continue;
           }
           hasVisibleContent = hasVisibleContent || widget->root()->visible();
           hasVisibleInk = hasVisibleInk || widget->shouldShowBarCapsule();
+          flushRunToEdge = flushRunToEdge || widget->barContentFlushToEdge();
         }
 
         shell->setVisible(hasVisibleContent);
@@ -974,8 +983,10 @@ namespace {
         const float shellCross = capsuleCross;
         const float shellW = isVertical ? shellCross : shellMain;
         const float shellH = isVertical ? shellMain : shellCross;
-        const float contentX = (shellW - iw) * 0.5f;
-        const float contentY = (shellH - ih) * 0.5f;
+        const float contentX =
+            flushToEdgeEnd && flushRunToEdge && isVertical ? (shellW - iw) : (shellW - iw) * 0.5f;
+        const float contentY =
+            flushToEdgeEnd && flushRunToEdge && !isVertical ? (shellH - ih) : (shellH - ih) * 0.5f;
         shell->setSize(shellW, shellH);
         bg->setVisible(true);
         bg->setPosition(0.0f, 0.0f);
@@ -2242,6 +2253,7 @@ void Bar::populateWidgets(BarInstance& instance) {
       // Spacers are layout gaps by default; enable Interactive to use them as hot zones.
       const bool interactiveDefault = widgetType != "spacer";
       widget->setNonInteractive(!wcPtr->getBool("interactive", interactiveDefault));
+      widget->setTooltipsEnabled(wcPtr->getBool("tooltip", true));
       if (!wcPtr->getBool("enabled", true)) {
         return;
       }
@@ -2309,21 +2321,6 @@ void Bar::populateWidgets(BarInstance& instance) {
   createWidgets(instance.barConfig.startWidgets, instance.startWidgets);
   createWidgets(instance.barConfig.centerWidgets, instance.centerWidgets);
   createWidgets(instance.barConfig.endWidgets, instance.endWidgets);
-
-#ifndef NDEBUG
-  // Prepend a red "debug" pill to the end section if running a debug build
-  auto debugWidget = m_widgetFactory->create(
-      "debug_indicator", instance.output, instance.barConfig.scale, instance.barConfig.position,
-      instance.barConfig.name, static_cast<float>(instance.barConfig.widgetSpacing)
-  );
-  if (debugWidget != nullptr) {
-    debugWidget->setConfigName("debug_indicator");
-    debugWidget->setLabelFontWeight(labelFontWeight);
-    debugWidget->setLabelFontFamily(barFontFamily);
-    debugWidget->create();
-    instance.endWidgets.insert(instance.endWidgets.begin(), std::move(debugWidget));
-  }
-#endif
 }
 
 void Bar::attachWidgetsToSections(BarInstance& instance) {
@@ -3733,58 +3730,9 @@ std::string Bar::setBarLayerIpc(std::string_view args) {
   return "ok\n";
 }
 
-TaskbarWidget* Bar::findTaskbarWidget(const IpcInvocationContext& context) const {
-  const auto findIn = [&context](const std::vector<std::unique_ptr<Widget>>& widgets) -> TaskbarWidget* {
-    for (const auto& widget : widgets) {
-      if (widget->configName() != context.widgetName) {
-        continue;
-      }
-      if (auto* taskbar = dynamic_cast<TaskbarWidget*>(widget.get()); taskbar != nullptr) {
-        return taskbar;
-      }
-    }
-    return nullptr;
-  };
-
-  for (const auto& instance : m_instances) {
-    if (instance->barConfig.name != context.barName || instance->output != context.output) {
-      continue;
-    }
-    for (const auto* section : {&instance->startWidgets, &instance->centerWidgets, &instance->endWidgets}) {
-      if (auto* taskbar = findIn(*section); taskbar != nullptr) {
-        return taskbar;
-      }
-    }
-  }
-  return nullptr;
-}
-
 void Bar::registerIpc(IpcService& ipc) {
   // Widget gesture actions dispatch through the same registry.
   m_actionDispatcher.setIpcService(&ipc);
-
-  ipc.registerCycleHandler(
-      "taskbar-cycle",
-      [this, &ipc](const std::string& args) -> std::string {
-        const auto parts = noctalia::ipc::splitWords(args);
-        if (parts.size() != 1 || (parts[0] != "next" && parts[0] != "prev")) {
-          return "error: taskbar-cycle requires <next|prev>\n";
-        }
-        // Order comes from the taskbar's own model (pins, grouping, per-monitor filter), so the
-        // target is a widget instance rather than a global window list.
-        const auto& context = ipc.invocationContext();
-        if (!context.has_value() || context->widgetName.empty()) {
-          return "error: taskbar-cycle must be invoked from a taskbar widget gesture\n";
-        }
-        auto* taskbar = findTaskbarWidget(*context);
-        if (taskbar == nullptr) {
-          return "error: no taskbar widget named '" + context->widgetName + "' on bar '" + context->barName + "'\n";
-        }
-        taskbar->cycleAdjacent(parts[0] == "next" ? 1 : -1);
-        return "ok\n";
-      },
-      "taskbar-cycle <next|prev>", "Step to the adjacent task or workspace group in the invoking taskbar"
-  );
 
   ipc.registerHandler(
       "bar-show", [this](const std::string& args) -> std::string { return showBarIpc(args); },

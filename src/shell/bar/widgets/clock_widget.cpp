@@ -38,7 +38,8 @@ namespace {
 
 ClockWidget::ClockWidget(wl_output* /*output*/, Options options)
     : m_format(std::move(options.format)), m_verticalFormat(std::move(options.verticalFormat)),
-      m_tooltipFormat(std::move(options.tooltipFormat)), m_timezone(std::move(options.timezone)) {}
+      m_tooltipFormat(std::move(options.tooltipFormat)), m_timezone(std::move(options.timezone)),
+      m_hPadding(options.hPadding), m_tooltip(options.tooltip) {}
 
 std::string ClockWidget::formatTimeText() const {
   if (!m_isVertical) {
@@ -192,7 +193,7 @@ void ClockWidget::doLayout(Renderer& renderer, float containerWidth, float conta
   }
 
   // Left/right inset so the widget doesn't hug its neighbours.
-  const float hPad = Style::spaceXs * m_contentScale;
+  const float hPad = m_hPadding * m_contentScale;
   width += 2.0f * hPad;
 
   if (showSecondary) {
@@ -244,6 +245,10 @@ void ClockWidget::doUpdate(Renderer& renderer) {
   }
 
   if (auto* area = static_cast<InputArea*>(root()); area != nullptr) {
+    if (!m_tooltip) {
+      area->clearTooltip();
+      return;
+    }
     std::string tooltipText = formatTooltipText();
 
     if (tooltipText.empty()) {

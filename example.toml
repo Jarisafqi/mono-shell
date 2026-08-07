@@ -347,9 +347,9 @@ capsule            = false
 # capsule_opacity  = 1.0
 # capsule_border   = "outline"      # uncomment for a border on all widgets
 
-start  = ["launcher", "wallpaper", "workspaces"]
+start  = ["workspaces"]
 center = ["clock"]
-end    = ["media", "tray", "notifications", "clipboard", "network", "bluetooth", "volume", "brightness", "battery", "control-center", "session"]
+end    = ["battery", "tray", "spacer"]
 
 # Commands for the bar margin outside widget sections (dead zone):
 # [bar.main.dead_zone.actions]
@@ -482,32 +482,6 @@ enabled = false
 # battery_state_changed   = "notify-send 'Power' \"Battery: $NOCTALIA_BATTERY_STATE\""
 # battery_under_threshold = "notify-send 'Power' \"Battery at ${NOCTALIA_BATTERY_PERCENT}%\""
 # power_profile_changed   = "notify-send 'Power' \"Profile: $NOCTALIA_POWER_PROFILE\""
-# [widget.launcher]
-# custom_image = "/path/to/image.png"
-# custom_image_colorize = false
-
-# [widget.control-center]
-# custom_image = "/path/to/image.png"
-# custom_image_colorize = false
-
-# [widget.notifications]
-# hide_when_no_unread = true
-
-# [widget.network_rx]
-# network_speed_unit = "mb"          # auto | kb | mb
-# network_speed_compact = true       # show "1.2M" instead of "1.2 MB/s"
-#
-# [widget.network_tx]
-# network_speed_unit = "mb"          # auto | kb | mb
-# network_speed_compact = true       # show "1.2M" instead of "1.2 MB/s"
-
-# [widget.network]
-# vpn_status     = "replace"         # replace | both | hidden
-# show_label     = true
-# show_vpn_label = false             # replace: replaces network label; both: adds VPN label
-
-# [widget.volume.effects_profile_glyphs]
-# eq_desktop = "device-speaker"
 
 # [widget.keyboard_layout]
 # display                 = "short"    # "short" (e.g. "DE") or "full" (full layout name)
@@ -519,16 +493,6 @@ enabled = false
 # "German (Neo 2)"        = "Neo2"
 # "English (US)"          = "EN"
 
-# [widget.lock_button]
-# type                = "custom_button"
-# glyph               = "lock"
-# tooltip             = "Lock screen"
-# command             = "noctalia msg session lock"
-# right_command       = ""
-# middle_command      = ""
-# scroll_up_command   = ""
-# scroll_down_command = ""
-#
 # [widget.clock]
 # format = "{:%H:%M}\n{:%d/%m}"
 # vertical_format = "{:%H\n%M}"

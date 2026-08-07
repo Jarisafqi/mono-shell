@@ -155,6 +155,7 @@ public:
   void setTooltipAnchorInsets(TooltipAnchorInsets insets);
   void clearTooltipAnchorInsets();
   void setTooltipAnchorNode(Node* node) noexcept { m_tooltipAnchorNode = node; }
+  void setTooltipsEnabled(bool enabled) noexcept { m_tooltipsEnabled = enabled; }
   [[nodiscard]] Node* tooltipAnchorNode() const noexcept { return m_tooltipAnchorNode; }
   [[nodiscard]] TooltipPlacement tooltipPlacement() const noexcept { return m_tooltipPlacement; }
   [[nodiscard]] bool hasTooltipAnchorInsets() const noexcept { return m_hasTooltipAnchorInsets; }
@@ -239,5 +240,6 @@ private:
   TooltipPlacement m_tooltipPlacement = TooltipPlacement::Default;
   TooltipAnchorInsets m_tooltipAnchorInsets{};
   bool m_hasTooltipAnchorInsets = false;
+  bool m_tooltipsEnabled = true;
   Node* m_tooltipAnchorNode = nullptr;
 };

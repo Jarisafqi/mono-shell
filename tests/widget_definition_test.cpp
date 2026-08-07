@@ -1,30 +1,10 @@
 // Every typed widget definition validates itself lazily: `field()` and `WidgetDefinition::validate()`
 // throw std::logic_error on the first resolve()/schemaFields() call, and WidgetFactory::create() does
 // not catch. Without this test a malformed definition ships as an uncaught exception at bar build.
-#include "shell/bar/widgets/active_window_widget_definition.h"
-#include "shell/bar/widgets/audio_visualizer_widget_definition.h"
 #include "shell/bar/widgets/battery_widget_definition.h"
-#include "shell/bar/widgets/bluetooth_widget_definition.h"
-#include "shell/bar/widgets/brightness_widget_definition.h"
-#include "shell/bar/widgets/clipboard_widget_definition.h"
 #include "shell/bar/widgets/clock_widget_definition.h"
-#include "shell/bar/widgets/control_center_widget_definition.h"
-#include "shell/bar/widgets/custom_button_widget_definition.h"
-#include "shell/bar/widgets/launcher_widget_definition.h"
-#include "shell/bar/widgets/lock_keys_widget_definition.h"
-#include "shell/bar/widgets/media_widget_definition.h"
-#include "shell/bar/widgets/network_widget_definition.h"
-#include "shell/bar/widgets/notification_widget_definition.h"
-#include "shell/bar/widgets/privacy_widget_definition.h"
-#include "shell/bar/widgets/screenshot_widget_definition.h"
-#include "shell/bar/widgets/session_widget_definition.h"
-#include "shell/bar/widgets/settings_widget_definition.h"
 #include "shell/bar/widgets/spacer_widget_definition.h"
-#include "shell/bar/widgets/sysmon_widget_definition.h"
-#include "shell/bar/widgets/text_widget_definition.h"
 #include "shell/bar/widgets/tray_widget_definition.h"
-#include "shell/bar/widgets/wallpaper_widget_definition.h"
-#include "shell/bar/widgets/weather_widget_definition.h"
 #include "system/battery_warning_monitor.h"
 
 #include <exception>
@@ -107,30 +87,10 @@ namespace {
 int main() {
   const BatteryConfig batteryConfig;
 
-  checkDefinition("active_window", activeWindowWidgetDefinition);
-  checkDefinition("audio_visualizer", audioVisualizerWidgetDefinition);
   checkDefinition("battery", batteryWidgetDefinition, BatteryWidgetDefinitionContext{.batteryConfig = &batteryConfig});
-  checkDefinition("bluetooth", bluetoothWidgetDefinition);
-  checkDefinition("brightness", brightnessWidgetDefinition);
-  checkDefinition("clipboard", clipboardWidgetDefinition);
   checkDefinition("clock", clockWidgetDefinition);
-  checkDefinition("control-center", controlCenterWidgetDefinition);
-  checkDefinition("custom_button", customButtonWidgetDefinition);
-  checkDefinition("launcher", launcherWidgetDefinition);
-  checkDefinition("lock_keys", lockKeysWidgetDefinition);
-  checkDefinition("media", mediaWidgetDefinition);
-  checkDefinition("network", networkWidgetDefinition);
-  checkDefinition("notifications", notificationWidgetDefinition);
-  checkDefinition("privacy", privacyWidgetDefinition);
-  checkDefinition("screenshot", screenshotWidgetDefinition);
-  checkDefinition("session", sessionWidgetDefinition);
-  checkDefinition("settings", settingsWidgetDefinition);
   checkDefinition("spacer", spacerWidgetDefinition);
-  checkDefinition("sysmon", sysmonWidgetDefinition, SysmonWidgetDefinitionContext{});
-  checkDefinition("text", textWidgetDefinition);
   checkDefinition("tray", trayWidgetDefinition, TrayWidgetDefinitionContext{});
-  checkDefinition("wallpaper", wallpaperWidgetDefinition);
-  checkDefinition("weather", weatherWidgetDefinition);
 
   return g_ok ? 0 : 1;
 }

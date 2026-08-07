@@ -67,17 +67,17 @@ int main() {
   Config base;
   noctalia::config::seedBuiltinWidgets(base);
 
-  const auto parsed = toml::parse("[widget.temp]\nshow_label = false\n");
+  const auto parsed = toml::parse("[widget.date]\nshow_label = false\n");
   const auto* widgetRoot = parsed["widget"].as_table();
-  const auto* tempTable = widgetRoot != nullptr ? (*widgetRoot)["temp"].as_table() : nullptr;
-  if (!expect(tempTable != nullptr, "parsed widget.temp table")) {
+  const auto* dateTable = widgetRoot != nullptr ? (*widgetRoot)["date"].as_table() : nullptr;
+  if (!expect(dateTable != nullptr, "parsed widget.date table")) {
     return 1;
   }
 
-  const WidgetConfig temp = noctalia::config::readBarWidgetConfig("temp", *tempTable, base);
-  ok = expect(temp.type == "sysmon", "temp resolves to sysmon") && ok;
-  ok = expectStringSetting(temp, "stat", "cpu_temp") && ok;
-  ok = expectBoolSetting(temp, "show_label", false) && ok;
+  const WidgetConfig date = noctalia::config::readBarWidgetConfig("date", *dateTable, base);
+  ok = expect(date.type == "clock", "date resolves to clock") && ok;
+  ok = expectStringSetting(date, "format", "{:%a %d %b}") && ok;
+  ok = expectBoolSetting(date, "show_label", false) && ok;
 
   const auto customParsed = toml::parse("[widget.my_clock]\nformat = \"{:%H:%M}\"\n");
   const auto* customRoot = customParsed["widget"].as_table();

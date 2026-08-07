@@ -28,6 +28,9 @@ public:
     bool hideWhenPlugged = false;
     bool hideWhenFull = false;
     bool showBluetoothDevices = true;
+    float bluetoothGap = 4.0f;
+    float hPadding = 4.0f;
+    bool tooltip = true;
   };
 
   BatteryWidget(UPowerService* upower, BluetoothService* bluetooth, Options options);
@@ -63,6 +66,9 @@ private:
   bool m_hideWhenPlugged = false;
   bool m_hideWhenFull = false;
   bool m_showBluetoothDevices = true;
+  float m_bluetoothGap = 4.0f;
+  float m_hPadding = 4.0f;
+  bool m_tooltip = true;
 
   // Glyph mode nodes
   Glyph* m_glyph = nullptr;

@@ -87,6 +87,15 @@ void Widget::setNonInteractive(bool nonInteractive) noexcept {
   updateGestureAreaEnabled();
 }
 
+void Widget::setTooltipsEnabled(bool enabled) noexcept {
+  if (m_innerArea != nullptr) {
+    m_innerArea->setTooltipsEnabled(enabled);
+  }
+  if (m_gestureArea != nullptr) {
+    m_gestureArea->setTooltipsEnabled(enabled);
+  }
+}
+
 void Widget::updateGestureAreaEnabled() noexcept {
   if (m_gestureArea != nullptr) {
     m_gestureArea->setEnabled(!m_nonInteractive && !m_gestureBindings.empty());

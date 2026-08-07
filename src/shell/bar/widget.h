@@ -107,6 +107,7 @@ public:
   void setWidgetIconColor(std::optional<ColorSpec> color) noexcept { m_widgetIconColor = color; }
   void setNonInteractive(bool nonInteractive) noexcept;
   [[nodiscard]] bool nonInteractive() const noexcept { return m_nonInteractive; }
+  void setTooltipsEnabled(bool enabled) noexcept;
   [[nodiscard]] const WidgetBarCapsuleSpec& barCapsuleSpec() const noexcept { return m_barCapsuleSpec; }
   void setBarCapsuleScene(Node* shell, Box* box) noexcept;
   [[nodiscard]] Node* barCapsuleShell() const noexcept { return m_capsuleShell; }
@@ -123,6 +124,11 @@ public:
 
   // Whether the bar should paint the decorative capsule for this frame (spec enabled + visible ink).
   [[nodiscard]] virtual bool shouldShowBarCapsule() const;
+
+  // Whether this widget's capsule content should be anchored flush against the docked
+  // screen edge (bottom/right bars hug the edge) rather than centered in the bar's
+  // cross axis. Dock-style pills (workspaces) use this; plain text/icons stay centered.
+  [[nodiscard]] virtual bool barContentFlushToEdge() const noexcept { return false; }
 
   // Resolved primary label color: `[widget.*] color` when set, else `capsule_foreground` when capsule styling is
   // enabled, else `fallback` (e.g. colorSpecFromRole(OnSurface)).

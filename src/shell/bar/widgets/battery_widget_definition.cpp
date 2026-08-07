@@ -74,6 +74,21 @@ batteryWidgetDefinition() {
                           .labelKey = "settings.widgets.battery.show_bluetooth",
                       },
               }),
+              field<&Options::tooltip>({
+                  .key = "tooltip",
+              }),
+              field<&Options::bluetoothGap>({
+                  .key = "bluetooth_gap",
+                  .minValue = 0.0,
+                  .maxValue = 48.0,
+                  .step = 1.0,
+              }),
+              field<&Options::hPadding>({
+                  .key = "h_padding",
+                  .minValue = 0.0,
+                  .maxValue = 32.0,
+                  .step = 1.0,
+              }),
               field<&Options::deviceSelector>({
                   .key = "device",
                   .presentation =

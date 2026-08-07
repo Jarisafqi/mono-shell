@@ -7,9 +7,8 @@ mode = "dark"
 [widget.clock]
 enabled = false
 
-[widget.launcher]
-capsule = true
-capsule_radius = "auto"
+[widget.spacer]
+interactive = false
 
 [plugins]
 enabled = ["mono-shell/wallhaven"]

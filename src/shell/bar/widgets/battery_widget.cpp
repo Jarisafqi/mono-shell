@@ -96,7 +96,8 @@ BatteryWidget::BatteryWidget(UPowerService* upower, BluetoothService* bluetooth,
       m_warningThreshold(options.warningThreshold), m_warningColor(options.warningColor),
       m_displayMode(options.displayMode), m_labelContent(options.labelContent), m_showLabel(options.showLabel),
       m_hideWhenPlugged(options.hideWhenPlugged), m_hideWhenFull(options.hideWhenFull),
-      m_showBluetoothDevices(options.showBluetoothDevices) {}
+      m_showBluetoothDevices(options.showBluetoothDevices), m_bluetoothGap(options.bluetoothGap),
+      m_hPadding(options.hPadding), m_tooltip(options.tooltip) {}
 
 // Vertical bars are too narrow for time or rate text, so they always show the bare percentage; the
 // tooltip carries the full detail. Time and rate are only known while the battery is actively charging
@@ -365,7 +366,7 @@ void BatteryWidget::layoutGlyphMode(Renderer& renderer, float /*containerWidth*/
 
   m_glyph->measure(renderer);
 
-  const float hPad = Style::spaceXs * m_contentScale;
+  const float hPad = m_hPadding * m_contentScale;
 
   if (m_label != nullptr && m_showLabel) {
     m_label->measure(renderer);
@@ -400,7 +401,7 @@ void BatteryWidget::layoutLabelOnlyMode(Renderer& renderer, float /*containerWid
 
   m_label->setFontSize((m_isVertical ? Style::fontSizeCaption : Style::fontSizeBody) * m_contentScale);
   m_label->measure(renderer);
-  const float hPad = Style::spaceXs * m_contentScale;
+  const float hPad = m_hPadding * m_contentScale;
   m_label->setPosition(hPad, 0.0f);
   rootNode->setSize(m_label->width() + 2.0f * hPad, m_label->height());
 
@@ -422,7 +423,8 @@ void BatteryWidget::layoutBluetoothIndicator(Renderer& renderer, float& rootWidt
     m_bluetoothLabel->measure(renderer);
   }
 
-  const float gap = Style::spaceXs * m_contentScale;
+  const float separatorGap = m_bluetoothGap * m_contentScale;
+  const float innerGap = Style::spaceXs * m_contentScale;
   const float glyphW = m_bluetoothGlyph->width();
   const float glyphH = m_bluetoothGlyph->height();
   const float labelW = showLabel ? m_bluetoothLabel->width() : 0.0f;
@@ -430,25 +432,26 @@ void BatteryWidget::layoutBluetoothIndicator(Renderer& renderer, float& rootWidt
 
   if (m_isVertical) {
     const float groupW = std::max(glyphW, labelW);
-    const float groupH = glyphH + (showLabel ? gap + labelH : 0.0f);
-    const float startY = rootHeight + gap;
+    const float groupH = glyphH + (showLabel ? innerGap + labelH : 0.0f);
+    const float startY = rootHeight + separatorGap;
     const float startX = std::round((rootWidth - groupW) * 0.5f);
     m_bluetoothGlyph->setPosition(startX + std::round((groupW - glyphW) * 0.5f), startY);
     if (showLabel) {
-      m_bluetoothLabel->setPosition(startX + std::round((groupW - labelW) * 0.5f), startY + glyphH + gap);
+      m_bluetoothLabel->setPosition(startX + std::round((groupW - labelW) * 0.5f), startY + glyphH + innerGap);
     }
     rootWidth = std::max(rootWidth, groupW);
     rootHeight = startY + groupH;
   } else {
-    const float groupW = glyphW + (showLabel ? gap + labelW : 0.0f);
+    const float hPad = m_hPadding * m_contentScale;
+    const float groupW = glyphW + (showLabel ? innerGap + labelW : 0.0f);
     const float groupH = std::max(glyphH, labelH);
-    const float startX = rootWidth + gap;
+    const float startX = rootWidth + separatorGap;
     const float groupY = std::round((rootHeight - groupH) * 0.5f);
     m_bluetoothGlyph->setPosition(startX, groupY + std::round((groupH - glyphH) * 0.5f));
     if (showLabel) {
-      m_bluetoothLabel->setPosition(startX + glyphW + gap, groupY + std::round((groupH - labelH) * 0.5f));
+      m_bluetoothLabel->setPosition(startX + glyphW + innerGap, groupY + std::round((groupH - labelH) * 0.5f));
     }
-    rootWidth = startX + groupW;
+    rootWidth = startX + groupW + hPad;
     rootHeight = std::max(rootHeight, groupH);
   }
 }
@@ -683,7 +686,7 @@ void BatteryWidget::syncState(Renderer& renderer) {
   }
 
   // Tooltip (both modes)
-  if (rootNode != nullptr) {
+  if (rootNode != nullptr && m_tooltip) {
     auto devices = m_upower->batteryDevices();
     auto laptopEnd =
         std::ranges::stable_partition(devices, [](const UPowerDeviceInfo& d) { return d.isLaptopBattery(); }).begin();
@@ -735,6 +738,8 @@ void BatteryWidget::syncState(Renderer& renderer) {
     } else {
       static_cast<InputArea*>(rootNode)->clearTooltip();
     }
+  } else if (rootNode != nullptr) {
+    static_cast<InputArea*>(rootNode)->clearTooltip();
   }
 
   requestRedraw();

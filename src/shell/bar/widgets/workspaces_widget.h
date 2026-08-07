@@ -51,6 +51,9 @@ public:
 
   void create() override;
   [[nodiscard]] bool wantsBarHoverHighlight() const noexcept override { return false; }
+  // Workspace pills behave like a dock: hug the screen edge instead of floating centered
+  // in the bar, so the pill touches the bar's screen edge with no dead gap below it.
+  [[nodiscard]] bool barContentFlushToEdge() const noexcept override { return true; }
 
 private:
   struct Item;

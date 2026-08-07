@@ -18,18 +18,6 @@
 
 constexpr bool kLockKeysEnabled = true;
 
-inline bool widgetIsLockKeys(std::string_view widgetName, const Config& config) {
-  auto it = config.widgets.find(std::string(widgetName));
-  if (it == config.widgets.end()) {
-    return widgetName == "lock_keys";
-  }
-  return it->second.type == "lock_keys";
-}
-
-inline bool widgetListHasLockKeys(const std::vector<std::string>& widgets, const Config& config) {
-  return std::ranges::any_of(widgets, [&config](const std::string& name) { return widgetIsLockKeys(name, config); });
-}
-
 inline bool barMayRender(const BarConfig& bar) {
   if (bar.enabled) {
     return true;
@@ -39,17 +27,8 @@ inline bool barMayRender(const BarConfig& bar) {
   });
 }
 
-inline bool configHasLockKeysWidget(const Config& config) {
-  return std::ranges::any_of(config.bars, [&config](const BarConfig& bar) {
-    return barMayRender(bar)
-        && (widgetListHasLockKeys(bar.startWidgets, config)
-            || widgetListHasLockKeys(bar.centerWidgets, config)
-            || widgetListHasLockKeys(bar.endWidgets, config));
-  });
-}
-
 inline bool lockKeysConsumersEnabled(const Config& config) {
-  return config.osd.kinds.lockKeys || configHasLockKeysWidget(config);
+  return config.osd.kinds.lockKeys;
 }
 
 inline OsdContent powerProfileOsdContent(std::string_view profile) {

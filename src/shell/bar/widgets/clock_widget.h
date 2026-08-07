@@ -15,6 +15,8 @@ public:
     std::string verticalFormat;
     std::string tooltipFormat;
     std::string timezone;
+    float hPadding = 4.0f;
+    bool tooltip = true;
   };
 
   ClockWidget(wl_output* output, Options options);
@@ -32,6 +34,8 @@ private:
   std::string m_verticalFormat;
   std::string m_tooltipFormat;
   std::string m_timezone;
+  float m_hPadding = 4.0f;
+  bool m_tooltip = true;
   bool m_isVertical = false;
   Label* m_label = nullptr;
   Label* m_secondaryLabel = nullptr;

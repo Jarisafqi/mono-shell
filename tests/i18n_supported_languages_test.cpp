@@ -15,7 +15,7 @@ namespace {
 } // namespace
 
 int main() {
-  const std::filesystem::path translationsDir = std::filesystem::path(NOCTALIA_SOURCE_ASSETS_DIR) / "translations";
+  const std::filesystem::path translationsDir = std::filesystem::path(MONO_SHELL_SOURCE_ASSETS_DIR) / "translations";
 
   std::set<std::string> supported;
   for (const auto& language : i18n::kSupportedLanguages) {

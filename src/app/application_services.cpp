@@ -769,9 +769,6 @@ void Application::initWaylandCallbacks() {
           if (config.osd.kinds.lockKeys) {
             m_lockKeysOsd.onLockKeysChanged(previous, current);
           }
-          if (configHasLockKeysWidget(config)) {
-            m_bar.refresh();
-          }
         }
     );
   }

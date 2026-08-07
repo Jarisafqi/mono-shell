@@ -143,7 +143,7 @@ void InputArea::setTooltipAnchorInsets(TooltipAnchorInsets insets) {
 }
 void InputArea::clearTooltipAnchorInsets() { m_hasTooltipAnchorInsets = false; }
 bool InputArea::hasTooltip() const noexcept {
-  return m_tooltipProvider != nullptr || !std::holds_alternative<std::monostate>(m_tooltipContent);
+  return m_tooltipsEnabled && (m_tooltipProvider != nullptr || !std::holds_alternative<std::monostate>(m_tooltipContent));
 }
 
 TooltipContent InputArea::tooltipContent() const {

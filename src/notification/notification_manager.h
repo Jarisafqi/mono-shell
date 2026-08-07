@@ -27,7 +27,7 @@ struct NotificationHistoryEntry {
   std::uint64_t eventSerial = 0;
 };
 
-constexpr int32_t kDefaultNotificationTimeout = 6000;
+constexpr int32_t kDefaultNotificationTimeout = 3000;
 
 // Upper bound on action pairs (key + label) kept per notification. Enforced once at ingress
 // in addOrReplace(); render sites clamp defensively against the same value.

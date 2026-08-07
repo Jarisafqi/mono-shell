@@ -17,8 +17,6 @@
 #include <unordered_set>
 #include <vector>
 
-class TaskbarWidget;
-
 class ConfigService;
 class CompositorPlatform;
 class FileWatcher;
@@ -122,7 +120,6 @@ private:
   void syncInstances();
   void createInstance(const WaylandOutput& output, std::size_t barIndex, const BarConfig& barConfig);
   void destroyInstance(std::uint32_t outputName);
-  [[nodiscard]] TaskbarWidget* findTaskbarWidget(const IpcInvocationContext& context) const;
   void populateWidgets(BarInstance& instance);
   void attachWidgetsToSections(BarInstance& instance);
   void updateWidgetHoverHighlight(BarInstance& instance, InputArea* hoveredArea);
