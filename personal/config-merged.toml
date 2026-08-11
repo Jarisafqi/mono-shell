@@ -1,0 +1,219 @@
+[accessibility]
+high_contrast = false
+ui_scale = 0.90000000000000002
+
+[audio]
+enable_overdrive = false
+enable_sounds = false
+notification_sound = ""
+sound_volume = 0.5
+volume_change_sound = ""
+
+[backdrop]
+enabled = false
+
+[bar.main]
+auto_hide = false
+background_opacity = 1.0
+capsule = false
+capsule_radius = 0
+center = []
+end = [ "clock", "battery", "spacer" ]
+font_family = "JetBrains Mono Slashed"
+margin_edge = 0
+margin_ends = 0
+margin_opposite_edge = 0
+padding = 2
+position = "bottom"
+radius = 0
+reserve_space = true
+scale = 1.0
+shadow = false
+start = [ "workspaces" ]
+thickness = 20
+widget_spacing = 8
+
+[brightness]
+enable_ddcutil = false
+
+[calendar]
+enabled = false
+
+[control_center]
+height = 850
+hidden_tabs = [ "media", "audio", "monitor", "system", "power", "network", "bluetooth", "weather", "calendar", "screen-time" ]
+notifications_scale = 1.0
+scale = 0.88
+show_shortcut_labels = true
+sidebar = "none"
+sidebar_section = "none"
+
+    [[control_center.shortcuts]]
+    type = "nightlight"
+
+    [[control_center.shortcuts]]
+    type = "caffeine"
+
+    [[control_center.shortcuts]]
+    type = "notification"
+
+[desktop_widgets]
+enabled = false
+
+[dock]
+enabled = false
+
+[idle.behavior.lock]
+action = "lock"
+enabled = false
+timeout = 600
+
+[idle.behavior.screen-off]
+action = "screen_off"
+enabled = false
+timeout = 660
+
+[lockscreen]
+blur_intensity = 0.0
+blurred_desktop = false
+enabled = false
+tint_intensity = 0.0
+
+[nightlight]
+enabled = false
+force = false
+temperature_day = 6500
+temperature_night = 4000
+
+[notification]
+background_opacity = 1.0
+border = true
+collapse_on_dismiss = true
+enable_daemon = true
+history_retention_hours = 0
+layer = "top"
+offset_x = 7
+offset_y = 8
+position = "bottom_right"
+scale = 1.0
+show_actions = true
+show_app_name = true
+
+[osd]
+background_opacity = 1.0
+font_family = "JetBrains Mono Slashed"
+offset_x = 20
+offset_y = 8
+position = "bottom_center"
+scale = 1.1200000000000001
+
+    [osd.kinds]
+    bluetooth = false
+    brightness = true
+    caffeine = false
+    dnd = false
+    keyboard_layout = false
+    lock_keys = false
+    media = false
+    nightlight = false
+    power_profile = false
+    privacy = false
+    volume = true
+    volume_input = true
+    volume_output = true
+    wifi = false
+
+[shell]
+avatar_path = ""
+clipboard_enabled = false
+clipboard_history_max_entries = 100
+corner_radius_scale = 0.0
+date_format = "%A, %x"
+font_family = "OnePlus Sans Text"
+polkit_agent = false
+telemetry_enabled = false
+time_format = "{:%H:%M}"
+
+    [shell.animation]
+    enabled = false
+    speed = 1.0
+
+    [shell.panel]
+    borders = true
+    clipboard_placement = "floating"
+    clipboard_position = "center"
+    control_center_placement = "floating"
+    control_center_position = "bottom_right"
+    enabled = false
+    launcher_placement = "floating"
+    launcher_position = "center"
+    open_near_click_clipboard = false
+    open_near_click_control_center = true
+    open_near_click_launcher = false
+    open_near_click_session = false
+    open_near_click_wallpaper = false
+    session_placement = "attached"
+    shadow = false
+    transparency_mode = "solid"
+    wallpaper_placement = "attached"
+
+    [shell.shadow]
+    alpha = 0.55000000000000004
+    direction = "down"
+
+[system.monitor]
+enabled = false
+
+[theme]
+custom_palette = "Noctadark"
+mode = "dark"
+pure_black_dark = false
+source = "custom"
+
+[wallpaper]
+enabled = false
+
+[weather]
+enabled = false
+
+[widget.battery]
+bluetooth_gap = 10
+device = "auto"
+display_mode = "glyph"
+h_padding = 0
+hide_when_full = false
+hide_when_plugged = false
+label_content = "percent"
+scale = 0.80000000000000004
+show_label = true
+tooltip = false
+warning_color = "error"
+
+[widget.clock]
+font_family = "JetBrains Mono Slashed"
+format = "{:%-I:%M %p}"
+h_padding = 0
+scale = 0.80000000000000004
+tooltip = false
+tooltip_format = "{:%H:%M %a, %b %d}"
+
+[widget.spacer]
+length = 10
+
+[widget.workspaces]
+active_pill_size = 1.0
+capsule_radius = 0
+change_color_on_hover = true
+display = "id"
+empty_color = "#FFFFFF"
+focused_color = "#FFFFFF"
+focused_output_only = false
+font_weight = 400
+hide_when_empty = true
+inactive_pill_size = 1.0
+label_size = 0.80000000000000004
+labels_only_when_occupied = true
+occupied_color = "#FFFFFF"
+pill_scale = 1.0
+style = "regular"
+urgent_color = "error"

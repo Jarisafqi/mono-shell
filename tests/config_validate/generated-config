@@ -1,0 +1,23 @@
+[accessibility]
+ui_scale = 1.0
+
+[theme]
+mode = "dark"
+
+[widget.clock]
+enabled = false
+
+[widget.spacer]
+interactive = false
+
+[plugins]
+enabled = ["mono-shell/wallhaven"]
+
+[[plugins.source]]
+name = "test"
+kind = "path"
+location = "tests/config_validate/plugin-source"
+
+[plugin_settings."mono-shell/wallhaven"]
+browser_placement = "floating"
+browser_position = "center"

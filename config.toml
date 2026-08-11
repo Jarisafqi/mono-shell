@@ -1,0 +1,246 @@
+# Mono Shell default configuration.
+#
+# This file is the portable default shipped for every machine: it is
+# intentionally free of device-specific settings (display geometry, avatars,
+# absolute paths). Install it with `just config-install` and customize from
+# there.
+
+# ── Accessibility ────────────────────────────────────────────────────────────
+
+[accessibility]
+ui_scale        = 0.9
+high_contrast   = false
+
+# ── Shell ────────────────────────────────────────────────────────────────────
+
+[shell]
+corner_radius_scale   = 0
+font_family           = "OnePlus Sans Text"
+time_format           = "{:%H:%M}"
+date_format           = "%A, %x"
+telemetry_enabled     = false
+polkit_agent          = false
+avatar_path           = ""
+clipboard_enabled     = false
+clipboard_history_max_entries = 100
+
+[shell.animation]
+enabled = false
+speed   = 1.0
+
+[shell.shadow]
+direction = "down"
+alpha     = 0.55
+
+[shell.panel]
+enabled                = false                # master switch: disable all popup panels
+transparency_mode     = "solid"
+borders               = true
+shadow                = false
+launcher_placement       = "floating"
+clipboard_placement      = "floating"
+wallpaper_placement      = "attached"
+session_placement        = "attached"
+launcher_position        = "center"
+clipboard_position       = "center"
+open_near_click_launcher       = false
+open_near_click_clipboard      = false
+open_near_click_wallpaper      = false
+open_near_click_session        = false
+
+# ── Wallpaper ────────────────────────────────────────────────────────────────
+# Disabled: an external wallpaper daemon (e.g. swaybg) handles it.
+
+[wallpaper]
+enabled = false
+
+[backdrop]
+enabled = false
+
+# ── Theme ────────────────────────────────────────────────────────────────────
+# Shipped with the self-contained builtin palette Black & White, so no external
+# palette file is required and every machine renders byte-identical colors.
+
+[theme]
+mode        = "dark"
+source      = "builtin"
+builtin     = "Black & White"
+pure_black_dark = false
+
+# ── Notifications ────────────────────────────────────────────────────────────
+
+[notification]
+enable_daemon       = true
+show_app_name       = true
+show_actions        = true
+position            = "bottom_right"
+layer               = "top"
+scale               = 1.0
+background_opacity  = 1.0
+offset_x            = 7
+offset_y            = 8
+border              = true
+collapse_on_dismiss = true
+history_retention_hours = 0
+
+# ── OSD ──────────────────────────────────────────────────────────────────────
+
+[osd]
+position            = "bottom_center"
+scale               = 1.12
+background_opacity  = 1.0
+offset_x            = 20
+offset_y            = 8
+font_family         = "JetBrains Mono Slashed"
+
+[osd.kinds]
+volume           = true
+volume_output    = true
+volume_input     = true
+brightness       = true
+wifi             = false
+bluetooth        = false
+power_profile    = false
+caffeine         = false
+nightlight       = false
+dnd              = false
+lock_keys        = false
+keyboard_layout  = false
+privacy          = false
+media            = false
+
+# ── Lock Screen ──────────────────────────────────────────────────────────────
+# Disabled: an external locker (e.g. hyprlock/swaylock) handles locking.
+
+[lockscreen]
+enabled         = false
+blurred_desktop = false
+blur_intensity  = 0.0
+tint_intensity  = 0.0
+
+# ── System Monitor ───────────────────────────────────────────────────────────
+# Kept at defaults; only used if a widget/shortcut references it.
+
+[system.monitor]
+enabled = false
+
+# ── Calendar ─────────────────────────────────────────────────────────────────
+
+[calendar]
+enabled = false
+
+# ── Weather ──────────────────────────────────────────────────────────────────
+
+[weather]
+enabled = false
+
+# ── Audio ────────────────────────────────────────────────────────────────────
+
+[audio]
+enable_overdrive  = false
+enable_sounds     = false
+sound_volume      = 0.5
+volume_change_sound = ""
+notification_sound  = ""
+
+# ── Brightness ───────────────────────────────────────────────────────────────
+
+[brightness]
+enable_ddcutil    = false
+
+# ── Night Light ──────────────────────────────────────────────────────────────
+
+[nightlight]
+enabled              = false
+force                = false
+temperature_day      = 6500
+temperature_night    = 4000
+
+# ── Idle ─────────────────────────────────────────────────────────────────────
+
+[idle.behavior.lock]
+timeout = 600
+action  = "lock"
+enabled = false
+
+[idle.behavior.screen-off]
+timeout = 660
+action  = "screen_off"
+enabled = false
+
+# ── Bar ──────────────────────────────────────────────────────────────────────
+# Bottom bar, squared with no margins/shadows. Left: workspaces | Right: clock,
+# battery
+
+[bar.main]
+position           = "bottom"
+thickness          = 19
+background_opacity = 1.0
+radius             = 0
+margin_ends        = 0
+margin_edge        = 0
+margin_opposite_edge= 0
+padding            = 2
+widget_spacing     = 8
+scale               = 1.0
+font_family        = "JetBrains Mono Slashed"
+shadow             = false
+auto_hide          = false
+reserve_space      = true
+capsule            = false
+
+start  = ["workspaces"]
+center = []
+end    = ["clock", "battery", "spacer"]
+
+# Workspaces
+[widget.workspaces]
+style                    = "regular"
+display                  = "id"
+capsule_radius           = 0
+pill_scale               = 0.9
+active_pill_size         = 2.2
+inactive_pill_size       = 1.0
+focused_color            = "#FFFFFF"
+occupied_color           = "#FFFFFF"
+empty_color              = "#FFFFFF"
+label_size               = 0.8
+urgent_color             = "error"
+change_color_on_hover    = true
+focused_output_only      = false
+labels_only_when_occupied = true
+hide_when_empty          = true
+font_weight              = 400
+
+# Clock
+[widget.clock]
+format            = "{:%-I:%M %p}"
+tooltip_format    = "{:%H:%M %a, %b %d}"
+font_family       = "JetBrains Mono Slashed"
+scale             = 0.8
+tooltip           = false
+h_padding         = 0
+capsule_radius    = 0
+
+# Battery
+[widget.battery]
+display_mode      = "glyph"
+show_label        = true
+label_content     = "percent"
+scale             = 0.8
+hide_when_plugged = false
+hide_when_full    = false
+device            = "auto"
+warning_color     = "error"
+tooltip           = false
+bluetooth_gap     = 10
+h_padding         = 0
+capsule_radius    = 0
+
+[widget.spacer]
+length = 10
+
+# ── Dock ─────────────────────────────────────────────────────────────────────
+
+[dock]
+enabled = false

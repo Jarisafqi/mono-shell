@@ -1,0 +1,123 @@
+#pragma once
+
+#include "render/animation/animation_manager.h"
+#include "wayland/layer_surface.h"
+
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
+
+class ConfigService;
+class IpcService;
+class Box;
+class Flex;
+class Label;
+class RenderContext;
+class WaylandConnection;
+struct WaylandOutput;
+struct wl_surface;
+
+enum class OsdKind : std::uint8_t {
+  Volume,
+  Microphone,
+  Brightness,
+  Wifi,
+  Bluetooth,
+  PowerProfile,
+  Caffeine,
+  NightLight,
+  Dnd,
+  LockKeys,
+  KeyboardLayout,
+  Media,
+  Privacy,
+  KeyboardBacklight
+};
+
+struct OsdContent {
+  OsdKind kind = OsdKind::Volume;
+  std::string icon;
+  std::string label;
+  std::string value;
+  float progress = 0.0f;
+  bool showProgress = true;
+  bool inactive = false;
+};
+
+class OsdOverlay {
+public:
+  OsdOverlay();
+  ~OsdOverlay();
+
+  OsdOverlay(const OsdOverlay&) = delete;
+  OsdOverlay& operator=(const OsdOverlay&) = delete;
+
+  void initialize(WaylandConnection& wayland, ConfigService* config, RenderContext* renderContext);
+  void registerIpc(IpcService& ipc);
+  void onOutputChange();
+  void onConfigReload();
+  void requestLayout();
+  void requestRedraw();
+
+  void show(const OsdContent& content);
+  [[nodiscard]] bool isEnabled() const noexcept;
+
+  // True while any instance is on screen or animating into view. Callers use this to correct
+  // already-visible content in place without popping up a fresh OSD.
+  [[nodiscard]] bool isVisible() const;
+
+private:
+  struct SurfaceMargins {
+    std::int32_t top = 0;
+    std::int32_t right = 0;
+    std::int32_t bottom = 0;
+    std::int32_t left = 0;
+  };
+
+  struct Instance {
+    wl_output* output = nullptr;
+    std::int32_t scale = 1;
+    float uiLayoutScale = 1.0f;
+    std::unique_ptr<LayerSurface> surface;
+    // sceneRoot must be destroyed before `animations` — ~Node() calls cancelForOwner().
+    AnimationManager animations;
+    std::unique_ptr<Node> sceneRoot;
+    wl_surface* wlSurface = nullptr;
+
+    Node* cardGroup = nullptr;
+    Flex* row = nullptr;
+    Box* background = nullptr;
+    Label* label = nullptr;
+    Label* value = nullptr;
+    AnimationManager::Id showAnimId = 0;
+    AnimationManager::Id hideAnimId = 0;
+    bool showPending = false;
+    bool visible = false;
+  };
+
+  [[nodiscard]] SurfaceMargins surfaceMarginsForPosition(const std::string& position) const;
+  [[nodiscard]] std::vector<std::string> osdMonitors() const;
+  [[nodiscard]] bool shouldRenderOnOutput(const WaylandOutput& output) const;
+  void ensureSurfaces();
+  void destroySurfaces();
+  void setEnabledOverride(bool enabled);
+  void prepareFrame(Instance& inst, bool needsUpdate, bool needsLayout);
+  void buildScene(Instance& inst, std::uint32_t width, std::uint32_t height);
+  void updateInstanceContent(Instance& inst);
+  void updateBlurRegion(Instance& inst) const;
+  void applyReveal(Instance& inst, float reveal);
+  void animateInstance(Instance& inst);
+
+  WaylandConnection* m_wayland = nullptr;
+  ConfigService* m_config = nullptr;
+  RenderContext* m_renderContext = nullptr;
+  OsdContent m_content;
+  std::string m_lastPosition;
+  float m_lastLayoutScale = 1.0f;
+  std::vector<std::string> m_lastMonitorSelectors;
+  std::optional<bool> m_runtimeEnabledOverride;
+  bool m_lastConfiguredEnabled = true;
+  std::vector<std::unique_ptr<Instance>> m_instances;
+};
